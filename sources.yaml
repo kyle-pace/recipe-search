@@ -1,0 +1,49 @@
+# Every source, how it's collected, and the result of its last check.
+# Checked by hand on 2026-11-01: robots.txt, sitemap, and a few recipe pages.
+
+recipes:
+  - id: woks
+    name: The Woks of Life
+    site: https://thewoksoflife.com
+    sitemap: /sitemap_index.xml        # not listed in robots.txt
+    format: json-ld                    # full schema.org Recipe
+    allowed: true                      # blocks AI training bots only; stay out of /wp-json/
+    size: about 1,600 posts
+  - id: joc
+    name: Just One Cookbook
+    site: https://www.justonecookbook.com
+    sitemap: /sitemap_index.xml
+    format: json-ld
+    default_cuisine: Japanese
+    allowed: true                      # only site search is off limits
+    size: 1,000 to 2,000 posts
+  - id: htk
+    name: Hot Thai Kitchen
+    site: https://hot-thai-kitchen.com
+    sitemap: /sitemap_index.xml
+    format: json-ld                    # total time and cuisine often missing
+    default_cuisine: Thai
+    allowed: true
+    size: about 470 posts
+  - id: sk
+    name: Smitten Kitchen
+    site: https://smittenkitchen.com
+    sitemap: /sitemap.xml
+    format: microdata                  # name, yield, total time as text, ingredients; photo from og:image
+    allowed: true
+    size: 1,000+ posts
+
+videos:
+  - id: kenji
+    name: J. Kenji López-Alt
+    channel: https://www.youtube.com/@JKenjiLopezAlt
+    via: youtube-data-api              # uploads list; titles and descriptions only, no transcripts
+    note: kenjilopezalt.com and his Patreon have no recipe data to index
+
+link_only:
+  - name: Serious Eats
+    search: https://www.seriouseats.com/search?q={q}
+    reason: owner (People Inc.) requires written permission for automated collection
+  - name: All of Kenji's videos
+    search: https://www.youtube.com/@JKenjiLopezAlt/search?query={q}
+    reason: backstop for anything the index misses
