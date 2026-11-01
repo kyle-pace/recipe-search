@@ -1,6 +1,6 @@
 # Recipe search
 
-One search box across the recipe sites I trust: The Woks of Life, Just One Cookbook, Hot Thai Kitchen, Smitten Kitchen, and J. Kenji López-Alt's YouTube videos. It runs on our own small index, not Google, and every result opens on the original site.
+One search box across the recipe sites I trust: The Woks of Life, Just One Cookbook, Hot Thai Kitchen, Smitten Kitchen, Maangchi, and J. Kenji López-Alt's YouTube videos. It runs on our own small index, not Google, and every result opens on the original site.
 
 **Status:** prototype (November 1, 2026). Working name; the real name and domain are still open.
 
@@ -20,4 +20,4 @@ See `sources.yaml` for every source and why it's in or out, and `CLAUDE.md` for 
 python3 prototype/build.py   # writes prototype/index.html
 ```
 
-Open `prototype/index.html` in a browser. It uses a small real sample: 26 recipes and 14 videos.
+Open `prototype/index.html` in a browser. It uses a small real sample: 34 recipes and 14 videos.

@@ -17,8 +17,8 @@ CATALOG = {
     'eggplant': ['aubergine', 'japanese eggplant', 'chinese eggplant'],
     'thai chili': ['thai chilies', 'bird chilies', 'thai bird chilies', 'thai chili'],
     'red pepper flakes': ['chili flakes', 'crushed red pepper'],
-    'tofu': ['silken tofu', 'soft tofu', 'firm tofu', 'soft/silken tofu'],
-    'rice': ['cooked rice', 'jasmine rice', 'white rice', 'short-grain rice', 'short grain japanese rice', 'arborio', 'carnaroli'],
+    'tofu': ['silken tofu', 'soft tofu', 'firm tofu', 'soft/silken tofu', 'dubu', 'sundubu'],
+    'rice': ['bowl of rice', 'cooked rice', 'jasmine rice', 'white rice', 'short-grain rice', 'short grain japanese rice', 'arborio', 'carnaroli'],
     'garlic': ['garlic cloves'],
     'ginger': [],
     'galangal': [],
@@ -34,7 +34,7 @@ CATALOG = {
     'shrimp': ['prawns'],
     'seafood': ['mixed seafood'],
     'egg': ['eggs'],
-    'mushrooms': ['shiitake', 'shimeji', 'chanterelle', 'chanterelles', 'sliced mushrooms'],
+    'mushrooms': ['shiitake', 'shimeji', 'chanterelle', 'chanterelles', 'sliced mushrooms', 'wood ear mushrooms', 'king oyster mushrooms'],
     'kabocha squash': ['kabocha'],
     'miso': [],
     'dashi': ['dashi packet', 'dashi powder'],
@@ -53,7 +53,7 @@ CATALOG = {
     'sour cream': [],
     'yogurt': ['greek-style yogurt'],
     'pasta': ['spaghetti', 'dried spaghetti'],
-    'noodles': ['rice noodles', 'ramen noodles', 'egg noodles', 'instant ramen'],
+    'noodles': ['rice noodles', 'ramen noodles', 'egg noodles', 'instant ramen', 'sweet potato starch noodles', 'glass noodles', 'japchae'],
     'coconut milk': [],
     'curry paste': ['green curry paste'],
     'cornstarch': ['potato starch'],
@@ -77,7 +77,13 @@ CATALOG = {
     'daikon': ['daikon radish'],
     'wakame': ['seaweed', 'nori'],
     'bean sprouts': [],
-    'gochujang': [],
+    'gochujang': ['korean hot pepper paste'],
+    'gochugaru': ['gochu-garu', 'korean hot pepper flakes'],
+    'kimchi': ['fermented kimchi'],
+    'rice cakes': ['tteok', 'tteokbokki'],
+    'cream': ['heavy cream'],
+    'mozzarella': ['shredded mozzarella cheese'],
+    'honey': ['rice syrup'],
 }
 TERMS = sorted(((alias, canon) for canon, al in CATALOG.items() for alias in [canon, *al]),
                key=lambda t: -len(t[0]))
@@ -99,14 +105,15 @@ def minutes(t):
         return None
     if t.isdigit():
         return int(t)
-    m = re.match(r'PT(?:(\d+)H)?(?:(\d+)M)?', t)
-    return (int(m[1] or 0) * 60 + int(m[2] or 0)) if m else None
+    m = re.match(r'P(?:(\d+)D)?T(?:(\d+)H)?(?:(\d+)M)?', t)
+    return (int(m[1] or 0) * 1440 + int(m[2] or 0) * 60 + int(m[3] or 0)) or None if m else None
 
 SOURCES = {
     'woks': ('The Woks of Life', 'https://thewoksoflife.com', None),
     'joc': ('Just One Cookbook', 'https://www.justonecookbook.com', 'Japanese'),
     'htk': ('Hot Thai Kitchen', 'https://hot-thai-kitchen.com', 'Thai'),
     'sk': ('Smitten Kitchen', 'https://smittenkitchen.com', None),
+    'maangchi': ('Maangchi', 'https://www.maangchi.com', 'Korean'),
 }
 
 items = []

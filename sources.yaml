@@ -32,6 +32,15 @@ recipes:
     format: microdata                  # name, yield, total time as text, ingredients; photo from og:image
     allowed: true
     size: 1,000+ posts
+  - id: maangchi
+    name: Maangchi
+    site: https://www.maangchi.com
+    sitemap: /sitemap.xml              # index of yearly post sitemaps; recipes are under /recipe/
+    format: json-ld                    # older recipes have an empty ingredient list; match them by title and keywords
+    default_cuisine: Korean
+    allowed: true                      # blocks AI training bots only (checked 2026-11-01)
+    size: 451 recipes (of 2,278 posts)
+    note: her YouTube videos are embedded in her recipe pages, so her channel isn't added separately
 
 videos:
   - id: kenji

@@ -8,44 +8,49 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
-/* Layout idea: one calm reading column; the search bar is the one raised surface,
-   results are flat rows with a colored source tile as the only strong color. */
+/* Layout idea: a quiet reading column. The search field is the one strong surface;
+   results are flat rows, and the only real color is each source's own tint, like
+   book spines on a shelf. */
 :root {
-  --bg: #f5f7f3;
+  --bg: #f6f7f4;
   --surface: #ffffff;
-  --ink: #1c2320;
-  --muted: #56615b;
-  --line: #d9dfd9;
+  --ink: #1d2421;
+  --muted: #58625c;
+  --line: #e0e5df;
   --accent: #0d6a59;
   --accent-ink: #ffffff;
-  --accent-soft: #e2f1ec;
+  --accent-soft: #e3f1ec;
   --mark: #fbe3a0;
   --src-woks: #a3271f;
   --src-joc: #2b5c99;
   --src-htk: #85570a;
   --src-sk: #6a3f9e;
+  --src-maangchi: #a8336a;
   --src-kenji: #c4161c;
+  --tint: 13%;
   --font: 'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --radius: 14px;
   --step--1: 0.875rem;
   --step-0: 1rem;
-  --step-1: 1.2rem;
-  --step-2: 1.6rem;
-  --step-3: 2.2rem;
+  --step-1: 1.125rem;
+  --step-2: 1.5rem;
+  --step-3: 2rem;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #111614; --surface: #19201d; --ink: #e5ebe7; --muted: #a2ada6; --line: #2d3632;
-    --accent: #62cdb3; --accent-ink: #08130f; --accent-soft: #173029; --mark: #5b4a10;
-    --src-woks: #c2453b; --src-joc: #4a7cc0; --src-htk: #a87216; --src-sk: #8d63c4; --src-kenji: #d63b3f;
+    --bg: #111614; --surface: #18201c; --ink: #e5ebe7; --muted: #a3aea7; --line: #2a332f;
+    --accent: #62cdb3; --accent-ink: #08130f; --accent-soft: #163029; --mark: #5b4a10;
+    --src-woks: #ee8a80; --src-joc: #8cb4ec; --src-htk: #e2b15a; --src-sk: #c3a2ec; --src-maangchi: #ef8fbd; --src-kenji: #f08a8a;
+    --tint: 18%;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #111614; --surface: #19201d; --ink: #e5ebe7; --muted: #a2ada6; --line: #2d3632;
-  --accent: #62cdb3; --accent-ink: #08130f; --accent-soft: #173029; --mark: #5b4a10;
-  --src-woks: #c2453b; --src-joc: #4a7cc0; --src-htk: #a87216; --src-sk: #8d63c4; --src-kenji: #d63b3f;
+  --bg: #111614; --surface: #18201c; --ink: #e5ebe7; --muted: #a3aea7; --line: #2a332f;
+  --accent: #62cdb3; --accent-ink: #08130f; --accent-soft: #163029; --mark: #5b4a10;
+  --src-woks: #ee8a80; --src-joc: #8cb4ec; --src-htk: #e2b15a; --src-sk: #c3a2ec; --src-maangchi: #ef8fbd; --src-kenji: #f08a8a;
+  --tint: 18%;
   color-scheme: dark;
 }
 :root[data-text="large"] { font-size: 112.5%; }
@@ -54,134 +59,130 @@
 
 * { box-sizing: border-box; }
 html, body { margin: 0; }
-body {
-  background: var(--bg);
-  color: var(--ink);
-  font-family: var(--font);
-  font-size: var(--step-0);
-  line-height: 1.55;
-}
+body { background: var(--bg); color: var(--ink); font-family: var(--font); font-size: var(--step-0); line-height: 1.55; }
 a { color: var(--accent); text-underline-offset: 0.18em; }
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
 h1, h2, h3 { text-wrap: balance; line-height: 1.2; margin: 0; }
-.wrap { max-width: 52rem; margin: 0 auto; padding: 0 20px; }
+button { font: inherit; color: inherit; }
+.wrap { max-width: 48rem; margin: 0 auto; padding: 0 20px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 /* Top bar */
-.top { border-bottom: 1px solid var(--line); background: var(--surface); }
-.top .wrap { display: flex; align-items: center; gap: 16px; min-height: 64px; flex-wrap: wrap; }
-.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: var(--step-1); margin-right: auto; }
-.brand svg { flex: none; }
-.pill { font-size: var(--step--1); font-weight: 600; padding: 2px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--ink); }
-.tabs { display: flex; gap: 4px; }
-.tabs a {
-  text-decoration: none; color: var(--muted); font-weight: 600; padding: 8px 12px; border-radius: 10px;
-}
+.top { border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; gap: 12px; min-height: 60px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; margin-right: auto; }
+.brand small { font-weight: 400; color: var(--muted); font-size: var(--step--1); }
+.tabs { display: flex; gap: 2px; }
+.tabs a { text-decoration: none; color: var(--muted); font-weight: 600; padding: 6px 10px; border-radius: 8px; }
+.tabs a:hover { color: var(--ink); }
 .tabs a[aria-current="page"] { color: var(--ink); background: var(--accent-soft); }
-.btn {
-  font: inherit; font-weight: 600; color: var(--ink); background: var(--surface);
-  border: 1px solid var(--line); border-radius: 10px; padding: 7px 12px; cursor: pointer;
-}
+.btn { font-weight: 600; background: transparent; border: 1px solid var(--line); border-radius: 8px; padding: 5px 10px; cursor: pointer; }
 .btn:hover { border-color: var(--muted); }
 
 /* Display settings */
-#display { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); color: var(--ink);
-  padding: 18px 20px; width: min(22rem, calc(100vw - 32px)); box-shadow: 0 12px 40px rgb(0 0 0 / 0.18); }
-#display h2 { font-size: var(--step-1); margin-bottom: 8px; }
-#display fieldset { border: 0; padding: 0; margin: 12px 0 0; }
+#display { border: 1px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--ink);
+  padding: 18px 20px; width: min(22rem, calc(100vw - 32px)); box-shadow: 0 16px 48px rgb(0 0 0 / 0.16); }
+#display h2 { font-size: var(--step-1); }
+#display fieldset { border: 0; padding: 0; margin: 14px 0 0; }
 #display legend { font-weight: 600; margin-bottom: 6px; }
 .seg { display: flex; flex-wrap: wrap; gap: 6px; }
 .seg label { display: inline-flex; }
 .seg input { position: absolute; opacity: 0; pointer-events: none; }
-.seg span { padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; cursor: pointer; }
+.seg span { padding: 5px 12px; border: 1px solid var(--line); border-radius: 999px; cursor: pointer; }
 .seg input:checked + span { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .seg input:focus-visible + span { outline: 3px solid var(--accent); outline-offset: 2px; }
 
 /* Search */
-.view { padding: 32px 0 56px; }
+.view { padding: 36px 0 64px; }
 .view[hidden] { display: none; }
-.intro { color: var(--muted); max-width: 40rem; margin: 6px 0 24px; }
-.searchcard { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; display: grid; gap: 14px; }
-.modes { display: inline-flex; border: 1px solid var(--line); border-radius: 12px; padding: 3px; gap: 3px; justify-self: start; }
-.modes button { font: inherit; font-weight: 600; border: 0; background: transparent; color: var(--muted); padding: 6px 14px; border-radius: 9px; cursor: pointer; }
-.modes button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
-.qrow { display: flex; gap: 8px; }
-.qrow input {
-  flex: 1; min-width: 0; font: inherit; font-size: var(--step-1); color: var(--ink); background: var(--bg);
-  border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px;
-}
-.qrow input:focus-visible { outline-offset: 0; }
-.have-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.have-chips:empty { display: none; }
-.chip {
-  display: inline-flex; align-items: center; gap: 6px; font: inherit; font-size: var(--step--1);
-  border: 1px solid var(--line); background: var(--bg); color: var(--ink); border-radius: 999px; padding: 4px 10px; cursor: pointer;
-}
-.chip[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); }
-.chip .x { font-weight: 700; color: var(--muted); }
-.try { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; color: var(--muted); font-size: var(--step--1); }
-.filters { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; border-top: 1px solid var(--line); padding-top: 14px; }
-.filters .group { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-.filters .lab { font-size: var(--step--1); font-weight: 600; color: var(--muted); margin-right: 2px; }
-.filters select { font: inherit; font-size: var(--step--1); color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 4px 8px; }
-.dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.hero h1 { font-size: var(--step-3); letter-spacing: -0.01em; }
+.hero p { color: var(--muted); margin: 6px 0 22px; max-width: 36rem; }
 
-.summary { margin: 22px 0 6px; color: var(--muted); }
-.summary strong { color: var(--ink); }
+.modes { display: inline-flex; gap: 18px; margin-bottom: 10px; }
+.modes button { background: none; border: 0; padding: 2px 0; color: var(--muted); font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; }
+.modes button[aria-pressed="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+
+.field { display: flex; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 4px 4px 4px 14px; gap: 10px; box-shadow: 0 1px 2px rgb(0 0 0 / 0.04); }
+.field:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.field svg { flex: none; color: var(--muted); }
+.field input { flex: 1; min-width: 0; border: 0; background: transparent; font: inherit; font-size: var(--step-1); color: var(--ink); padding: 10px 0; }
+.field input:focus { outline: none; }
+.go { flex: none; font-weight: 700; background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 10px; padding: 10px 18px; cursor: pointer; }
+.go:hover { filter: brightness(1.08); }
+
+.under { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline; margin-top: 10px; font-size: var(--step--1); color: var(--muted); min-height: 1.6em; }
+.under .ex { background: none; border: 0; padding: 0; color: var(--ink); text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 0.2em; cursor: pointer; }
+.under .ex:hover { text-decoration-color: var(--accent); }
+.hint { width: 100%; }
+.pantry { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.pantry:empty { display: none; }
+.pill { display: inline-flex; align-items: center; gap: 6px; font-size: var(--step--1); background: var(--accent-soft); border: 1px solid transparent; border-radius: 999px; padding: 3px 10px; cursor: pointer; }
+.pill:hover { border-color: var(--accent); }
+.pill .x { color: var(--muted); font-weight: 700; }
+
+/* Toolbar */
+.toolbar { margin-top: 32px; padding-bottom: 12px; border-bottom: 1px solid var(--line); display: grid; gap: 10px; }
+.toolbar .row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+.count { margin-right: auto; font-weight: 700; }
+.count span { display: block; font-weight: 400; font-size: var(--step--1); color: var(--muted); }
+.toolbar label { font-size: var(--step--1); color: var(--muted); display: inline-flex; align-items: center; gap: 6px; }
+.toolbar select { font: inherit; font-size: var(--step--1); color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 3px 6px; }
+.sources { display: flex; flex-wrap: wrap; gap: 6px; }
+.src-toggle { display: inline-flex; align-items: center; gap: 6px; font-size: var(--step--1); border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 3px 9px 3px 7px; cursor: pointer; color: var(--muted); }
+.src-toggle i { width: 9px; height: 9px; border-radius: 2px; background: var(--c); opacity: 0.35; }
+.src-toggle[aria-pressed="true"] { color: var(--ink); background: color-mix(in oklab, var(--c) var(--tint), var(--surface)); border-color: transparent; }
+.src-toggle[aria-pressed="true"] i { opacity: 1; }
+
+/* Results */
 .results { list-style: none; margin: 0; padding: 0; }
-.result { display: grid; grid-template-columns: 56px 1fr; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--line); }
-.tile {
-  width: 56px; height: 56px; border-radius: 12px; display: grid; place-items: center;
-  color: #fff; font-weight: 700; font-size: var(--step--1); letter-spacing: 0.02em;
-}
+.result { display: grid; grid-template-columns: 40px 1fr; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.tile { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; font-weight: 700; font-size: 0.8rem;
+  color: var(--c); background: color-mix(in oklab, var(--c) var(--tint), var(--surface)); }
 .result h3 { font-size: var(--step-1); font-weight: 600; }
 .result h3 a { color: var(--ink); text-decoration: none; }
-.result h3 a:hover { text-decoration: underline; }
-.meta { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: var(--step--1); color: var(--muted); margin-top: 2px; }
-.meta .src { font-weight: 600; color: var(--ink); }
-.why { font-size: var(--step--1); margin-top: 6px; }
+.result h3 a:hover { text-decoration: underline; text-decoration-color: var(--c); }
+.meta { display: flex; flex-wrap: wrap; gap: 2px 14px; font-size: var(--step--1); color: var(--muted); margin-top: 2px; }
+.meta .src { color: var(--c); font-weight: 700; }
+.ings { font-size: var(--step--1); color: var(--muted); margin-top: 6px; }
+.ings b { color: var(--ink); font-weight: 600; background: var(--mark); border-radius: 3px; padding: 0 3px; }
+.ings .need { display: block; }
 mark { background: var(--mark); color: var(--ink); border-radius: 3px; padding: 0 2px; }
-.need { color: var(--muted); }
-.badge { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; border: 1px solid currentColor; border-radius: 6px; padding: 0 5px; }
 .empty { padding: 28px 0; color: var(--muted); }
 
-.also { margin-top: 28px; background: var(--surface); border: 1px dashed var(--line); border-radius: var(--radius); padding: 16px; }
-.also h2 { font-size: var(--step-0); }
-.also p { margin: 4px 0 10px; color: var(--muted); font-size: var(--step--1); }
-.also .links { display: flex; flex-wrap: wrap; gap: 8px; }
-.also a { display: inline-flex; gap: 6px; align-items: center; border: 1px solid var(--line); border-radius: 10px; padding: 6px 12px; text-decoration: none; font-weight: 600; }
-.also a:hover { border-color: var(--accent); }
-
-.note { margin-top: 28px; font-size: var(--step--1); color: var(--muted); max-width: 42rem; }
+.also { margin-top: 28px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; font-size: var(--step--1); color: var(--muted); }
+.also strong { color: var(--ink); }
+.also a { font-weight: 600; }
+.note { margin-top: 40px; font-size: var(--step--1); color: var(--muted); max-width: 40rem; }
 
 /* How it works */
 .how h1 { font-size: var(--step-3); }
 .how h2 { font-size: var(--step-2); margin: 40px 0 12px; }
-.steps { list-style: none; padding: 0; margin: 20px 0 0; display: grid; gap: 10px; counter-reset: step; }
-.steps li { counter-increment: step; display: grid; grid-template-columns: 40px 1fr; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; }
-.steps li::before { content: counter(step); width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: var(--accent-ink); font-weight: 700; }
+.how > p { color: var(--muted); max-width: 38rem; margin: 6px 0 0; }
+.steps { list-style: none; padding: 0; margin: 24px 0 0; counter-reset: step; }
+.steps li { counter-increment: step; display: grid; grid-template-columns: 36px 1fr; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.steps li::before { content: counter(step); width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--accent-soft); color: var(--ink); font-weight: 700; font-size: var(--step--1); }
 .steps h3 { font-size: var(--step-0); }
-.steps p { margin: 4px 0 0; color: var(--muted); }
-.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.steps p { margin: 2px 0 0; color: var(--muted); }
+.tablewrap { overflow-x: auto; }
 table { border-collapse: collapse; width: 100%; font-size: var(--step--1); }
-th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
-tr:last-child td { border-bottom: 0; }
+th, td { text-align: left; padding: 10px 12px 10px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
 th { font-weight: 600; color: var(--muted); }
 td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
-.status { display: inline-block; font-weight: 700; border-radius: 999px; padding: 1px 9px; white-space: nowrap; }
-.status.ok { background: var(--accent-soft); color: var(--ink); }
-.status.api { background: var(--mark); color: var(--ink); }
+.dot { display: inline-block; width: 9px; height: 9px; border-radius: 2px; background: var(--c); margin-right: 6px; }
+.status { display: inline-block; font-weight: 600; border-radius: 6px; padding: 0 7px; white-space: nowrap; }
+.status.ok { background: var(--accent-soft); }
+.status.api { background: var(--mark); }
 .status.link { border: 1px solid var(--line); color: var(--muted); }
-.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 12px; }
-.box { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; }
-.box h3 { font-size: var(--step-0); margin-bottom: 6px; }
-.box ul { margin: 0; padding-left: 1.1em; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 8px 32px; }
+.two h3 { font-size: var(--step-0); margin-bottom: 4px; }
+.two ul { margin: 0; padding-left: 1.1em; color: var(--muted); }
 
 @media (max-width: 480px) {
-  .result { grid-template-columns: 44px 1fr; }
-  .tile { width: 44px; height: 44px; }
+  .hero h1 { font-size: var(--step-2); }
+  .go { padding: 10px 12px; }
 }
 @media (prefers-reduced-motion: no-preference) {
-  .btn, .chip, .also a { transition: border-color 160ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+  .src-toggle, .pill, .field, .modes button { transition: background-color 160ms var(--ease), border-color 160ms var(--ease), box-shadow 160ms var(--ease); }
 }
 </style>
 <script>
@@ -195,13 +196,14 @@ td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
 <header class="top">
   <div class="wrap">
     <div class="brand">
-      <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
-        <rect x="3" y="4" width="5" height="20" rx="1.5" fill="var(--src-woks)"/>
-        <rect x="9.5" y="7" width="5" height="17" rx="1.5" fill="var(--src-joc)"/>
-        <rect x="16" y="5" width="5" height="19" rx="1.5" fill="var(--src-htk)"/>
-        <rect x="21" y="9" width="5" height="15" rx="1.5" fill="var(--src-sk)" transform="rotate(8 23.5 16.5)"/>
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="2" y="4" width="4" height="19" rx="1.2" fill="var(--src-woks)"/>
+        <rect x="7" y="7" width="4" height="16" rx="1.2" fill="var(--src-joc)"/>
+        <rect x="12" y="5" width="4" height="18" rx="1.2" fill="var(--src-htk)"/>
+        <rect x="17" y="8" width="4" height="15" rx="1.2" fill="var(--src-maangchi)"/>
+        <rect x="21" y="10" width="4" height="13" rx="1.2" fill="var(--src-sk)" transform="rotate(10 23 16.5)"/>
       </svg>
-      Recipe search <span class="pill">Prototype</span>
+      Recipe search <small>prototype</small>
     </div>
     <nav class="tabs" aria-label="Views">
       <a href="#search" id="tab-search">Search</a>
@@ -231,77 +233,75 @@ td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
 
 <main class="wrap">
   <section class="view" id="view-search" aria-labelledby="search-title">
-    <h1 id="search-title" style="font-size: var(--step-2)">Search the recipe sites I trust</h1>
-    <p class="intro">One search across The Woks of Life, Just One Cookbook, Hot Thai Kitchen, Smitten Kitchen and Kenji’s YouTube videos. Every result opens on the original site.</p>
+    <div class="hero">
+      <h1 id="search-title">Search the recipe sites I trust</h1>
+      <p>Five cooks’ sites and Kenji’s videos, in one search. Every result opens on the original site.</p>
+    </div>
 
-    <form class="searchcard" id="form" role="search">
+    <form id="form" role="search">
       <div class="modes" role="group" aria-label="Search mode">
         <button type="button" id="mode-find" aria-pressed="true">Find recipes</button>
         <button type="button" id="mode-have" aria-pressed="false">Use what I have</button>
       </div>
-      <div class="qrow">
-        <label for="q" class="visually-hidden" style="position:absolute;left:-9999px">Search</label>
-        <input id="q" type="search" autocomplete="off" placeholder="Search a dish or ingredient" value="scallions">
-        <button class="btn" type="submit" id="go">Search</button>
+      <div class="field">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5 20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <label for="q" class="sr-only">Search</label>
+        <input id="q" type="search" autocomplete="off" placeholder="A dish or an ingredient" value="scallions">
+        <button class="go" type="submit" id="go">Search</button>
       </div>
-      <div class="have-chips" id="have-chips" aria-label="Ingredients you have"></div>
-      <div class="try" id="try"></div>
-      <div class="filters">
-        <div class="group" role="group" aria-label="Sources">
-          <span class="lab">Sources</span>
-          <span id="src-chips"></span>
-        </div>
-        <div class="group">
-          <label class="lab" for="time">Total time</label>
+      <div class="pantry" id="pantry" aria-label="Ingredients you have"></div>
+      <div class="under" id="under"></div>
+    </form>
+
+    <div class="toolbar">
+      <div class="row">
+        <p class="count" id="count" aria-live="polite"></p>
+        <label for="time">Time
           <select id="time">
             <option value="">Any</option>
             <option value="20">20 min or less</option>
             <option value="30">30 min or less</option>
             <option value="60">1 hour or less</option>
           </select>
-        </div>
-        <div class="group">
-          <label class="lab" for="cuisine">Cuisine</label>
+        </label>
+        <label for="cuisine">Cuisine
           <select id="cuisine"><option value="">Any</option></select>
-        </div>
+        </label>
       </div>
-    </form>
+      <div class="sources" id="sources" role="group" aria-label="Sources"></div>
+    </div>
 
-    <p class="summary" id="summary" aria-live="polite"></p>
     <ul class="results" id="results"></ul>
 
-    <aside class="also" aria-labelledby="also-title">
-      <h2 id="also-title">Also search</h2>
-      <p>Sites we don’t index. These links run the same words through each site’s own search.</p>
-      <div class="links" id="also-links"></div>
-    </aside>
+    <p class="also" id="also"></p>
 
-    <p class="note">Prototype with real sample data, pulled November 1, 2026: <span id="counts"></span>. The full index would hold about 4,000 to 5,000 recipes plus Kenji’s whole channel. Photos are left out here: this page can’t load images from other sites, and whether to show them is still an open question.</p>
+    <p class="note">Prototype with real sample data, pulled November 1, 2026: <span id="counts"></span>. The full index would hold about 4,500 to 5,500 recipes plus Kenji’s whole channel. No photos here: this page can’t load images from other sites, and whether to show them is still open.</p>
   </section>
 
   <section class="view how" id="view-how" aria-labelledby="how-title" hidden>
     <h1 id="how-title">How it works</h1>
-    <p class="intro">No Google. A weekly job builds our own small index from sites that allow it, and search runs right in the browser. It costs nothing to run.</p>
+    <p>No Google. A weekly job builds our own small index from sites that allow it, and search runs in your browser. It costs nothing to run.</p>
 
     <ol class="steps">
-      <li><div><h3>A list of sources, kept in the repo</h3><p>Four recipe sites, Kenji’s YouTube channel, and the “Also search” links for sites we don’t index.</p></div></li>
-      <li><div><h3>A polite weekly crawl</h3><p>Checks each site’s robots.txt, reads its sitemap, and only fetches recipes that are new or changed. One request at a time, a few seconds apart, with a clear name and contact page.</p></div></li>
+      <li><div><h3>A list of sources, kept in the repo</h3><p>Five recipe sites, Kenji’s YouTube channel, and links for sites we don’t index.</p></div></li>
+      <li><div><h3>A polite weekly crawl</h3><p>Checks each site’s robots.txt, reads its sitemap, and fetches only recipes that are new or changed. One request at a time, a few seconds apart, with a clear name and contact page.</p></div></li>
       <li><div><h3>Kenji’s videos through the YouTube API</h3><p>The official, free API lists every upload. Refreshed each week, well inside YouTube’s 30-day rule, and always labeled as YouTube.</p></div></li>
       <li><div><h3>Ingredients matched with KitchenCatalog</h3><p>“Scallions”, “green onions” and “spring onion” all become green onion, so one search finds them all, and “Use what I have” can compare recipes to your pantry.</p></div></li>
-      <li><div><h3>A static index on each deploy</h3><p>The data files become a search index the browser downloads in small pieces. No server, no database to run.</p></div></li>
+      <li><div><h3>A static index on each deploy</h3><p>The data becomes a search index your browser loads in small pieces. No server, no database.</p></div></li>
       <li><div><h3>Search, then link out</h3><p>Results show only what you need to choose. The recipe itself is always on the original site.</p></div></li>
     </ol>
 
     <h2>Sources</h2>
     <div class="tablewrap">
       <table>
-        <thead><tr><th scope="col">Source</th><th scope="col">How</th><th scope="col">Recipe data</th><th scope="col">Rough size</th></tr></thead>
+        <thead><tr><th scope="col">Source</th><th scope="col">How</th><th scope="col">Recipe data</th><th scope="col">Size</th></tr></thead>
         <tbody>
-          <tr><td><span class="dot" style="background:var(--src-woks)"></span> The Woks of Life</td><td><span class="status ok">Crawled</span></td><td>Full structured recipe data</td><td class="num">~1,600</td></tr>
-          <tr><td><span class="dot" style="background:var(--src-joc)"></span> Just One Cookbook</td><td><span class="status ok">Crawled</span></td><td>Full structured recipe data</td><td class="num">1,000 to 2,000</td></tr>
-          <tr><td><span class="dot" style="background:var(--src-htk)"></span> Hot Thai Kitchen</td><td><span class="status ok">Crawled</span></td><td>Structured data; times often missing</td><td class="num">~470</td></tr>
-          <tr><td><span class="dot" style="background:var(--src-sk)"></span> Smitten Kitchen</td><td><span class="status ok">Crawled</span></td><td>Older format: ingredients, time, yield</td><td class="num">1,000+</td></tr>
-          <tr><td><span class="dot" style="background:var(--src-kenji)"></span> Kenji on YouTube</td><td><span class="status api">YouTube API</span></td><td>Titles and descriptions only</td><td class="num">Whole channel</td></tr>
+          <tr><td><span class="dot" style="--c:var(--src-woks)"></span>The Woks of Life</td><td><span class="status ok">Crawled</span></td><td>Full structured recipe data</td><td class="num">~1,600</td></tr>
+          <tr><td><span class="dot" style="--c:var(--src-joc)"></span>Just One Cookbook</td><td><span class="status ok">Crawled</span></td><td>Full structured recipe data</td><td class="num">1,000 to 2,000</td></tr>
+          <tr><td><span class="dot" style="--c:var(--src-htk)"></span>Hot Thai Kitchen</td><td><span class="status ok">Crawled</span></td><td>Structured data; times often missing</td><td class="num">~470</td></tr>
+          <tr><td><span class="dot" style="--c:var(--src-sk)"></span>Smitten Kitchen</td><td><span class="status ok">Crawled</span></td><td>Older format: ingredients, time, yield</td><td class="num">1,000+</td></tr>
+          <tr><td><span class="dot" style="--c:var(--src-maangchi)"></span>Maangchi</td><td><span class="status ok">Crawled</span></td><td>Structured data; older recipes have no ingredient list, so they match by title</td><td class="num">451</td></tr>
+          <tr><td><span class="dot" style="--c:var(--src-kenji)"></span>Kenji on YouTube</td><td><span class="status api">YouTube API</span></td><td>Titles and descriptions only</td><td class="num">Whole channel</td></tr>
           <tr><td>Serious Eats</td><td><span class="status link">Link only</span></td><td>Owner doesn’t allow automated collection</td><td class="num">n/a</td></tr>
         </tbody>
       </table>
@@ -309,8 +309,8 @@ td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
 
     <h2>What we keep</h2>
     <div class="two">
-      <div class="box"><h3>Kept</h3><ul><li>Title and link</li><li>Ingredient names</li><li>Total time, cuisine, course</li><li>Photo link (if we show photos)</li></ul></div>
-      <div class="box"><h3>Never kept</h3><ul><li>The method or steps</li><li>Headnotes and stories</li><li>Comments or ratings text</li><li>Anything from sites that say no</li></ul></div>
+      <div><h3>Kept</h3><ul><li>Title and link</li><li>Ingredient names</li><li>Total time, cuisine, course</li><li>Photo link, if we show photos</li></ul></div>
+      <div><h3>Never kept</h3><ul><li>The method or steps</li><li>Headnotes and stories</li><li>Comments or ratings text</li><li>Anything from sites that say no</li></ul></div>
     </div>
 
     <h2>Cost</h2>
@@ -328,18 +328,20 @@ td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
 </main>
 
 <script>
-const ITEMS = [{"type": "recipe", "src": "woks", "title": "Vegan Mapo Tofu", "url": "https://thewoksoflife.com/vegan-mapo-tofu/", "min": 30, "cuisine": "Chinese", "course": "Tofu", "ing": ["vegetable oil", "sichuan peppercorns", "ginger", "garlic", "fermented black beans", "thai bird chilies", "shiitake mushrooms", "spicy bean sauce", "chili oil", "water", "cornstarch", "silken tofu", "sesame oil", "sugar", "scallion"], "ci": ["ginger", "garlic", "thai chili", "mushrooms", "chili oil", "cornstarch", "tofu", "sesame oil", "sugar", "green onion"]}, {"type": "recipe", "src": "woks", "title": "Pineapple Fried Rice", "url": "https://thewoksoflife.com/pineapple-fried-rice/", "min": 60, "cuisine": "Thai", "course": "Rice", "ing": ["shrimp", "onion", "carrot", "ham", "cooked rice", "peas", "pineapple", "scallion", "eggs", "salt", "shaoxing wine", "vegetable oil", "fish sauce", "light soy sauce", "ground white pepper", "sesame oil"], "ci": ["shrimp", "onion", "carrot", "pork", "rice", "peas", "pineapple", "green onion", "egg", "shaoxing wine", "fish sauce", "soy sauce", "sesame oil"]}, {"type": "recipe", "src": "woks", "title": "Bacon & Scallion Egg Noodle Stir-fry", "url": "https://thewoksoflife.com/bacon-scallion-egg-noodle-stir-fry/", "min": 25, "cuisine": "Chinese", "course": "Noodles and Pasta", "ing": ["soy sauce", "dark soy sauce", "sesame oil", "sugar", "shaoxing wine", "ground white pepper", "oil", "bacon", "scallions"], "ci": ["soy sauce", "sesame oil", "sugar", "shaoxing wine", "pork", "green onion"]}, {"type": "recipe", "src": "woks", "title": "Steamed Chinese Eggplant with Spicy Lao Gan Ma", "url": "https://thewoksoflife.com/steamed-chinese-eggplant-spicy/", "min": 25, "cuisine": "Chinese", "course": "Appetizer", "ing": ["japanese or chinese eggplant", "white vinegar", "chinese black vinegar", "light soy sauce", "oyster sauce", "sugar", "sesame oil", "lao gan ma chili sauce", "garlic", "scallion", "vegetable oil"], "ci": ["eggplant", "vinegar", "soy sauce", "oyster sauce", "sugar", "sesame oil", "chili oil", "garlic", "green onion"]}, {"type": "recipe", "src": "woks", "title": "Chicken Larb", "url": "https://thewoksoflife.com/chicken-larb/", "min": 30, "cuisine": "Southeast Asian", "course": "Chicken", "ing": ["uncooked jasmine rice", "vegetable oil", "shallots", "ground chicken", "sugar", "fish sauce", "limes", "thai bird chilies", "scallions", "cilantro", "mint", "salt", "butter"], "ci": ["rice", "shallot", "chicken", "sugar", "fish sauce", "lime", "thai chili", "green onion", "cilantro", "mint", "butter"]}, {"type": "recipe", "src": "woks", "title": "Yunnan Rice Noodle Soup (云南小锅米线)", "url": "https://thewoksoflife.com/yunnan-rice-noodle-soup/", "min": 75, "cuisine": "Chinese", "course": "Noodle Soup", "ing": ["ground pork", "shaoxing wine", "dark soy sauce", "light soy sauce", "water", "rice noodles", "oil", "ginger", "garlic", "dried red chilies", "chicken/pork stock or chicken stock", "sugar", "bean sprouts", "pea tips", "garlic chives", "salt", "pickled sour cabbage", "cilantro", "scallion"], "ci": ["pork", "shaoxing wine", "soy sauce", "noodles", "ginger", "garlic", "chicken", "sugar", "bean sprouts", "garlic chives", "cabbage", "cilantro", "green onion"]}, {"type": "recipe", "src": "joc", "title": "Easy Miso Soup", "url": "https://www.justonecookbook.com/10-minute-meal-easy-miso-soup/", "min": 10, "cuisine": "Japanese", "course": "Soup", "ing": ["water", "dashi packet", "green onion/scallion", "miso", "dried wakame seaweed", "soft/silken tofu"], "ci": ["dashi", "green onion", "miso", "wakame", "tofu"]}, {"type": "recipe", "src": "joc", "title": "Shoyu Ramen (from Bizentei, Tokyo)", "url": "https://www.justonecookbook.com/shoyu-ramen/", "min": 390, "cuisine": "Japanese", "course": "Main Dish", "ing": ["water", "pork leg bones", "yellow onion", "garlic", "fresh ginger", "pork belly block", "rendered chicken fat", "tokyo negi", "reserved soup broth", "soy sauce", "sake", "mirin", "diamond crystal kosher salt", "green onions/scallions", "fresh ramen noodles", "menma", "nori seaweed"], "ci": ["pork", "onion", "garlic", "ginger", "chicken", "soy sauce", "sake", "mirin", "green onion", "noodles", "wakame"]}, {"type": "recipe", "src": "joc", "title": "Easy Oyakodon", "url": "https://www.justonecookbook.com/10-minute-meal-oyakodon/", "min": 15, "cuisine": "Japanese", "course": "Main Dish", "ing": ["yellow onion", "green onion/scallion", "boneless chicken thigh", "eggs", "water", "dashi powder", "soy sauce", "mirin", "sugar", "cooked japanese short-grain rice", "shichimi togarashi"], "ci": ["onion", "green onion", "chicken", "egg", "dashi", "soy sauce", "mirin", "sugar", "rice"]}, {"type": "recipe", "src": "joc", "title": "Napa Cabbage Gyoza with Miso Dipping Sauce", "url": "https://www.justonecookbook.com/napa-cabbage-gyoza/", "min": 90, "cuisine": "Japanese", "course": "Main Dish", "ing": ["napa cabbage", "diamond crystal kosher salt", "ground pork", "garlic chives", "green onions/scallions", "ginger", "garlic", "sake", "miso", "soy sauce", "potato starch or cornstarch", "toasted sesame oil", "ground black pepper", "gyoza wrappers", "neutral oil", "water", "rice vinegar", "sugar", "la-yu"], "ci": ["cabbage", "pork", "garlic chives", "green onion", "ginger", "garlic", "sake", "miso", "soy sauce", "cornstarch", "sesame oil", "rice vinegar", "sugar", "chili oil"]}, {"type": "recipe", "src": "joc", "title": "Agedashi Tofu", "url": "https://www.justonecookbook.com/agedashi-tofu-2/", "min": 30, "cuisine": "Japanese", "course": "Appetizer", "ing": ["firm tofu", "green onions/scallions", "daikon radish", "ginger", "dashi", "soy sauce", "mirin", "neutral oil", "potato starch or cornstarch", "katsuobushi", "shichimi togarashi"], "ci": ["tofu", "green onion", "daikon", "ginger", "dashi", "soy sauce", "mirin", "cornstarch"]}, {"type": "recipe", "src": "htk", "title": "Green Curry Fried Rice ข้าวผัดแกงเขียวหวาน (kao pad gaeng keow waan)", "url": "https://hot-thai-kitchen.com/green-curry-fried-rice/", "min": null, "cuisine": "Thai", "course": "", "ing": ["chicken", "soy sauce or fish sauce", "vegetable oil", "green curry paste", "coconut milk", "fish sauce", "sugar", "veggies of your choice", "kaffir lime leaves", "cooked white rice", "thai basil"], "ci": ["chicken", "fish sauce", "curry paste", "coconut milk", "sugar", "lime", "rice", "basil"]}, {"type": "recipe", "src": "htk", "title": "Dry Tom Yum Seafood ต้มยำทะเลแห้ง", "url": "https://hot-thai-kitchen.com/dry-tom-yum-seafood/", "min": null, "cuisine": "Thai", "course": "", "ing": ["mixed seafood of your choice", "lemongrass", "galangal", "kaffir lime leaves", "shallot", "thai chilies", "water or stock", "fish sauce", "palm sugar", "shimeji", "cherry tomato halves", "lime juice", "cilantro"], "ci": ["seafood", "lemongrass", "galangal", "lime", "shallot", "thai chili", "fish sauce", "sugar", "mushrooms", "tomato", "cilantro"]}, {"type": "recipe", "src": "htk", "title": "Thai Holy Basil Stir Fry with Beef (Pad Kra Pao)", "url": "https://hot-thai-kitchen.com/pad-kra-pao-beef/", "min": null, "cuisine": "Thai", "course": "Main Course", "ing": ["garlic", "thai chilies", "mild red chilies", "vegetable oil", "ground beef", "fish sauce", "granulated sugar", "unsalted beef or chicken stock", "ground black pepper", "holy basil or regular basil leaves", "cooked jasmine rice", "eggs", "lime juice"], "ci": ["garlic", "thai chili", "beef", "fish sauce", "sugar", "chicken", "basil", "rice", "egg", "lime"]}, {"type": "recipe", "src": "htk", "title": "Garlic Fried Rice ข้าวผัดกระเทียม", "url": "https://hot-thai-kitchen.com/garlic-fried-rice/", "min": null, "cuisine": "Thai", "course": "", "ing": ["neutral cooking oil", "garlic", "butter", "ground black pepper", "cooked short grain japanese rice", "japanese soy sauce", "salt", "dashi powder", "eggs", "green onions", "crushed seaweed"], "ci": ["garlic", "butter", "rice", "soy sauce", "dashi", "egg", "green onion", "wakame"]}, {"type": "recipe", "src": "htk", "title": "Chilled Tofu & Herb Salad ยำเต้าหู้เย็น (yum tao hu yen)", "url": "https://hot-thai-kitchen.com/chilled-tofu-salad/", "min": null, "cuisine": "Thai", "course": "", "ing": ["soft tofu", "soy sauce", "lime juice", "palm sugar", "thai chilies", "diced shallots", "lemongrass", "chopped green onion", "cilantro", "mint leaves", "diced cucumber", "red bell pepper", "black sesame seeds"], "ci": ["tofu", "soy sauce", "lime", "sugar", "thai chili", "shallot", "lemongrass", "green onion", "cilantro", "mint", "cucumber"]}, {"type": "recipe", "src": "htk", "title": "Roasted Eggplant with Garlicky Shrimp", "url": "https://hot-thai-kitchen.com/ingredient-challenge-eggplant/", "min": null, "cuisine": "Thai", "course": "Main Course", "ing": ["japanese eggplant", "salt", "garlic", "thai chili", "thai shrimp paste in oil", "shrimp", "fish sauce", "sugar", "cherry tomatoes", "cilantro", "jasmine rice"], "ci": ["eggplant", "garlic", "thai chili", "shrimp", "fish sauce", "sugar", "tomato", "cilantro", "rice"]}, {"type": "recipe", "src": "sk", "title": "Skillet Pierogi with Mushrooms", "url": "https://smittenkitchen.com/2026/10/skillet-pierogi-with-mushrooms/", "min": 20, "cuisine": "", "course": "", "ing": ["butter", "olive oil", "onion", "kosher salt", "black pepper", "garlic", "sliced mushrooms", "frozen potato pierogi", "water", "white vinegar", "sour cream", "herbs"], "ci": ["butter", "onion", "garlic", "mushrooms", "vinegar", "sour cream"]}, {"type": "recipe", "src": "sk", "title": "Simple Chicken Tacos", "url": "https://smittenkitchen.com/2026/09/simple-chicken-tacos/", "min": 30, "cuisine": "", "course": "", "ing": ["flour tortillas", "red onion", "red wine vinegar", "kosher salt", "granulated sugar", "avocado", "red cabbage", "cilantro", "hot sauce", "ground cumin", "chili or chipotle powder", "paprika", "black pepper", "boneless chicken thighs"], "ci": ["tortillas", "onion", "vinegar", "sugar", "avocado", "cabbage", "cilantro", "cumin", "chicken"]}, {"type": "recipe", "src": "sk", "title": "Tomato Sauce with Butter and Onions", "url": "https://smittenkitchen.com/2010/01/tomato-sauce-with-butter-and-onions/", "min": 50, "cuisine": "", "course": "", "ing": ["peeled tomatoes", "unsalted butter", "yellow onion", "salt", "spaghetti"], "ci": ["tomato", "butter", "onion", "pasta"]}, {"type": "recipe", "src": "sk", "title": "Everyday Meatballs", "url": "https://smittenkitchen.com/2016/02/everyday-meatballs/", "min": 45, "cuisine": "", "course": "", "ing": ["ground meat", "bread crumbs or panko", "milk or water", "parsley", "parmesan or romano cheese", "kosher salt", "red pepper flakes", "onion powder", "eggs", "garlic", "olive oil", "tomato puree or crushed tomatoes"], "ci": ["parsley", "parmesan", "red pepper flakes", "onion", "egg", "garlic", "tomato"]}, {"type": "recipe", "src": "sk", "title": "New York Crumb Cake", "url": "https://smittenkitchen.com/2024/04/new-york-crumb-cake/", "min": 60, "cuisine": "", "course": "", "ing": ["unsalted butter", "dark brown sugar", "granulated sugar", "ground cinnamon", "kosher salt", "all-purpose flour", "egg", "sour cream", "water or milk", "vanilla extract", "baking powder", "powdered sugar"], "ci": ["butter", "sugar", "cinnamon", "flour", "egg", "sour cream"]}, {"type": "recipe", "src": "sk", "title": "Tomato Risotto with Frizzled Red Onions", "url": "https://smittenkitchen.com/2026/09/tomato-risotto-with-frizzled-red-onions/", "min": 50, "cuisine": "", "course": "", "ing": ["red onion", "olive oil", "garlic", "dry white wine", "arborio or carnaroli rice", "kosher salt", "black pepper", "red pepper flakes", "water", "butter or olive oil", "grated parmesan cheese", "basil leaves"], "ci": ["onion", "garlic", "rice", "red pepper flakes", "butter", "parmesan", "basil"]}, {"type": "recipe", "src": "sk", "title": "Peach Cobbler Loaf", "url": "https://smittenkitchen.com/2026/08/peach-cobbler-loaf/", "min": 90, "cuisine": "", "course": "", "ing": ["peaches", "lemon", "ground cinnamon", "light brown sugar", "unsalted butter", "granulated sugar", "greek-style yogurt", "eggs", "baking powder", "baking soda", "kosher salt", "all-purpose flour"], "ci": ["peaches", "lemon", "cinnamon", "sugar", "butter", "yogurt", "egg", "flour"]}, {"type": "recipe", "src": "sk", "title": "Cucumber Salad with Sesame and Rice Vinegar", "url": "https://smittenkitchen.com/2026/08/cucumber-salad-with-sesame-and-rice-vinegar/", "min": 15, "cuisine": "", "course": "", "ing": ["persian-style cucumbers", "kosher salt", "unseasoned rice vinegar", "toasted sesame oil", "soy sauce", "black or white pepper", "chili oil or chili crisp", "toasted sesame seeds"], "ci": ["cucumber", "rice vinegar", "sesame oil", "soy sauce", "chili oil"]}, {"type": "recipe", "src": "sk", "title": "Spaghetti Aglio e Olio", "url": "https://smittenkitchen.com/2026/07/spaghetti-aglio-e-olio/", "min": 20, "cuisine": "", "course": "", "ing": ["kosher salt", "dried spaghetti", "olive oil", "garlic", "red pepper flakes", "flat-leaf parsley"], "ci": ["pasta", "garlic", "red pepper flakes", "parsley"]}, {"type": "video", "src": "kenji", "title": "Introducing Cooking on the River", "url": "https://www.youtube.com/watch?v=yTohZC8TEHw", "date": "2026-11-01", "min": null, "cuisine": "", "course": "", "ing": [], "ci": []}, {"type": "video", "src": "kenji", "title": "It's a BADOP! drop. It's a BADROP!", "url": "https://www.youtube.com/watch?v=WQJBqvy1rR4", "date": "2026-10-31", "min": null, "cuisine": "", "course": "", "ing": [], "ci": []}, {"type": "video", "src": "kenji", "title": "Braised Kabocha Squash Season!", "url": "https://www.youtube.com/watch?v=s6liqS8PTF8", "date": "2026-10-30", "min": null, "cuisine": "", "course": "", "ing": [], "ci": ["kabocha squash"]}, {"type": "video", "src": "kenji", "title": "Cooking on the River: Episode 1 | Our Trip to the Moab Music Festival", "url": "https://www.youtube.com/watch?v=-HMSKdle3vk", "date": "2026-10-29", "min": null, "cuisine": "", "course": "", "ing": [], "ci": []}, {"type": "video", "src": "kenji", "title": "BADOP! Gochujang Michelada", "url": "https://www.youtube.com/watch?v=FyN1oIOMgSE", "date": "2026-10-27", "min": null, "cuisine": "", "course": "", "ing": [], "ci": ["gochujang"]}, {"type": "video", "src": "kenji", "title": "Simple Simmered Kabocha Squash", "url": "https://www.youtube.com/watch?v=ntLj5ecaQKs", "date": "2026-10-21", "min": null, "cuisine": "", "course": "", "ing": [], "ci": ["kabocha squash"]}, {"type": "video", "src": "kenji", "title": "It's Chanterelle Season!", "url": "https://www.youtube.com/watch?v=ImyGKjKC9yc", "date": "2026-10-19", "min": null, "cuisine": "", "course": "", "ing": [], "ci": ["mushrooms"]}, {"type": "video", "src": "kenji", "title": "That Maillard Reaction Tho", "url": "https://www.youtube.com/watch?v=YvlINdshm6Q", "date": "2026-10-16", "min": null, "cuisine": "", "course": "", "ing": [], "ci": []}, {"type": "video", "src": "kenji", "title": "Our Place x Kenji Titanium Braiser Pro", "url": "https://www.youtube.com/watch?v=Qg8uaWa06jU", "date": "2026-10-15", "min": null, "cuisine": "", "course": "", "ing": [], "ci": []}, {"type": "video", "src": "kenji", "title": "Crispy Braised Chicken with White Beans and Spinach", "url": "https://www.youtube.com/watch?v=jGqdsQkmgQI", "date": "2026-10-14", "min": null, "cuisine": "", "course": "", "ing": [], "ci": ["white beans"]}, {"type": "video", "src": "kenji", "title": "Easy Weeknight Chanterelle Pasta", "url": "https://www.youtube.com/watch?v=Q4pKa9FrNTY", "date": "2026-10-13", "min": null, "cuisine": "", "course": "", "ing": [], "ci": ["mushrooms"]}, {"type": "video", "src": "kenji", "title": "Don't Buy Chives from JojaMart", "url": "https://www.youtube.com/watch?v=098pnRGj6F4", "date": "2026-10-12", "min": null, "cuisine": "", "course": "", "ing": [], "ci": ["chives"]}, {"type": "video", "src": "kenji", "title": "Here's What I Add to My Instant Ramen!", "url": "https://www.youtube.com/watch?v=az8YbBkoKeU", "date": "2026-10-11", "min": null, "cuisine": "", "course": "", "ing": [], "ci": ["noodles"]}, {"type": "video", "src": "kenji", "title": "Taste-Tester-In-Residence Ruby", "url": "https://www.youtube.com/watch?v=Dvhn3XMmvFk", "date": "2026-10-10", "min": null, "cuisine": "", "course": "", "ing": [], "ci": []}];
-const CATALOG = {"green onion": ["scallion", "scallions", "green onions", "spring onion", "spring onions"], "garlic chives": ["chinese chives"], "chives": [], "cilantro": ["coriander leaves", "fresh coriander"], "eggplant": ["aubergine", "japanese eggplant", "chinese eggplant"], "thai chili": ["thai chilies", "bird chilies", "thai bird chilies", "thai chili"], "red pepper flakes": ["chili flakes", "crushed red pepper"], "tofu": ["silken tofu", "soft tofu", "firm tofu", "soft/silken tofu"], "rice": ["cooked rice", "jasmine rice", "white rice", "short-grain rice", "short grain japanese rice", "arborio", "carnaroli"], "garlic": ["garlic cloves"], "ginger": [], "galangal": [], "lemongrass": [], "soy sauce": ["light soy sauce", "dark soy sauce", "japanese soy sauce", "shoyu"], "fish sauce": [], "oyster sauce": [], "sesame oil": ["toasted sesame oil"], "chili oil": ["chili crisp", "la-yu", "lao gan ma"], "chicken": ["ground chicken", "chicken thigh", "chicken thighs", "boneless chicken"], "pork": ["ground pork", "pork belly", "pork leg bones", "bacon", "ham"], "beef": ["ground beef"], "shrimp": ["prawns"], "seafood": ["mixed seafood"], "egg": ["eggs"], "mushrooms": ["shiitake", "shimeji", "chanterelle", "chanterelles", "sliced mushrooms"], "kabocha squash": ["kabocha"], "miso": [], "dashi": ["dashi packet", "dashi powder"], "basil": ["thai basil", "holy basil", "basil leaves"], "mint": ["mint leaves"], "parsley": ["flat-leaf parsley"], "lime": ["limes", "lime juice", "kaffir lime leaves"], "lemon": [], "shallot": ["shallots"], "cabbage": ["napa cabbage", "red cabbage", "pickled sour cabbage"], "cucumber": ["cucumbers", "persian-style cucumbers"], "tomato": ["tomatoes", "cherry tomatoes", "peeled tomatoes", "crushed tomatoes", "tomato puree"], "onion": ["yellow onion", "red onion", "onions"], "butter": ["unsalted butter"], "parmesan": ["parmesan cheese", "romano"], "sour cream": [], "yogurt": ["greek-style yogurt"], "pasta": ["spaghetti", "dried spaghetti"], "noodles": ["rice noodles", "ramen noodles", "egg noodles", "instant ramen"], "coconut milk": [], "curry paste": ["green curry paste"], "cornstarch": ["potato starch"], "mirin": [], "sake": [], "shaoxing wine": [], "rice vinegar": ["unseasoned rice vinegar"], "vinegar": ["white vinegar", "red wine vinegar", "black vinegar"], "peas": [], "carrot": ["carrots"], "pineapple": [], "avocado": [], "peaches": ["peach"], "tortillas": ["flour tortillas"], "white beans": [], "spinach": [], "cumin": ["ground cumin"], "cinnamon": ["ground cinnamon"], "flour": ["all-purpose flour"], "sugar": ["granulated sugar", "brown sugar", "palm sugar", "powdered sugar"], "daikon": ["daikon radish"], "wakame": ["seaweed", "nori"], "bean sprouts": [], "gochujang": []};
+const ITEMS = [{"type": "recipe", "src": "woks", "title": "Vegan Mapo Tofu", "url": "https://thewoksoflife.com/vegan-mapo-tofu/", "min": 30, "cuisine": "Chinese", "course": "Tofu", "ing": ["vegetable oil", "sichuan peppercorns", "ginger", "garlic", "fermented black beans", "thai bird chilies", "shiitake mushrooms", "spicy bean sauce", "chili oil", "water", "cornstarch", "silken tofu", "sesame oil", "sugar", "scallion"], "ci": ["ginger", "garlic", "thai chili", "mushrooms", "chili oil", "cornstarch", "tofu", "sesame oil", "sugar", "green onion"]}, {"type": "recipe", "src": "woks", "title": "Pineapple Fried Rice", "url": "https://thewoksoflife.com/pineapple-fried-rice/", "min": 60, "cuisine": "Thai", "course": "Rice", "ing": ["shrimp", "onion", "carrot", "ham", "cooked rice", "peas", "pineapple", "scallion", "eggs", "salt", "shaoxing wine", "vegetable oil", "fish sauce", "light soy sauce", "ground white pepper", "sesame oil"], "ci": ["shrimp", "onion", "carrot", "pork", "rice", "peas", "pineapple", "green onion", "egg", "shaoxing wine", "fish sauce", "soy sauce", "sesame oil"]}, {"type": "recipe", "src": "woks", "title": "Bacon & Scallion Egg Noodle Stir-fry", "url": "https://thewoksoflife.com/bacon-scallion-egg-noodle-stir-fry/", "min": 25, "cuisine": "Chinese", "course": "Noodles and Pasta", "ing": ["soy sauce", "dark soy sauce", "sesame oil", "sugar", "shaoxing wine", "ground white pepper", "oil", "bacon", "scallions"], "ci": ["soy sauce", "sesame oil", "sugar", "shaoxing wine", "pork", "green onion"]}, {"type": "recipe", "src": "woks", "title": "Steamed Chinese Eggplant with Spicy Lao Gan Ma", "url": "https://thewoksoflife.com/steamed-chinese-eggplant-spicy/", "min": 25, "cuisine": "Chinese", "course": "Appetizer", "ing": ["japanese or chinese eggplant", "white vinegar", "chinese black vinegar", "light soy sauce", "oyster sauce", "sugar", "sesame oil", "lao gan ma chili sauce", "garlic", "scallion", "vegetable oil"], "ci": ["eggplant", "vinegar", "soy sauce", "oyster sauce", "sugar", "sesame oil", "chili oil", "garlic", "green onion"]}, {"type": "recipe", "src": "woks", "title": "Chicken Larb", "url": "https://thewoksoflife.com/chicken-larb/", "min": 30, "cuisine": "Southeast Asian", "course": "Chicken", "ing": ["uncooked jasmine rice", "vegetable oil", "shallots", "ground chicken", "sugar", "fish sauce", "limes", "thai bird chilies", "scallions", "cilantro", "mint", "salt", "butter"], "ci": ["rice", "shallot", "chicken", "sugar", "fish sauce", "lime", "thai chili", "green onion", "cilantro", "mint", "butter"]}, {"type": "recipe", "src": "woks", "title": "Yunnan Rice Noodle Soup (云南小锅米线)", "url": "https://thewoksoflife.com/yunnan-rice-noodle-soup/", "min": 75, "cuisine": "Chinese", "course": "Noodle Soup", "ing": ["ground pork", "shaoxing wine", "dark soy sauce", "light soy sauce", "water", "rice noodles", "oil", "ginger", "garlic", "dried red chilies", "chicken/pork stock or chicken stock", "sugar", "bean sprouts", "pea tips", "garlic chives", "salt", "pickled sour cabbage", "cilantro", "scallion"], "ci": ["pork", "shaoxing wine", "soy sauce", "noodles", "ginger", "garlic", "chicken", "sugar", "bean sprouts", "garlic chives", "cabbage", "cilantro", "green onion"]}, {"type": "recipe", "src": "joc", "title": "Easy Miso Soup", "url": "https://www.justonecookbook.com/10-minute-meal-easy-miso-soup/", "min": 10, "cuisine": "Japanese", "course": "Soup", "ing": ["water", "dashi packet", "green onion/scallion", "miso", "dried wakame seaweed", "soft/silken tofu"], "ci": ["dashi", "green onion", "miso", "wakame", "tofu"]}, {"type": "recipe", "src": "joc", "title": "Shoyu Ramen (from Bizentei, Tokyo)", "url": "https://www.justonecookbook.com/shoyu-ramen/", "min": 390, "cuisine": "Japanese", "course": "Main Dish", "ing": ["water", "pork leg bones", "yellow onion", "garlic", "fresh ginger", "pork belly block", "rendered chicken fat", "tokyo negi", "reserved soup broth", "soy sauce", "sake", "mirin", "diamond crystal kosher salt", "green onions/scallions", "fresh ramen noodles", "menma", "nori seaweed"], "ci": ["pork", "onion", "garlic", "ginger", "chicken", "soy sauce", "sake", "mirin", "green onion", "noodles", "wakame"]}, {"type": "recipe", "src": "joc", "title": "Easy Oyakodon", "url": "https://www.justonecookbook.com/10-minute-meal-oyakodon/", "min": 15, "cuisine": "Japanese", "course": "Main Dish", "ing": ["yellow onion", "green onion/scallion", "boneless chicken thigh", "eggs", "water", "dashi powder", "soy sauce", "mirin", "sugar", "cooked japanese short-grain rice", "shichimi togarashi"], "ci": ["onion", "green onion", "chicken", "egg", "dashi", "soy sauce", "mirin", "sugar", "rice"]}, {"type": "recipe", "src": "joc", "title": "Napa Cabbage Gyoza with Miso Dipping Sauce", "url": "https://www.justonecookbook.com/napa-cabbage-gyoza/", "min": 90, "cuisine": "Japanese", "course": "Main Dish", "ing": ["napa cabbage", "diamond crystal kosher salt", "ground pork", "garlic chives", "green onions/scallions", "ginger", "garlic", "sake", "miso", "soy sauce", "potato starch or cornstarch", "toasted sesame oil", "ground black pepper", "gyoza wrappers", "neutral oil", "water", "rice vinegar", "sugar", "la-yu"], "ci": ["cabbage", "pork", "garlic chives", "green onion", "ginger", "garlic", "sake", "miso", "soy sauce", "cornstarch", "sesame oil", "rice vinegar", "sugar", "chili oil"]}, {"type": "recipe", "src": "joc", "title": "Agedashi Tofu", "url": "https://www.justonecookbook.com/agedashi-tofu-2/", "min": 30, "cuisine": "Japanese", "course": "Appetizer", "ing": ["firm tofu", "green onions/scallions", "daikon radish", "ginger", "dashi", "soy sauce", "mirin", "neutral oil", "potato starch or cornstarch", "katsuobushi", "shichimi togarashi"], "ci": ["tofu", "green onion", "daikon", "ginger", "dashi", "soy sauce", "mirin", "cornstarch"]}, {"type": "recipe", "src": "htk", "title": "Green Curry Fried Rice ข้าวผัดแกงเขียวหวาน (kao pad gaeng keow waan)", "url": "https://hot-thai-kitchen.com/green-curry-fried-rice/", "min": null, "cuisine": "Thai", "course": "", "ing": ["chicken", "soy sauce or fish sauce", "vegetable oil", "green curry paste", "coconut milk", "fish sauce", "sugar", "veggies of your choice", "kaffir lime leaves", "cooked white rice", "thai basil"], "ci": ["chicken", "fish sauce", "curry paste", "coconut milk", "sugar", "lime", "rice", "basil"]}, {"type": "recipe", "src": "htk", "title": "Dry Tom Yum Seafood ต้มยำทะเลแห้ง", "url": "https://hot-thai-kitchen.com/dry-tom-yum-seafood/", "min": null, "cuisine": "Thai", "course": "", "ing": ["mixed seafood of your choice", "lemongrass", "galangal", "kaffir lime leaves", "shallot", "thai chilies", "water or stock", "fish sauce", "palm sugar", "shimeji", "cherry tomato halves", "lime juice", "cilantro"], "ci": ["seafood", "lemongrass", "galangal", "lime", "shallot", "thai chili", "fish sauce", "sugar", "mushrooms", "tomato", "cilantro"]}, {"type": "recipe", "src": "htk", "title": "Thai Holy Basil Stir Fry with Beef (Pad Kra Pao)", "url": "https://hot-thai-kitchen.com/pad-kra-pao-beef/", "min": null, "cuisine": "Thai", "course": "Main Course", "ing": ["garlic", "thai chilies", "mild red chilies", "vegetable oil", "ground beef", "fish sauce", "granulated sugar", "unsalted beef or chicken stock", "ground black pepper", "holy basil or regular basil leaves", "cooked jasmine rice", "eggs", "lime juice"], "ci": ["garlic", "thai chili", "beef", "fish sauce", "sugar", "chicken", "basil", "rice", "egg", "lime"]}, {"type": "recipe", "src": "htk", "title": "Garlic Fried Rice ข้าวผัดกระเทียม", "url": "https://hot-thai-kitchen.com/garlic-fried-rice/", "min": null, "cuisine": "Thai", "course": "", "ing": ["neutral cooking oil", "garlic", "butter", "ground black pepper", "cooked short grain japanese rice", "japanese soy sauce", "salt", "dashi powder", "eggs", "green onions", "crushed seaweed"], "ci": ["garlic", "butter", "rice", "soy sauce", "dashi", "egg", "green onion", "wakame"]}, {"type": "recipe", "src": "htk", "title": "Chilled Tofu & Herb Salad ยำเต้าหู้เย็น (yum tao hu yen)", "url": "https://hot-thai-kitchen.com/chilled-tofu-salad/", "min": null, "cuisine": "Thai", "course": "", "ing": ["soft tofu", "soy sauce", "lime juice", "palm sugar", "thai chilies", "diced shallots", "lemongrass", "chopped green onion", "cilantro", "mint leaves", "diced cucumber", "red bell pepper", "black sesame seeds"], "ci": ["tofu", "soy sauce", "lime", "sugar", "thai chili", "shallot", "lemongrass", "green onion", "cilantro", "mint", "cucumber"]}, {"type": "recipe", "src": "htk", "title": "Roasted Eggplant with Garlicky Shrimp", "url": "https://hot-thai-kitchen.com/ingredient-challenge-eggplant/", "min": null, "cuisine": "Thai", "course": "Main Course", "ing": ["japanese eggplant", "salt", "garlic", "thai chili", "thai shrimp paste in oil", "shrimp", "fish sauce", "sugar", "cherry tomatoes", "cilantro", "jasmine rice"], "ci": ["eggplant", "garlic", "thai chili", "shrimp", "fish sauce", "sugar", "tomato", "cilantro", "rice"]}, {"type": "recipe", "src": "sk", "title": "Skillet Pierogi with Mushrooms", "url": "https://smittenkitchen.com/2026/10/skillet-pierogi-with-mushrooms/", "min": 20, "cuisine": "", "course": "", "ing": ["butter", "olive oil", "onion", "kosher salt", "black pepper", "garlic", "sliced mushrooms", "frozen potato pierogi", "water", "white vinegar", "sour cream", "herbs"], "ci": ["butter", "onion", "garlic", "mushrooms", "vinegar", "sour cream"]}, {"type": "recipe", "src": "sk", "title": "Simple Chicken Tacos", "url": "https://smittenkitchen.com/2026/09/simple-chicken-tacos/", "min": 30, "cuisine": "", "course": "", "ing": ["flour tortillas", "red onion", "red wine vinegar", "kosher salt", "granulated sugar", "avocado", "red cabbage", "cilantro", "hot sauce", "ground cumin", "chili or chipotle powder", "paprika", "black pepper", "boneless chicken thighs"], "ci": ["tortillas", "onion", "vinegar", "sugar", "avocado", "cabbage", "cilantro", "cumin", "chicken"]}, {"type": "recipe", "src": "sk", "title": "Tomato Sauce with Butter and Onions", "url": "https://smittenkitchen.com/2010/01/tomato-sauce-with-butter-and-onions/", "min": 50, "cuisine": "", "course": "", "ing": ["peeled tomatoes", "unsalted butter", "yellow onion", "salt", "spaghetti"], "ci": ["tomato", "butter", "onion", "pasta"]}, {"type": "recipe", "src": "sk", "title": "Everyday Meatballs", "url": "https://smittenkitchen.com/2016/02/everyday-meatballs/", "min": 45, "cuisine": "", "course": "", "ing": ["ground meat", "bread crumbs or panko", "milk or water", "parsley", "parmesan or romano cheese", "kosher salt", "red pepper flakes", "onion powder", "eggs", "garlic", "olive oil", "tomato puree or crushed tomatoes"], "ci": ["parsley", "parmesan", "red pepper flakes", "onion", "egg", "garlic", "tomato"]}, {"type": "recipe", "src": "sk", "title": "New York Crumb Cake", "url": "https://smittenkitchen.com/2024/04/new-york-crumb-cake/", "min": 60, "cuisine": "", "course": "", "ing": ["unsalted butter", "dark brown sugar", "granulated sugar", "ground cinnamon", "kosher salt", "all-purpose flour", "egg", "sour cream", "water or milk", "vanilla extract", "baking powder", "powdered sugar"], "ci": ["butter", "sugar", "cinnamon", "flour", "egg", "sour cream"]}, {"type": "recipe", "src": "sk", "title": "Tomato Risotto with Frizzled Red Onions", "url": "https://smittenkitchen.com/2026/09/tomato-risotto-with-frizzled-red-onions/", "min": 50, "cuisine": "", "course": "", "ing": ["red onion", "olive oil", "garlic", "dry white wine", "arborio or carnaroli rice", "kosher salt", "black pepper", "red pepper flakes", "water", "butter or olive oil", "grated parmesan cheese", "basil leaves"], "ci": ["onion", "garlic", "rice", "red pepper flakes", "butter", "parmesan", "basil"]}, {"type": "recipe", "src": "sk", "title": "Peach Cobbler Loaf", "url": "https://smittenkitchen.com/2026/08/peach-cobbler-loaf/", "min": 90, "cuisine": "", "course": "", "ing": ["peaches", "lemon", "ground cinnamon", "light brown sugar", "unsalted butter", "granulated sugar", "greek-style yogurt", "eggs", "baking powder", "baking soda", "kosher salt", "all-purpose flour"], "ci": ["peaches", "lemon", "cinnamon", "sugar", "butter", "yogurt", "egg", "flour"]}, {"type": "recipe", "src": "sk", "title": "Cucumber Salad with Sesame and Rice Vinegar", "url": "https://smittenkitchen.com/2026/08/cucumber-salad-with-sesame-and-rice-vinegar/", "min": 15, "cuisine": "", "course": "", "ing": ["persian-style cucumbers", "kosher salt", "unseasoned rice vinegar", "toasted sesame oil", "soy sauce", "black or white pepper", "chili oil or chili crisp", "toasted sesame seeds"], "ci": ["cucumber", "rice vinegar", "sesame oil", "soy sauce", "chili oil"]}, {"type": "recipe", "src": "sk", "title": "Spaghetti Aglio e Olio", "url": "https://smittenkitchen.com/2026/07/spaghetti-aglio-e-olio/", "min": 20, "cuisine": "", "course": "", "ing": ["kosher salt", "dried spaghetti", "olive oil", "garlic", "red pepper flakes", "flat-leaf parsley"], "ci": ["pasta", "garlic", "red pepper flakes", "parsley"]}, {"type": "recipe", "src": "maangchi", "title": "Seafood green onion pancake (Haemul-pajeon: 해물파전)", "url": "https://www.maangchi.com/recipe/haemul-pajeon", "min": null, "cuisine": "Korean", "course": "Korean pancake", "ing": [], "ci": []}, {"type": "recipe", "src": "maangchi", "title": "Kimchi stew with tuna (Chamchi-kimchi-jjigae: 참치김치찌개)", "url": "https://www.maangchi.com/recipe/chamchi-kimchi-jjigae", "min": null, "cuisine": "Korean", "course": "Main course", "ing": [], "ci": []}, {"type": "recipe", "src": "maangchi", "title": "Bibimbap (Mixed rice with vegetables)", "url": "https://www.maangchi.com/recipe/bibimbap", "min": 76, "cuisine": "Korean", "course": "Main dish", "ing": ["dried bellflower roots", "eggs", "kosher salt", "vegetable oil", "toasted sesame oil", "toasted sesame seeds", "garlic", "soy sauce", "honey", "korean hot pepper paste"], "ci": ["egg", "sesame oil", "garlic", "soy sauce", "honey", "gochujang"]}, {"type": "recipe", "src": "maangchi", "title": "Easy japchae (Korean stir-fried noodles and vegetables)", "url": "https://www.maangchi.com/recipe/easy-japchae", "min": 38, "cuisine": "Korean", "course": "Main course", "ing": ["garlic cloves", "sweet potato starch noodles", "dried wood ear mushrooms", "king oyster mushrooms", "onion", "carrot", "spinach", "vegetable oil", "toasted sesame seeds", "toasted sesame oil"], "ci": ["garlic", "noodles", "mushrooms", "onion", "carrot", "spinach", "sesame oil"]}, {"type": "recipe", "src": "maangchi", "title": "Rosé tteokbokki (로제 떡볶이)", "url": "https://www.maangchi.com/recipe/rose-tteokbokki", "min": 27, "cuisine": "Korean", "course": "Snack", "ing": ["gochu-garu", "soy sauce", "sugar", "milk", "heavy cream", "water", "shredded mozzarella cheese", "green onion", "hard boiled eggs", "gochujang"], "ci": ["gochugaru", "soy sauce", "sugar", "cream", "mozzarella", "green onion", "egg", "gochujang"]}, {"type": "recipe", "src": "maangchi", "title": "Spicy beef bulgogi (Maeun-sobulgogi: 매운소불고기)", "url": "https://www.maangchi.com/recipe/spicy-bulgogi", "min": 33, "cuisine": "Korean", "course": "Main dish", "ing": ["soy sauce", "ground black pepper", "water", "cooking oil", "bowl of rice", "fermented kimchi", "gochu-garu", "rice syrup", "gochujang", "garlic cloves"], "ci": ["soy sauce", "rice", "kimchi", "gochugaru", "honey", "gochujang", "garlic"]}, {"type": "recipe", "src": "maangchi", "title": "Spicy soft tofu stew with beef (Gogi sundubu-jjigae: 고기 순두부찌개)", "url": "https://www.maangchi.com/recipe/gogi-sundubu-jjigae", "min": null, "cuisine": "Korean", "course": "Main dish", "ing": [], "ci": []}, {"type": "recipe", "src": "maangchi", "title": "Spicy braised tofu (Dubu-jorim: 두부조림)", "url": "https://www.maangchi.com/recipe/dubu-jorim", "min": null, "cuisine": "Korean", "course": "Side dish", "ing": [], "ci": []}, {"type": "video", "src": "kenji", "title": "Introducing Cooking on the River", "url": "https://www.youtube.com/watch?v=yTohZC8TEHw", "date": "2026-11-01", "min": null, "cuisine": "", "course": "", "ing": [], "ci": []}, {"type": "video", "src": "kenji", "title": "It's a BADOP! drop. It's a BADROP!", "url": "https://www.youtube.com/watch?v=WQJBqvy1rR4", "date": "2026-10-31", "min": null, "cuisine": "", "course": "", "ing": [], "ci": []}, {"type": "video", "src": "kenji", "title": "Braised Kabocha Squash Season!", "url": "https://www.youtube.com/watch?v=s6liqS8PTF8", "date": "2026-10-30", "min": null, "cuisine": "", "course": "", "ing": [], "ci": ["kabocha squash"]}, {"type": "video", "src": "kenji", "title": "Cooking on the River: Episode 1 | Our Trip to the Moab Music Festival", "url": "https://www.youtube.com/watch?v=-HMSKdle3vk", "date": "2026-10-29", "min": null, "cuisine": "", "course": "", "ing": [], "ci": []}, {"type": "video", "src": "kenji", "title": "BADOP! Gochujang Michelada", "url": "https://www.youtube.com/watch?v=FyN1oIOMgSE", "date": "2026-10-27", "min": null, "cuisine": "", "course": "", "ing": [], "ci": ["gochujang"]}, {"type": "video", "src": "kenji", "title": "Simple Simmered Kabocha Squash", "url": "https://www.youtube.com/watch?v=ntLj5ecaQKs", "date": "2026-10-21", "min": null, "cuisine": "", "course": "", "ing": [], "ci": ["kabocha squash"]}, {"type": "video", "src": "kenji", "title": "It's Chanterelle Season!", "url": "https://www.youtube.com/watch?v=ImyGKjKC9yc", "date": "2026-10-19", "min": null, "cuisine": "", "course": "", "ing": [], "ci": ["mushrooms"]}, {"type": "video", "src": "kenji", "title": "That Maillard Reaction Tho", "url": "https://www.youtube.com/watch?v=YvlINdshm6Q", "date": "2026-10-16", "min": null, "cuisine": "", "course": "", "ing": [], "ci": []}, {"type": "video", "src": "kenji", "title": "Our Place x Kenji Titanium Braiser Pro", "url": "https://www.youtube.com/watch?v=Qg8uaWa06jU", "date": "2026-10-15", "min": null, "cuisine": "", "course": "", "ing": [], "ci": []}, {"type": "video", "src": "kenji", "title": "Crispy Braised Chicken with White Beans and Spinach", "url": "https://www.youtube.com/watch?v=jGqdsQkmgQI", "date": "2026-10-14", "min": null, "cuisine": "", "course": "", "ing": [], "ci": ["white beans"]}, {"type": "video", "src": "kenji", "title": "Easy Weeknight Chanterelle Pasta", "url": "https://www.youtube.com/watch?v=Q4pKa9FrNTY", "date": "2026-10-13", "min": null, "cuisine": "", "course": "", "ing": [], "ci": ["mushrooms"]}, {"type": "video", "src": "kenji", "title": "Don't Buy Chives from JojaMart", "url": "https://www.youtube.com/watch?v=098pnRGj6F4", "date": "2026-10-12", "min": null, "cuisine": "", "course": "", "ing": [], "ci": ["chives"]}, {"type": "video", "src": "kenji", "title": "Here's What I Add to My Instant Ramen!", "url": "https://www.youtube.com/watch?v=az8YbBkoKeU", "date": "2026-10-11", "min": null, "cuisine": "", "course": "", "ing": [], "ci": ["noodles"]}, {"type": "video", "src": "kenji", "title": "Taste-Tester-In-Residence Ruby", "url": "https://www.youtube.com/watch?v=Dvhn3XMmvFk", "date": "2026-10-10", "min": null, "cuisine": "", "course": "", "ing": [], "ci": []}];
+const CATALOG = {"green onion": ["scallion", "scallions", "green onions", "spring onion", "spring onions"], "garlic chives": ["chinese chives"], "chives": [], "cilantro": ["coriander leaves", "fresh coriander"], "eggplant": ["aubergine", "japanese eggplant", "chinese eggplant"], "thai chili": ["thai chilies", "bird chilies", "thai bird chilies", "thai chili"], "red pepper flakes": ["chili flakes", "crushed red pepper"], "tofu": ["silken tofu", "soft tofu", "firm tofu", "soft/silken tofu", "dubu", "sundubu"], "rice": ["bowl of rice", "cooked rice", "jasmine rice", "white rice", "short-grain rice", "short grain japanese rice", "arborio", "carnaroli"], "garlic": ["garlic cloves"], "ginger": [], "galangal": [], "lemongrass": [], "soy sauce": ["light soy sauce", "dark soy sauce", "japanese soy sauce", "shoyu"], "fish sauce": [], "oyster sauce": [], "sesame oil": ["toasted sesame oil"], "chili oil": ["chili crisp", "la-yu", "lao gan ma"], "chicken": ["ground chicken", "chicken thigh", "chicken thighs", "boneless chicken"], "pork": ["ground pork", "pork belly", "pork leg bones", "bacon", "ham"], "beef": ["ground beef"], "shrimp": ["prawns"], "seafood": ["mixed seafood"], "egg": ["eggs"], "mushrooms": ["shiitake", "shimeji", "chanterelle", "chanterelles", "sliced mushrooms", "wood ear mushrooms", "king oyster mushrooms"], "kabocha squash": ["kabocha"], "miso": [], "dashi": ["dashi packet", "dashi powder"], "basil": ["thai basil", "holy basil", "basil leaves"], "mint": ["mint leaves"], "parsley": ["flat-leaf parsley"], "lime": ["limes", "lime juice", "kaffir lime leaves"], "lemon": [], "shallot": ["shallots"], "cabbage": ["napa cabbage", "red cabbage", "pickled sour cabbage"], "cucumber": ["cucumbers", "persian-style cucumbers"], "tomato": ["tomatoes", "cherry tomatoes", "peeled tomatoes", "crushed tomatoes", "tomato puree"], "onion": ["yellow onion", "red onion", "onions"], "butter": ["unsalted butter"], "parmesan": ["parmesan cheese", "romano"], "sour cream": [], "yogurt": ["greek-style yogurt"], "pasta": ["spaghetti", "dried spaghetti"], "noodles": ["rice noodles", "ramen noodles", "egg noodles", "instant ramen", "sweet potato starch noodles", "glass noodles", "japchae"], "coconut milk": [], "curry paste": ["green curry paste"], "cornstarch": ["potato starch"], "mirin": [], "sake": [], "shaoxing wine": [], "rice vinegar": ["unseasoned rice vinegar"], "vinegar": ["white vinegar", "red wine vinegar", "black vinegar"], "peas": [], "carrot": ["carrots"], "pineapple": [], "avocado": [], "peaches": ["peach"], "tortillas": ["flour tortillas"], "white beans": [], "spinach": [], "cumin": ["ground cumin"], "cinnamon": ["ground cinnamon"], "flour": ["all-purpose flour"], "sugar": ["granulated sugar", "brown sugar", "palm sugar", "powdered sugar"], "daikon": ["daikon radish"], "wakame": ["seaweed", "nori"], "bean sprouts": [], "gochujang": ["korean hot pepper paste"], "gochugaru": ["gochu-garu", "korean hot pepper flakes"], "kimchi": ["fermented kimchi"], "rice cakes": ["tteok", "tteokbokki"], "cream": ["heavy cream"], "mozzarella": ["shredded mozzarella cheese"], "honey": ["rice syrup"]};
 
 const SOURCES = {
-  woks:  { name: 'The Woks of Life',  short: 'WL', color: 'var(--src-woks)' },
-  joc:   { name: 'Just One Cookbook', short: 'JO', color: 'var(--src-joc)' },
-  htk:   { name: 'Hot Thai Kitchen',  short: 'HT', color: 'var(--src-htk)' },
-  sk:    { name: 'Smitten Kitchen',   short: 'SK', color: 'var(--src-sk)' },
-  kenji: { name: 'Kenji on YouTube',  short: '▶',  color: 'var(--src-kenji)' },
+  woks:     { name: 'The Woks of Life',  short: 'WL', color: 'var(--src-woks)' },
+  joc:      { name: 'Just One Cookbook', short: 'JO', color: 'var(--src-joc)' },
+  htk:      { name: 'Hot Thai Kitchen',  short: 'HT', color: 'var(--src-htk)' },
+  sk:       { name: 'Smitten Kitchen',   short: 'SK', color: 'var(--src-sk)' },
+  maangchi: { name: 'Maangchi',          short: 'MA', color: 'var(--src-maangchi)' },
+  kenji:    { name: 'Kenji on YouTube',  short: '',   color: 'var(--src-kenji)' },
 };
 const STAPLES = new Set(['sugar', 'flour', 'cornstarch', 'vinegar', 'butter']);
 const STOP = new Set(['a', 'an', 'the', 'and', 'with', 'or', 'of', 'recipe', 'recipes', 'easy']);
+const PLAY = '<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v9.6l8-4.8z" fill="currentColor"/></svg>';
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -376,45 +378,52 @@ const state = { mode: 'find', have: ['green onion', 'tofu', 'garlic', 'soy sauce
 
 function highlight(title, terms) {
   let out = esc(title);
-  for (const t of terms.sort((a, b) => b.length - a.length)) {
+  for (const t of [...new Set(terms)].sort((a, b) => b.length - a.length)) {
     out = out.replace(new RegExp('(?<![a-z&;])(' + reEsc(esc(t)) + ')(?![a-z])', 'gi'), '<mark>$1</mark>');
   }
   return out;
 }
 const fmtTime = (m) => m == null ? null : m < 60 ? `${m} min` : `${Math.floor(m / 60)} hr${m % 60 ? ` ${m % 60} min` : ''}`;
 const fmtDate = (d) => new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
 
 function filtered() {
   const max = Number($('time').value) || null;
   const cuisine = $('cuisine').value;
-  let hiddenNoTime = 0;
+  let hidden = 0;
   const list = ITEMS.filter((it) => {
     if (!state.sources.has(it.src)) return false;
     if (cuisine && it.cuisine !== cuisine) return false;
-    if (max) { if (it.min == null) { hiddenNoTime++; return false; } if (it.min > max) return false; }
+    if (max) { if (it.min == null) { hidden++; return false; } if (it.min > max) return false; }
     return true;
   });
-  return { list, hiddenNoTime };
+  return { list, hidden };
+}
+
+// The first few ingredient names, with the matched ones marked.
+function preview(it, marked) {
+  if (!it.ing.length) return '';
+  const want = new Set(marked);
+  const hits = it.ing.filter((i) => want.has(canonOf(i)));
+  const rest = it.ing.filter((i) => !want.has(canonOf(i)));
+  const shown = [...hits, ...rest].slice(0, 6);
+  const more = it.ing.length - shown.length;
+  return shown.map((i) => want.has(canonOf(i)) ? `<b>${esc(i)}</b>` : esc(i)).join(', ') + (more > 0 ? `, and ${more} more` : '');
 }
 
 function runFind() {
   const q = $('q').value.trim();
   const { canon, words } = parseQuery(q);
-  const { list, hiddenNoTime } = filtered();
+  const { list, hidden } = filtered();
   const res = [];
   for (const it of list) {
-    let score = 0; const why = []; const marks = [];
+    let score = 0; const marks = [];
     let ok = true;
     for (const c of canon) {
-      const inTitle = titleHas(it, c);
-      const inIng = it.ci.includes(c);
+      const inTitle = titleHas(it, c), inIng = it.ci.includes(c);
       if (!inTitle && !inIng) { ok = false; break; }
       if (inTitle) { score += 3; marks.push(...aliasesOf(c)); }
-      if (inIng) {
-        score += 2;
-        const listed = it.ing.find((i) => canonOf(i) === c);
-        why.push(listed && listed.toLowerCase() !== c ? `<mark>${esc(c)}</mark> <span class="need">(listed as “${esc(listed)}”)</span>` : `<mark>${esc(c)}</mark>`);
-      }
+      if (inIng) score += 2;
     }
     if (!ok) continue;
     const hay = [it.title, it.cuisine, it.course, ...it.ing].join(' ').toLowerCase();
@@ -425,94 +434,93 @@ function runFind() {
       else { ok = false; break; }
     }
     if (!ok || (!canon.length && !words.length)) continue;
-    res.push({ it, score, why, marks });
+    res.push({ it, score, marks });
   }
   // Mix sources together when scores tie, so one site doesn't fill the top.
   const seen = {};
   for (const r of res) { seen[r.it.src] = (seen[r.it.src] || 0) + 1; r.pos = seen[r.it.src]; }
   res.sort((a, b) => b.score - a.score || a.pos - b.pos || (a.it.type === 'video') - (b.it.type === 'video'));
 
-  const syn = canon.filter((c) => (CATALOG[c] || []).length);
-  let s = `<strong>${res.length} result${res.length === 1 ? '' : 's'}</strong> for “${esc(q)}”`;
-  if (syn.length) s += `. Searched as ${syn.map((c) => `<strong>${esc(c)}</strong>, which also covers ${esc(otherNames(c).join(', '))}`).join('; ')}`;
-  if (hiddenNoTime) s += `. ${hiddenNoTime} without a listed time are hidden`;
-  $('summary').innerHTML = q ? s + '.' : 'Type a dish or an ingredient.';
-  render(res.map(({ it, why, marks }) => ({
-    it, title: highlight(it.title, marks),
-    line: it.type === 'video' ? 'Matched on the video title.' : why.length ? `Uses ${why.join(', ')}` : '',
-  })));
+  setCount(q ? res.length : null, 'result', hidden);
+  const syn = canon.filter((c) => otherNames(c).length);
+  const hint = syn.length ? `<span class="hint">Also matching ${syn.map((c) => esc([c, ...otherNames(c)].filter((n) => n.toLowerCase() !== q.toLowerCase()).join(', '))).join('; ')}</span>` : '';
+  renderUnder(hint);
+  render(res.map(({ it, marks }) => ({ it, title: highlight(it.title, marks), line: it.type === 'video' ? '' : preview(it, canon) })));
   renderAlso(q);
 }
 
 function runHave() {
   const have = new Set(state.have);
-  const { list, hiddenNoTime } = filtered();
+  const { list, hidden } = filtered();
   const res = [];
   for (const it of list) {
     if (it.type === 'video') continue;
     const needed = it.ci.filter((c) => !STAPLES.has(c));
     const got = needed.filter((c) => have.has(c));
     if (!got.length) continue;
-    const missing = needed.filter((c) => !have.has(c));
-    res.push({ it, got, missing });
+    res.push({ it, got, missing: needed.filter((c) => !have.has(c)) });
   }
   const share = (r) => r.got.length / (r.got.length + r.missing.length);
   res.sort((a, b) => share(b) - share(a) || b.got.length - a.got.length);
-  let s = state.have.length ? `<strong>${res.length} recipe${res.length === 1 ? '' : 's'}</strong> use what you have, best matches first` : 'Add a few ingredients you have.';
-  s += '. Videos are left out here because they don’t list ingredients';
-  if (hiddenNoTime) s += `, and ${hiddenNoTime} without a listed time are hidden`;
-  $('summary').innerHTML = s + '.';
+  setCount(state.have.length ? res.length : null, 'recipe', hidden, 'Videos aren’t included, since they don’t list ingredients.');
+  renderUnder('');
   render(res.map(({ it, got, missing }) => ({
     it, title: esc(it.title),
-    line: `You have ${got.length} of ${got.length + missing.length}: ${got.map((c) => `<mark>${esc(c)}</mark>`).join(', ')}` +
-      (missing.length ? `<br><span class="need">Also needs ${esc(missing.slice(0, 6).join(', '))}${missing.length > 6 ? ` and ${missing.length - 6} more` : ''}</span>` : '<br><span class="need">Nothing else to buy, beyond basics like salt and oil</span>'),
+    line: `You have ${got.length} of ${got.length + missing.length}: ${got.map((c) => `<b>${esc(c)}</b>`).join(', ')}` +
+      `<span class="need">${missing.length ? `Also needs ${esc(missing.slice(0, 5).join(', '))}${missing.length > 5 ? `, and ${missing.length - 5} more` : ''}` : 'Nothing else to buy, beyond basics like salt and oil'}</span>`,
   })));
   renderAlso(state.have.slice(0, 3).join(' '));
 }
 
+function setCount(n, word, hidden, extra = '') {
+  const notes = [];
+  if (hidden) notes.push(`${hidden} without a listed time hidden.`);
+  if (extra) notes.push(extra);
+  $('count').innerHTML = n == null
+    ? (state.mode === 'have' ? 'Add a few ingredients you have' : 'Type a dish or an ingredient')
+    : `${plural(n, word)}${notes.length ? ` <span>${esc(notes.join(' '))}</span>` : ''}`;
+}
+
 function render(rows) {
   const ul = $('results');
-  if (!rows.length) { ul.innerHTML = '<li class="empty">Nothing in this sample matches. Try one of the suggestions, or a site from “Also search”.</li>'; return; }
+  if (!rows.length) { ul.innerHTML = '<li class="empty">Nothing in this sample matches. Try a suggestion above, or one of the sites below.</li>'; return; }
   ul.innerHTML = rows.map(({ it, title, line }) => {
     const src = SOURCES[it.src];
-    const bits = [`<span class="src">${esc(src.name)}</span>`];
-    if (it.type === 'video') { bits.push('<span class="badge">Video</span>', esc(fmtDate(it.date))); }
+    const meta = [`<span class="src">${esc(src.name)}</span>`];
+    if (it.type === 'video') meta.push('Video', esc(fmtDate(it.date)));
     else {
-      if (fmtTime(it.min)) bits.push(esc(fmtTime(it.min)));
-      if (it.cuisine) bits.push(esc(it.cuisine));
-      if (it.course) bits.push(esc(it.course));
+      if (fmtTime(it.min)) meta.push(esc(fmtTime(it.min)));
+      if (it.cuisine) meta.push(esc(it.cuisine));
+      if (it.course) meta.push(esc(it.course));
     }
-    const tile = it.type === 'video'
-      ? `<svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M7 4.5v13l11-6.5z" fill="#fff"/></svg>`
-      : esc(src.short);
-    const label = it.type === 'video' ? 'Watch on YouTube' : `Open on ${src.name}`;
-    return `<li class="result"><div class="tile" style="background:${src.color}" aria-hidden="true">${tile}</div>
+    const label = it.type === 'video' ? 'watch on YouTube' : `open on ${src.name}`;
+    return `<li class="result" style="--c:${src.color}"><div class="tile" aria-hidden="true">${it.type === 'video' ? PLAY : esc(src.short)}</div>
       <div><h3><a href="${esc(it.url)}" aria-label="${esc(it.title)}, ${esc(label)}">${title}</a></h3>
-      <div class="meta">${bits.join('<span aria-hidden="true">·</span>')}</div>
-      ${line ? `<div class="why">${line}</div>` : ''}</div></li>`;
+      <div class="meta">${meta.map((m) => `<span>${m}</span>`).join('')}</div>
+      ${line ? `<div class="ings">${line}</div>` : ''}</div></li>`;
   }).join('');
 }
 
 function renderAlso(q) {
   const e = encodeURIComponent(q || '');
-  $('also-links').innerHTML = `
-    <a href="https://www.seriouseats.com/search?q=${e}">Serious Eats<span aria-hidden="true">↗</span></a>
-    <a href="https://www.youtube.com/@JKenjiLopezAlt/search?query=${e}">All of Kenji’s videos<span aria-hidden="true">↗</span></a>`;
+  $('also').innerHTML = `<strong>Also search</strong>
+    <a href="https://www.seriouseats.com/search?q=${e}">Serious Eats</a>
+    <a href="https://www.youtube.com/@JKenjiLopezAlt/search?query=${e}">All of Kenji’s videos</a>
+    <span>Sites we don’t index, searched on their own site.</span>`;
 }
 
-function renderHaveChips() {
-  const box = $('have-chips');
-  box.innerHTML = state.mode === 'have'
-    ? state.have.map((c) => `<button type="button" class="chip" data-remove="${esc(c)}" aria-label="Remove ${esc(c)}">${esc(c)} <span class="x" aria-hidden="true">×</span></button>`).join('')
-    : '';
-}
-
-function renderTry() {
+function renderUnder(hint) {
   const items = state.mode === 'find'
-    ? ['scallions', 'tofu', 'fried rice', 'kabocha', 'eggplant', 'pasta']
-    : ['miso', 'dashi', 'chicken', 'thai chili', 'lime', 'rice'];
-  $('try').innerHTML = `<span>${state.mode === 'find' ? 'Try' : 'Add'}:</span>` +
-    items.map((t) => `<button type="button" class="chip" data-try="${esc(t)}">${esc(t)}</button>`).join('');
+    ? ['scallions', 'tofu', 'fried rice', 'kimchi', 'kabocha', 'pasta']
+    : ['gochujang', 'miso', 'chicken', 'thai chili', 'lime', 'rice'];
+  $('under').innerHTML = hint + `<span>${state.mode === 'find' ? 'Try' : 'Add'}</span>` +
+    items.map((t) => `<button type="button" class="ex" data-try="${esc(t)}">${esc(t)}</button>`).join('');
+}
+
+function renderPantry() {
+  $('pantry').innerHTML = state.mode === 'have'
+    ? state.have.map((c) => `<button type="button" class="pill" data-remove="${esc(c)}" aria-label="Remove ${esc(c)}">${esc(c)} <span class="x" aria-hidden="true">×</span></button>`).join('')
+    : '';
 }
 
 function run() { state.mode === 'find' ? runFind() : runHave(); }
@@ -523,9 +531,9 @@ function setMode(m) {
   $('mode-have').setAttribute('aria-pressed', m === 'have');
   const q = $('q');
   q.value = m === 'find' ? 'scallions' : '';
-  q.placeholder = m === 'find' ? 'Search a dish or ingredient' : 'Add an ingredient you have, then press Enter';
+  q.placeholder = m === 'find' ? 'A dish or an ingredient' : 'Add an ingredient you have';
   $('go').textContent = m === 'find' ? 'Search' : 'Add';
-  renderHaveChips(); renderTry(); run();
+  renderPantry(); run();
 }
 
 function addHave(text) {
@@ -536,16 +544,16 @@ function addHave(text) {
     if (!state.have.includes(c)) state.have.push(c);
   }
   $('q').value = '';
-  renderHaveChips(); run();
+  renderPantry(); run();
 }
 
 // Setup
-$('src-chips').innerHTML = Object.entries(SOURCES).map(([k, s]) =>
-  `<button type="button" class="chip" data-src="${k}" aria-pressed="true"><span class="dot" style="background:${s.color}"></span>${esc(s.name)}</button>`).join(' ');
+$('sources').innerHTML = Object.entries(SOURCES).map(([k, s]) =>
+  `<button type="button" class="src-toggle" data-src="${k}" aria-pressed="true" style="--c:${s.color}"><i aria-hidden="true"></i>${esc(s.name)}</button>`).join('');
 const cuisines = [...new Set(ITEMS.map((i) => i.cuisine).filter(Boolean))].sort();
 $('cuisine').innerHTML += cuisines.map((c) => `<option>${esc(c)}</option>`).join('');
 const nRec = ITEMS.filter((i) => i.type === 'recipe').length;
-$('counts').textContent = `${nRec} recipes from four sites and ${ITEMS.length - nRec} of Kenji’s latest videos`;
+$('counts').textContent = `${nRec} recipes from five sites and ${ITEMS.length - nRec} of Kenji’s latest videos`;
 
 $('form').addEventListener('submit', (e) => { e.preventDefault(); state.mode === 'have' ? addHave($('q').value) : run(); });
 $('q').addEventListener('input', () => { if (state.mode === 'find') run(); });
@@ -563,7 +571,7 @@ document.addEventListener('click', (e) => {
     on ? state.sources.add(t.dataset.src) : state.sources.delete(t.dataset.src);
     run();
   }
-  if (t.dataset.remove) { state.have = state.have.filter((c) => c !== t.dataset.remove); renderHaveChips(); run(); }
+  if (t.dataset.remove) { state.have = state.have.filter((c) => c !== t.dataset.remove); renderPantry(); run(); }
 });
 
 // Display settings
@@ -586,10 +594,10 @@ function route() {
   const how = location.hash === '#how';
   $('view-search').hidden = how; $('view-how').hidden = !how;
   $('tab-search').toggleAttribute('aria-current', !how); $('tab-how').toggleAttribute('aria-current', how);
-  if (how) $('tab-how').setAttribute('aria-current', 'page'); else $('tab-search').setAttribute('aria-current', 'page');
+  (how ? $('tab-how') : $('tab-search')).setAttribute('aria-current', 'page');
 }
 window.addEventListener('hashchange', route);
-route(); renderTry(); run();
+route(); run();
 </script>
 </body>
 </html>
