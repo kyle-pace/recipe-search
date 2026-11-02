@@ -2,8 +2,12 @@ name: Crawl
 
 # Weekly: check robots.txt, read sitemaps, fetch only new or changed recipe
 # pages, refresh YouTube videos, and commit the data. Run by hand with a small
-# limit to test.
+# limit to test. A push that changes the crawler runs a smoke test instead:
+# 5 pages per site, nothing committed.
 on:
+  push:
+    branches: [main]
+    paths: ['crawler/**', 'sources.yaml', '.github/workflows/crawl.yml', 'package*.json']
   schedule:
     - cron: '17 11 * * 1' # Mondays, 3:17 or 4:17 am Seattle time
   workflow_dispatch:
@@ -43,7 +47,7 @@ jobs:
       - name: Crawl
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
-          LIMIT: ${{ inputs.limit }}
+          LIMIT: ${{ github.event_name == 'push' && '5' || inputs.limit }}
           SOURCES: ${{ inputs.sources }}
         run: |
           args="--budget-minutes 300"
@@ -51,7 +55,7 @@ jobs:
           [ -n "$SOURCES" ] && args="$args --sources $SOURCES"
           node crawler/crawl.mjs $args
       - name: Commit the data
-        if: github.event_name == 'schedule' || inputs.commit
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.commit)
         run: |
           git config user.name "recipe-search crawler"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
