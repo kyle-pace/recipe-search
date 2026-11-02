@@ -1,5 +1,8 @@
 # Every source, how it's collected, and the result of its last check.
 # Checked by hand on 2026-11-01: robots.txt, sitemap, and a few recipe pages.
+# The crawler (crawler/crawl.mjs) reads this file. Per site: sitemap (path),
+# format (json-ld or microdata), default_cuisine, and include (a pattern a
+# page's URL must match). Results of each run are in data/status.json.
 
 recipes:
   - id: woks
@@ -29,6 +32,7 @@ recipes:
     name: Smitten Kitchen
     site: https://smittenkitchen.com
     sitemap: /sitemap.xml
+    include: '^https://smittenkitchen\.com/\d{4}/\d{2}/'   # posts only, not pages
     format: microdata                  # name, yield, total time as text, ingredients; photo from og:image
     allowed: true
     size: 1,000+ posts
@@ -36,6 +40,7 @@ recipes:
     name: Maangchi
     site: https://www.maangchi.com
     sitemap: /sitemap.xml              # index of yearly post sitemaps; recipes are under /recipe/
+    include: '/recipe/'
     format: json-ld                    # older recipes have an empty ingredient list; match them by title and keywords
     default_cuisine: Korean
     allowed: true                      # blocks AI training bots only (checked 2026-11-01)

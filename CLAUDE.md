@@ -27,4 +27,7 @@ Working name. One search box across the recipe sites Kyle trusts, from our own s
 ## Layout
 
 - `sources.yaml`: every source, how it's collected, and the result of its last check.
+- `crawler/`: the weekly crawl (`node crawler/crawl.mjs`, options at the top of the file). `npm test` runs its tests. GitHub Actions runs it every Monday (`.github/workflows/crawl.yml`) and commits the results; run it by hand from the Actions tab with a small `limit` to test.
+- `data/<id>.json`: what we keep per recipe (n name, u link, t minutes, c cuisine, k course, y yield, i ingredient names, img photo link, kw keywords) or per video. `data/status.json`: the last run's counts and alerts.
+- `state/<id>.json`: every page seen, its sitemap lastmod, whether it had a recipe and when it was fetched, so only new or changed pages are fetched.
 - `prototype/`: the November 1, 2026 prototype. `python3 prototype/build.py` writes `prototype/index.html` from `template.html` and the sample data in `prototype/data/`. Published as a private Claude artifact; see Confluence for the link.

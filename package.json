@@ -1,0 +1,16 @@
+{
+  "name": "recipe-search",
+  "private": true,
+  "type": "module",
+  "description": "One search box across the recipe sites Kyle trusts, from our own small index.",
+  "scripts": {
+    "crawl": "node crawler/crawl.mjs",
+    "test": "node --test crawler/test/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "yaml": "^2.6.0"
+  }
+}

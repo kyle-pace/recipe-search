@@ -1,0 +1,65 @@
+name: Crawl
+
+# Weekly: check robots.txt, read sitemaps, fetch only new or changed recipe
+# pages, refresh YouTube videos, and commit the data. Run by hand with a small
+# limit to test.
+on:
+  schedule:
+    - cron: '17 11 * * 1' # Mondays, 3:17 or 4:17 am Seattle time
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: 'Most pages to fetch per site (empty for no limit)'
+        required: false
+        default: ''
+      sources:
+        description: 'Only these sources, comma separated (empty for all)'
+        required: false
+        default: ''
+      commit:
+        description: 'Commit the data'
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: crawl
+  cancel-in-progress: false
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - name: Crawl
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          LIMIT: ${{ inputs.limit }}
+          SOURCES: ${{ inputs.sources }}
+        run: |
+          args="--budget-minutes 300"
+          [ -n "$LIMIT" ] && args="$args --limit $LIMIT"
+          [ -n "$SOURCES" ] && args="$args --sources $SOURCES"
+          node crawler/crawl.mjs $args
+      - name: Commit the data
+        if: github.event_name == 'schedule' || inputs.commit
+        run: |
+          git config user.name "recipe-search crawler"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data state
+          if git diff --cached --quiet; then echo "No changes"; exit 0; fi
+          git commit -m "Crawl $(date -u +%Y-%m-%d)"
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Report problems
+        run: |
+          node -e "const s=require('./data/status.json'); if (s.alerts?.length) { console.log(s.alerts.join('\n')); process.exit(1) }"
