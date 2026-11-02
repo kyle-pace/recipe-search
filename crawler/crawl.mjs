@@ -40,7 +40,7 @@ const status = { run: new Date().toISOString(), options: { limit: args.limit ? l
 
 const recipeJobs = (sources.recipes || [])
   .filter((s) => !only || only.has(s.id))
-  .map((s) => crawlSite(s).catch((err) => ({ id: s.id, name: s.name, result: 'error', error: err.message })));
+  .map((s) => (s.paused ? Promise.resolve({ id: s.id, name: s.name, result: 'paused', error: s.paused }) : crawlSite(s)).catch((err) => ({ id: s.id, name: s.name, result: 'error', error: err.message })));
 const results = await Promise.all(recipeJobs);
 for (const r of results) status.sources[r.id] = r;
 

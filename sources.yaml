@@ -2,7 +2,8 @@
 # Checked by hand on 2026-11-01: robots.txt, sitemap, and a few recipe pages.
 # The crawler (crawler/crawl.mjs) reads this file. Per site: sitemap (path),
 # format (json-ld or microdata), default_cuisine, and include (a pattern a
-# page's URL must match). Results of each run are in data/status.json.
+# page's URL must match), and paused (a reason; the crawler skips the site).
+# Results of each run are in data/status.json.
 
 recipes:
   - id: woks
@@ -19,6 +20,7 @@ recipes:
     format: json-ld
     default_cuisine: Japanese
     allowed: true                      # only site search is off limits
+    paused: refuses cloud servers (HTTP 403 on its post sitemap from GitHub Actions, 2026-11-02)
     size: 1,000 to 2,000 posts
   - id: htk
     name: Hot Thai Kitchen
@@ -44,6 +46,7 @@ recipes:
     format: json-ld                    # older recipes have an empty ingredient list; match them by title and keywords
     default_cuisine: Korean
     allowed: true                      # blocks AI training bots only (checked 2026-11-01)
+    paused: refuses cloud servers (HTTP 403 on its sitemap from GitHub Actions, 2026-11-02)
     size: 451 recipes (of 2,278 posts)
     note: her YouTube videos are embedded in her recipe pages, so her channel isn't added separately
 

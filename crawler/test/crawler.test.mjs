@@ -125,6 +125,18 @@ test('ingredient names', () => {
     '100g (3.5 oz) dried rice noodles': 'dried rice noodles',
     '4 cloves garlic': 'garlic',
     'For the marinade:': null,
+    '2 tablespoons all-purpose flour': 'all-purpose flour',
+    'An apple, diced': 'apple',
+    '1 tablespoon peanut or canola oil )': 'peanut or canola oil',
+    '1 large or 2 small shallots': 'shallots',
+    '3 thin slices galangal': 'galangal',
+    'Squeeze of lime juice': 'lime juice',
+    'Serving suggestion: sticky rice and BBQ chicken!': null,
+    '1 cup fine, fresh breadcrumbs': 'fine, fresh breadcrumbs',
+    '4 cups beef, chicken or vegetable broth': 'beef, chicken or vegetable broth',
+    '2 cloves garlic, minced': 'garlic',
+    '1 onion, finely chopped': 'onion',
+    'Eggs, at room temperature': 'eggs',
     '': null,
   };
   for (const [line, want] of Object.entries(cases)) assert.equal(ingredientName(line), want, line);
