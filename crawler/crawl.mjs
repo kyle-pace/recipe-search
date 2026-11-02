@@ -6,7 +6,7 @@
 // state/<id>.json and data/status.json.
 //
 //   node crawler/crawl.mjs [--sources woks,sk] [--limit 20] [--budget-minutes 300]
-//                          [--delay-ms 4000] [--dry-run] [--no-videos]
+//                          [--delay-ms 4000] [--dry-run] [--no-videos] [--sample 2]
 
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
@@ -166,6 +166,10 @@ async function crawlSite(src) {
     recipes.set(u, recipe);
   }
 
+  if (args.sample) {
+    const fresh = todo.slice(0, limit).map((x) => recipes.get(x.u)).filter(Boolean).slice(0, Number(args.sample) || 2);
+    for (const r of fresh) log(`sample: ${JSON.stringify(r)}`);
+  }
   out.count = recipes.size;
   out.waiting = Math.max(0, out.waiting - out.fetched);
   if (out.fetched >= 5 && out.fetched === out.noRecipe) {

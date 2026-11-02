@@ -53,6 +53,7 @@ jobs:
           args="--budget-minutes 300"
           [ -n "$LIMIT" ] && args="$args --limit $LIMIT"
           [ -n "$SOURCES" ] && args="$args --sources $SOURCES"
+          [ "${{ github.event_name }}" = "push" ] && args="$args --sample 3"
           node crawler/crawl.mjs $args
       - name: Commit the data
         if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.commit)
