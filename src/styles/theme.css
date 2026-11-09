@@ -1,16 +1,19 @@
 /*
-  Recipe search's own look. It's a standalone lab (kp-design's LabLayout), so it takes
-  kp-design's tokens and makes them its own: a quiet kitchen palette, off-white and
-  herb green, with each recipe site's tint (on the page) as the only other color.
-  Every pair here meets WCAG AA (4.5:1 for text) in light and dark.
+  Recipe search's own look (design/PLAN.md). It's a standalone lab, so it takes
+  kp-design's tokens and makes them its own: rice-white or near-black, soy-dark text,
+  scallion green for the words you add, chili for removing. No other color; the
+  photos bring it. Every text pair meets WCAG AA in light and dark, and the field rule
+  meets 3:1 as a UI boundary.
 */
 :root {
-  --bg: light-dark(#f6f7f4, #111614);
-  --bg-raised: light-dark(#ffffff, #18201c);
-  --ink: light-dark(#1d2421, #e5ebe7);
-  --ink-muted: light-dark(#56605a, #a3aea7);
-  --line: light-dark(#dde3dc, #2a332f);
-  --accent: #3fae90;
-  --accent-ink: light-dark(#0d6a59, #62cdb3);
-  --radius: 1.1rem;
+  --bg: light-dark(#ffffff, #121314);
+  --bg-raised: light-dark(#ffffff, #1b1d1e);
+  --ink: light-dark(#141414, #f1f1ee);
+  --ink-muted: light-dark(#5d625f, #a6aba8);
+  --line: light-dark(#e4e6e1, #2a2d2b);
+  --field-rule: light-dark(#8a908c, #6e7471);
+  --accent: #3a9a46;
+  --accent-ink: light-dark(#2c7a36, #86d08e);
+  --scallion-fill: light-dark(#d6efd2, #24442a);
+  --chili: light-dark(#b8261a, #ff8f80);
 }

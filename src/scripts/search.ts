@@ -1,7 +1,8 @@
-// Recipe search, in the browser. Loads the index once (about 150 KB over the wire),
-// then every keystroke searches it locally: no server, no search service, nothing typed
-// ever leaves the page. State lives in the URL (?q=, &with=, &site=, &time=, &cuisine=),
-// so searches can be shared and the back button works.
+// Recipe search, in the browser. Loads the index once (about 150 KB over the wire), then
+// every keystroke searches it locally: no server, no search service, nothing typed ever
+// leaves the page. The query is a sentence: "I have <ingredients>" (#have, chips) and
+// "I want to make <dish>" (#q). State lives in the URL (?q=, &with=, &site=, &time=,
+// &cuisine=), so searches can be shared and the back button works.
 import { track } from 'kp-design/analytics';
 
 type Source = { id: string; name: string; site: string; host: string; count: number };
@@ -48,9 +49,8 @@ const TRY = ['mapo tofu', 'pad thai', 'dumplings', 'noodle soup', 'fried rice', 
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
 const app = $('app');
 const form = $<HTMLFormElement>('search-form');
-const input = $<HTMLInputElement>('q');
-const panel = $('suggestions-panel');
-const listbox = $('suggestions');
+const haveInput = $<HTMLInputElement>('have');
+const qInput = $<HTMLInputElement>('q');
 const statusEl = $('status');
 const resultsEl = $<HTMLOListElement>('results');
 const moreBtn = $<HTMLButtonElement>('more');
@@ -58,7 +58,11 @@ const moreBtn = $<HTMLButtonElement>('more');
 const esc = (s: unknown) =>
   String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
 const plural = (n: number, one: string, many = one + 's') => `${n.toLocaleString()} ${n === 1 ? one : many}`;
-const fmtTime = (m: number) => (m < 60 ? `${m} min` : `${Math.floor(m / 60)} hr${m % 60 ? ` ${m % 60} min` : ''}`);
+const fmtTime = (m: number) =>
+  m < 60 ? plural(m, 'minute') : `${plural(Math.floor(m / 60), 'hour')}${m % 60 ? ` ${plural(m % 60, 'minute')}` : ''}`;
+/** "a, b and c" */
+const andList = (xs: string[]) => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} and ${xs.at(-1)}`);
+const orList = (xs: string[]) => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} or ${xs.at(-1)}`);
 
 /** "Scallions, chopped!" -> ["scallion", "chopped"]: lowercase, no accents, singular words. */
 function words(text: string): string[] {
@@ -95,7 +99,9 @@ const state = {
   time: 0,
   cuisine: '',
   shown: PAGE,
+  picked: -1, // a recipe picked at random, by index into recipes
 };
+
 
 // ---------------------------------------------------------------------------------------
 // Loading
@@ -205,6 +211,8 @@ const filterCount = () => Number(!!state.sites.size) + Number(!!state.time) + Nu
 // ---------------------------------------------------------------------------------------
 // Rendering
 
+const ingName = (p: number) => data.ing[p][1].toLowerCase();
+
 function highlight(name: string, q: string[]): string {
   if (!q.length) return esc(name);
   // Mark the start of each word that matches a query word ("tofu" in "Mapo Tofu").
@@ -220,34 +228,43 @@ function highlight(name: string, q: string[]): string {
     .join('');
 }
 
-function card(h: Hit, position: number, q: string[]): string {
+/** "25 minutes, Chinese, from The Woks of Life" */
+function metaLine(r: Recipe): string {
+  const bits = [r.min ? fmtTime(r.min) : '', r.cuisine].filter(Boolean);
+  return `${bits.length ? `${esc(bits.join(', '))}, from ` : 'From '}${esc(r.src.name)}`;
+}
+
+/** "Uses ginger and tofu, plus 3 more things" / "Uses ginger, not tofu" */
+function usesLine(h: Hit): string {
+  const n = state.with.length;
+  if (!n) return '';
+  const used = andList(h.used.map((p) => esc(ingName(p))));
+  const not = state.with.filter((p) => !h.used.includes(p)).map((p) => esc(ingName(p)));
+  const plus = h.missing ? `, plus ${plural(h.missing, 'more thing', 'more things')}` : '';
+  return `<p class="uses">Uses ${used}${not.length && n > 1 ? ` (not ${orList(not)})` : ''}${plus}</p>`;
+}
+
+function row(h: Hit, position: number, q: string[], from = 'results'): string {
   const { r } = h;
-  const meta = [r.src.name, r.cuisine].filter(Boolean).map(esc).join(' · ');
   const photo = r.img
     ? `<img src="${esc(r.img)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" width="480" height="360">`
-    : `<span class="no-photo">${esc(r.src.name)}</span>`;
-  const n = state.with.length;
-  const names = h.used.map((p) => esc(data.ing[p][1].toLowerCase())).join(', ');
-  const needs = h.missing ? `. Also needs ${plural(h.missing, 'more thing', 'more things')}` : '';
-  const uses = !n
-    ? ''
-    : n === 1
-      ? `<p class="uses">Uses <strong>${names}</strong>${needs}</p>`
-      : `<p class="uses">Uses <strong>${h.used.length === n ? `all ${n}` : `${h.used.length} of your ${n}`}</strong>: ${names}${needs}</p>`;
-  // The title comes first in the page so screen readers hear it first; CSS puts the photo on top.
-  return `<li><article class="card" data-src="${esc(r.src.id)}">
-    <h3><a href="${esc(r.url)}" data-pos="${position}" data-src-id="${esc(r.src.id)}">${highlight(r.name, q)}</a></h3>
-    <div class="photo" style="order:-1">${photo}${r.min ? `<span class="time">${fmtTime(r.min)}</span>` : ''}</div>
-    <p class="src"><span class="src-mark" aria-hidden="true"></span>${meta}</p>
-    ${uses}
-  </article></li>`;
+    : `<span class="no-photo">No photo</span>`;
+  // The name comes first in the page so screen readers hear it first; CSS puts the photo on the left.
+  return `<article class="row">
+    <div class="text">
+      <h3><a href="${esc(r.url)}" data-pos="${position}" data-src-id="${esc(r.src.id)}" data-from="${from}">${highlight(r.name, q)}</a></h3>
+      <p class="meta">${metaLine(r)}</p>${usesLine(h)}
+    </div>
+    <div class="photo">${photo}</div>
+  </article>`;
 }
 
 function render() {
   const q = words(state.q);
-  input.value = state.q;
+  qInput.value = state.q;
   renderWith();
   renderFilterButtons();
+  renderPicked();
 
   const blank = isBlank();
   $('start').hidden = !blank;
@@ -258,42 +275,37 @@ function render() {
   if (blank) {
     resultsEl.innerHTML = '';
     moreBtn.hidden = true;
-    statusEl.innerHTML = `<strong>${data.recipes.length.toLocaleString()} recipes</strong> from ${plural(data.sources.length, 'site')}. Search by dish, or start with an ingredient.`;
+    statusEl.innerHTML = `<strong>${data.recipes.length.toLocaleString()}</strong> recipes to choose from.`;
     return;
   }
 
   const hits = search();
   const shown = hits.slice(0, state.shown);
-  resultsEl.innerHTML = shown.map((h, n) => card(h, n + 1, q)).join('');
+  resultsEl.innerHTML = shown.map((h, n) => `<li>${row(h, n + 1, q)}</li>`).join('');
   moreBtn.hidden = hits.length <= state.shown;
-  moreBtn.textContent = `Show more (${(hits.length - shown.length).toLocaleString()} left)`;
+  moreBtn.textContent = `Show ${Math.min(PAGE, hits.length - shown.length)} more of ${(hits.length - shown.length).toLocaleString()}`;
 
-  const about = [state.q && `for “${state.q}”`, state.with.length && `using ${listNames(state.with)}`].filter(Boolean).join(' ');
-  statusEl.innerHTML = hits.length
-    ? `<strong>${plural(hits.length, 'recipe')}</strong>${about ? ` ${esc(about)}` : ''}${state.with.length > 1 ? ', most of your ingredients first' : ''}.`
-    : `No recipes${about ? ` ${esc(about)}` : ''}${filterCount() ? ' with these filters' : ''}.`;
+  const count = `<strong>${hits.length.toLocaleString()}</strong>`;
+  if (!hits.length) statusEl.textContent = 'Nothing matches all of that.';
+  else if (state.with.length > 1)
+    statusEl.innerHTML = `${count} ${hits.length === 1 ? 'recipe uses' : 'recipes use'} at least one of them. The ones that use the most come first.`;
+  else statusEl.innerHTML = `${count} ${hits.length === 1 ? 'recipe' : 'recipes'}.`;
 
   if (!hits.length) renderEmpty();
   renderVideos(q);
   renderAlso();
 }
 
-function listNames(ps: number[]): string {
-  const names = ps.map((p) => data.ing[p][1].toLowerCase());
-  return names.length < 2 ? names.join('') : `${names.slice(0, -1).join(', ')} and ${names.at(-1)}`;
-}
-
 function renderWith() {
-  const box = $('with');
-  box.hidden = !state.with.length;
   $('with-chips').innerHTML = state.with
     .map(
-      (p) =>
-        `<li><button type="button" data-remove="${p}" aria-label="Remove ${esc(data.ing[p][1].toLowerCase())}">${esc(
-          data.ing[p][1].toLowerCase(),
-        )} <span class="x" aria-hidden="true">×</span></button></li>`,
+      (p, n) =>
+        `<li><button type="button" data-remove="${p}" aria-label="Remove ${esc(ingName(p))}">${esc(ingName(p))}<span class="x" aria-hidden="true">×</span></button>${
+          n < state.with.length - 1 ? '' : ''
+        }</li>`,
     )
     .join('');
+  haveInput.placeholder = state.with.length ? 'and…' : 'an ingredient';
 }
 
 function renderEmpty() {
@@ -301,23 +313,23 @@ function renderEmpty() {
   for (const p of state.with) {
     if (state.with.length < 2 && !state.q) continue;
     const rest = state.with.filter((x) => x !== p);
-    fixes.push({ label: `Remove ${data.ing[p][1].toLowerCase()}`, n: search({ with: rest }).length, apply: () => (state.with = rest) });
+    fixes.push({ label: `without ${ingName(p)}`, n: search({ with: rest }).length, apply: () => (state.with = rest) });
   }
   if (state.q && state.with.length)
-    fixes.push({ label: `Drop “${state.q}”`, n: search({ q: '' }).length, apply: () => (state.q = '') });
-  if (state.sites.size)
-    fixes.push({ label: 'Any site', n: search({ skip: 'site' }).length, apply: () => state.sites.clear() });
-  if (state.time)
-    fixes.push({ label: 'Any time', n: search({ skip: 'time' }).length, apply: () => (state.time = 0) });
-  if (state.cuisine)
-    fixes.push({ label: 'Any cuisine', n: search({ skip: 'cuisine' }).length, apply: () => (state.cuisine = '') });
+    fixes.push({ label: `any dish, not just “${state.q}”`, n: search({ q: '' }).length, apply: () => (state.q = '') });
+  if (state.sites.size) fixes.push({ label: 'any site', n: search({ skip: 'site' }).length, apply: () => state.sites.clear() });
+  if (state.time) fixes.push({ label: 'any time', n: search({ skip: 'time' }).length, apply: () => (state.time = 0) });
+  if (state.cuisine) fixes.push({ label: 'any cuisine', n: search({ skip: 'cuisine' }).length, apply: () => (state.cuisine = '') });
   const useful = fixes.filter((f) => f.n > 0).sort((a, b) => b.n - a.n);
   emptyFixes = useful.map((f) => f.apply);
   $('empty').hidden = false;
-  $('empty-hint').textContent = useful.length ? 'One change gets you somewhere:' : 'Try fewer or different words.';
-  $('fixes').innerHTML =
-    useful.map((f, n) => `<li><button type="button" data-fix="${n}">${esc(f.label)} (${f.n.toLocaleString()})</button></li>`).join('') +
-    (filterCount() || state.with.length ? `<li><button type="button" data-fix="clear">Start over</button></li>` : '');
+  const tries = useful.map((f, n) => `<button type="button" data-fix="${n}">${esc(f.label)}</button> (${plural(f.n, 'recipe')})`);
+  const over = `<button type="button" data-fix="clear">start over</button>`;
+  $('fixes').innerHTML = tries.length
+    ? `Try ${orList([...tries, over])}.`
+    : state.q
+      ? `Try fewer or different words, or ${over}.`
+      : `Try ${over}.`;
 }
 let emptyFixes: (() => void)[] = [];
 
@@ -325,61 +337,88 @@ function renderVideos(q: string[]) {
   const rows = data.videos.rows;
   if (!rows.length || !q.length || state.sites.size) return;
   const hits = rows
-    .map((v) => {
+    .filter((v) => {
       const t = words(v[1]);
-      const ok = q.every((w, n) => t.some((x) => x === w || (n === q.length - 1 && x.startsWith(w))));
-      return ok ? v : null;
+      return q.every((w, n) => t.some((x) => x === w || (n === q.length - 1 && x.startsWith(w))));
     })
-    .filter((v): v is VideoRow => !!v)
     .slice(0, 4);
   if (!hits.length) return;
   $('videos').hidden = false;
   $('video-results').innerHTML = hits
     .map(
-      (v) => `<li><article class="card" data-src="youtube">
-      <h3><a href="https://www.youtube.com/watch?v=${esc(v[2])}" data-src-id="youtube">${highlight(v[1], q)}</a></h3>
-      <div class="photo" style="order:-1"><img src="https://i.ytimg.com/vi/${esc(v[2])}/mqdefault.jpg" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" width="320" height="180"><span class="badge-yt">YouTube</span></div>
-      <p class="src"><span class="src-mark" aria-hidden="true"></span>${esc(v[0])} on YouTube</p>
+      (v) => `<li><article class="row">
+      <div class="text">
+        <h3><a href="https://www.youtube.com/watch?v=${esc(v[2])}" data-src-id="youtube" data-from="videos">${highlight(v[1], q)}</a></h3>
+        <p class="meta">Video on YouTube, from ${esc(v[0])}</p>
+      </div>
+      <div class="photo"><img src="https://i.ytimg.com/vi/${esc(v[2])}/mqdefault.jpg" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" width="320" height="180"></div>
     </article></li>`,
     )
     .join('');
 }
 
 function renderAlso() {
-  const term = state.q || listNames(state.with).replace(/ and /g, ' ');
+  const term = state.q || state.with.map(ingName).join(' ');
   if (!term || !data.linkOnly.length) return;
   const links = data.linkOnly.map(
     (l) => `<a href="${esc(l.search.replace('{q}', encodeURIComponent(term)))}" data-other="${esc(l.name)}">${esc(l.name)}</a>`,
   );
-  const list = links.length < 2 ? links[0] : `${links.slice(0, -1).join(', ')} or ${links.at(-1)}`;
   const also = $('also');
   also.hidden = false;
-  also.innerHTML = `Not here? Search ${list} for “${esc(term)}”.`;
+  also.innerHTML = `Not here? Search ${orList(links)} for “${esc(term)}”.`;
 }
 
 // ---------------------------------------------------------------------------------------
-// Filters (popovers with native checkboxes and radios)
+// Pick one at random: from what you're looking at, or from everything.
+
+function pickRandom() {
+  const pool = isBlank() ? recipes.map((r) => ({ r })) : search();
+  if (!pool.length) return;
+  let next = pool[Math.floor(Math.random() * pool.length)].r.i;
+  if (pool.length > 1 && next === state.picked) next = pool[(pool.findIndex((h) => h.r.i === next) + 1) % pool.length].r.i;
+  state.picked = next;
+  renderPicked();
+  const box = $('picked');
+  box.focus({ preventScroll: true });
+  box.scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  track('Picked Random Recipe', {
+    experiment: EXPERIMENT,
+    source: recipes[next].src.id,
+    pool_size: pool.length,
+    ingredient_count: state.with.length,
+  });
+}
+
+function renderPicked() {
+  const box = $('picked');
+  if (state.picked < 0) {
+    box.hidden = true;
+    return;
+  }
+  const r = recipes[state.picked];
+  const used = state.with.filter((p) => r.pos.has(p));
+  const missing = r.own.filter((p) => !covers(state.with, p)).length;
+  $('picked-card').innerHTML = row({ r, score: 0, used, missing }, 0, words(state.q), 'random');
+  box.hidden = false;
+}
+
+// ---------------------------------------------------------------------------------------
+// Filters: words that open a menu of native radios and checkboxes.
 
 function buildFilters() {
   $('f-site-options').innerHTML = data.sources
     .map(
       (s) =>
-        `<label data-src="${esc(s.id)}"><input type="checkbox" name="site" value="${esc(s.id)}"> ${esc(s.name)} <span class="count">${s.count.toLocaleString()}</span></label>`,
+        `<label><input type="checkbox" name="site" value="${esc(s.id)}"> ${esc(s.name)} <span class="count">${s.count.toLocaleString()}</span></label>`,
     )
     .join('');
   $('f-time-options').innerHTML = [0, ...TIMES]
     .map(
-      (t) =>
-        `<label><input type="radio" name="time" value="${t}"> ${t ? `${t} minutes or less` : 'Any time'} <span class="count">${
-          t ? recipes.filter((r) => r.min != null && r.min <= t).length.toLocaleString() : ''
-        }</span></label>`,
+      (t) => `<label><input type="radio" name="time" value="${t}"> ${t ? `${t} minutes or less` : 'Any time'} <span class="count"></span></label>`,
     )
     .join('');
   $('f-cuisine-options').innerHTML = [['', 0] as [string, number], ...data.cuisines]
-    .map(
-      ([c, n]) =>
-        `<label><input type="radio" name="cuisine" value="${esc(c)}"> ${c ? esc(c) : 'Any cuisine'} <span class="count">${n ? n.toLocaleString() : ''}</span></label>`,
-    )
+    .map(([c]) => `<label><input type="radio" name="cuisine" value="${esc(c)}"> ${c ? esc(c) : 'Any cuisine'} <span class="count"></span></label>`)
     .join('');
 
   for (const pop of document.querySelectorAll<HTMLElement>('.pop')) {
@@ -390,9 +429,10 @@ function buildFilters() {
       if (el.name === 'cuisine') state.cuisine = el.value;
       state.shown = PAGE;
       render();
+      updateCounts(pop);
       writeUrl(false);
     });
-    // Open below its button on wider screens; on phones CSS makes it a bottom sheet.
+    // Open under its word on wider screens; on phones CSS makes it a sheet at the bottom.
     pop.addEventListener('toggle', (e) => {
       if ((e as ToggleEvent).newState !== 'open') return;
       updateCounts(pop);
@@ -400,13 +440,18 @@ function buildFilters() {
       const btn = document.querySelector<HTMLElement>(`[popovertarget="${pop.id}"]`)!;
       const r = btn.getBoundingClientRect();
       pop.style.inset = 'auto';
-      pop.style.top = `${r.bottom + 8}px`;
+      pop.style.top = `${r.bottom + 6}px`;
       pop.style.left = `${Math.max(16, Math.min(r.left, innerWidth - pop.offsetWidth - 16))}px`;
     });
   }
-  addEventListener('scroll', () => document.querySelectorAll<HTMLElement>('.pop:popover-open').forEach((p) => p.hidePopover()), {
-    passive: true,
-  });
+  addEventListener(
+    'scroll',
+    () => {
+      if (matchMedia('(max-width: 40rem)').matches) return;
+      document.querySelectorAll<HTMLElement>('.pop:popover-open').forEach((p) => p.hidePopover());
+    },
+    { passive: true },
+  );
 }
 
 /** Each option's count, given everything else you've picked, so "Thai 12" means 12 here. */
@@ -415,23 +460,23 @@ function updateCounts(pop: HTMLElement) {
   const hits = isBlank() ? recipes.map((r) => ({ r })) : search({ skip: kind });
   for (const label of pop.querySelectorAll('label')) {
     const el = label.querySelector('input')!;
-    const count = label.querySelector('.count')!;
     let n = 0;
     if (kind === 'site') n = hits.filter((h) => h.r.src.id === el.value).length;
     if (kind === 'time') n = Number(el.value) ? hits.filter((h) => h.r.min != null && h.r.min <= Number(el.value)).length : hits.length;
     if (kind === 'cuisine') n = el.value ? hits.filter((h) => h.r.cuisine === el.value).length : hits.length;
-    count.textContent = n.toLocaleString();
+    label.querySelector('.count')!.textContent = n.toLocaleString();
   }
 }
 
 function renderFilterButtons() {
-  const site = state.sites.size === 1 ? data.sources.find((s) => state.sites.has(s.id))!.name : state.sites.size ? `${state.sites.size} sites` : '';
+  const site =
+    state.sites.size === 1 ? data.sources.find((s) => state.sites.has(s.id))!.name : state.sites.size ? `${state.sites.size} sites` : '';
   const set = (id: string, value: string) => {
-    $(`${id}-value`).textContent = value;
+    $(`${id}-value`).textContent = value || 'any';
     $(`${id}-btn`).toggleAttribute('data-active', !!value);
   };
   set('f-site', site);
-  set('f-time', state.time ? `${state.time} min or less` : '');
+  set('f-time', state.time ? `${state.time} minutes or less` : '');
   set('f-cuisine', state.cuisine);
   for (const el of document.querySelectorAll<HTMLInputElement>('.pop input')) {
     if (el.name === 'site') el.checked = state.sites.has(el.value);
@@ -442,44 +487,32 @@ function renderFilterButtons() {
 }
 
 // ---------------------------------------------------------------------------------------
-// Start state and the "What's in here" list
+// Ideas for an empty page, and where the recipes come from
 
 function buildStart() {
-  $('popular').innerHTML = data.popular
-    .map(
-      (p) =>
-        `<li><button type="button" data-add="${p}" aria-label="${esc(data.ing[p][1].toLowerCase())}, ${plural(ingRecipes[p], 'recipe')}">${esc(
-          data.ing[p][1].toLowerCase(),
-        )} <span class="chip-count" aria-hidden="true">${ingRecipes[p].toLocaleString()}</span></button></li>`,
-    )
-    .join('');
-  $('try').innerHTML = TRY.filter((t) => search({ q: t, with: [] }).length)
-    .map((t) => `<li><button type="button" data-try="${esc(t)}">${esc(t)}</button></li>`)
-    .join('');
+  const pop = data.popular.map((p) => `<button type="button" data-add="${p}">${esc(ingName(p))}</button>`);
+  $('popular').innerHTML = `Have any of these? ${andList(pop).replace(/ and (?=<button[^>]*>[^<]*<\/button>$)/, ' or ')}.`;
+  const tries = TRY.filter((t) => search({ q: t, with: [] }).length).map(
+    (t) => `<button type="button" data-try="${esc(t)}">${esc(t)}</button>`,
+  );
+  $('try').innerHTML = `Or look up ${orList(tries)}.`;
 }
 
 function buildAbout() {
+  const names = data.sources.map((s) => s.name);
+  $('from').textContent = `Searches ${andList(names)}. Every recipe opens on its own site.`;
   const items = [
-    ...data.sources.map(
-      (s) =>
-        `<li data-src="${esc(s.id)}"><span class="src-mark" aria-hidden="true"></span><span><a href="${esc(s.site)}">${esc(s.name)}</a> <span class="count">${plural(s.count, 'recipe')}</span></span></li>`,
-    ),
-    ...data.paused.map(
-      (s) =>
-        `<li><span class="src-mark" aria-hidden="true"></span><span><a href="${esc(s.site)}">${esc(s.name)}</a> <span class="why">not searchable yet: its site doesn’t answer our weekly job</span></span></li>`,
-    ),
+    ...data.sources.map((s) => `<li><a href="${esc(s.site)}">${esc(s.name)}</a>, ${plural(s.count, 'recipe')}</li>`),
+    ...data.paused.map((s) => `<li><a href="${esc(s.site)}">${esc(s.name)}</a>, coming back once its site lets the weekly program in</li>`),
     ...data.videos.sources.map(
       (v) =>
-        `<li data-src="youtube"><span class="src-mark" aria-hidden="true"></span><span><a href="${esc(v.channel)}">${esc(v.name)}</a> <span class="why">${
-          data.videos.rows.length ? plural(data.videos.rows.length, 'YouTube video') : 'YouTube videos, coming soon'
-        }</span></span></li>`,
+        `<li><a href="${esc(v.channel)}">${esc(v.name)}</a>, ${
+          data.videos.rows.length ? plural(data.videos.rows.length, 'video') : 'videos on YouTube, coming soon'
+        }</li>`,
     ),
     ...data.linkOnly
       .filter((l) => !/youtube/.test(l.search))
-      .map(
-        (l) =>
-          `<li><span class="src-mark" aria-hidden="true"></span><span>${esc(l.name)} <span class="why">a link to its own search, since its owner doesn’t allow automated collection</span></span></li>`,
-      ),
+      .map((l) => `<li>${esc(l.name)}, as a link to its own search, since its owner doesn’t allow automated collection</li>`),
   ];
   $('sources-list').innerHTML = items.join('');
   if (data.crawled) {
@@ -489,119 +522,129 @@ function buildAbout() {
 }
 
 // ---------------------------------------------------------------------------------------
-// Typeahead (the ARIA combobox pattern: focus stays in the field, arrows move the
-// highlighted option, Enter picks it)
+// Suggestions under each word (the ARIA combobox pattern: focus stays in the field,
+// arrows move the highlighted option, Enter picks it)
 
-type Option = { kind: 'ing'; p: number } | { kind: 'recipe'; h: Hit; n: number } | { kind: 'all' };
-let options: Option[] = [];
-let active = -1;
+type Option = { kind: 'ing'; p: number } | { kind: 'recipe'; h: Hit; n: number } | { kind: 'all'; n: number };
 
-function suggest() {
-  const raw = input.value.trim();
-  const qw = words(raw);
-  if (!qw.length) return closeList();
-  const qs = qw.join(' ');
-  const quality = (p: number) =>
-    ingNames[p].some((n) => n === qs) ? 3 : ingNames[p].some((n) => n.startsWith(qs)) ? 2 : 1;
-  const ings = data.ing
+class Suggest {
+  options: Option[] = [];
+  active = -1;
+  constructor(
+    public input: HTMLInputElement,
+    public panel: HTMLElement,
+    public list: HTMLElement,
+    public build: (text: string) => Option[],
+    public label: (o: Option, qs: string) => string,
+  ) {}
+
+  open() {
+    const text = this.input.value.trim();
+    if (!data || !text) return this.close();
+    this.options = this.build(text);
+    if (!this.options.length) return this.close();
+    this.active = -1;
+    const qs = words(text).join(' ');
+    this.list.innerHTML = this.options
+      .map((o, n) => `<span role="option" id="${this.input.id}-opt-${n}" aria-selected="false" data-n="${n}">${this.label(o, qs)}</span>`)
+      .join('');
+    this.panel.hidden = false;
+    this.input.setAttribute('aria-expanded', 'true');
+    this.input.removeAttribute('aria-activedescendant');
+  }
+
+  close() {
+    this.panel.hidden = true;
+    this.input.setAttribute('aria-expanded', 'false');
+    this.input.removeAttribute('aria-activedescendant');
+    this.options = [];
+    this.active = -1;
+  }
+
+  move(by: number) {
+    if (this.panel.hidden) return this.open();
+    const last = this.options.length - 1;
+    this.active = by > 0 ? (this.active >= last ? 0 : this.active + 1) : this.active <= 0 ? last : this.active - 1;
+    for (const el of this.list.querySelectorAll('[role="option"]'))
+      el.setAttribute('aria-selected', String(el.id === `${this.input.id}-opt-${this.active}`));
+    this.input.setAttribute('aria-activedescendant', `${this.input.id}-opt-${this.active}`);
+    $(`${this.input.id}-opt-${this.active}`).scrollIntoView({ block: 'nearest' });
+  }
+}
+
+const ingMatches = (text: string): number[] => {
+  const qs = words(text).join(' ');
+  const quality = (p: number) => (ingNames[p].some((n) => n === qs) ? 3 : ingNames[p].some((n) => n.startsWith(qs)) ? 2 : 1);
+  return data.ing
     .map((_, p) => p)
     .filter((p) => !state.with.includes(p) && ingRecipes[p] > 0 && ingNames[p].some((n) => n.startsWith(qs) || n.includes(` ${qs}`)))
-    // An exact name first, then names that start with what you typed ("scal": scallion,
-    // scallops), then a word inside one; within each, the most used first.
-    .sort((a, b) => quality(b) - quality(a) || ingRecipes[b] - ingRecipes[a])
-    .slice(0, 4);
-  const hits = search({ q: raw });
-  options = [
-    ...ings.map((p) => ({ kind: 'ing' as const, p })),
-    ...hits.slice(0, 4).map((h, n) => ({ kind: 'recipe' as const, h, n: n + 1 })),
-    { kind: 'all' as const },
-  ];
-  active = -1;
-  const opt = (o: Option, n: number) => {
-    const id = `opt-${n}`;
-    if (o.kind === 'ing')
-    {
-      // When it matched another name ("thai ginger" for galangal), say so.
-      const names = data.ing[o.p].slice(4) as string[];
-      const via = ingNames[o.p][0].startsWith(qs) || ingNames[o.p][0].includes(` ${qs}`)
-        ? ''
-        : names.find((_, k) => ingNames[o.p][k + 1].startsWith(qs) || ingNames[o.p][k + 1].includes(` ${qs}`)) || '';
-      return `<div role="option" id="${id}" aria-selected="false" data-n="${n}"><span class="opt-plus" aria-hidden="true">+</span><span class="opt-text"><span>Add <strong>${esc(
-        data.ing[o.p][1].toLowerCase(),
-      )}</strong>${via ? ` <span class="opt-meta">(${esc(via)})</span>` : ''}</span><span class="opt-meta">${plural(ingRecipes[o.p], 'recipe')}</span></span></div>`;
-    }
+    .sort((a, b) => quality(b) - quality(a) || ingRecipes[b] - ingRecipes[a]);
+};
+
+const haveSuggest = new Suggest(
+  haveInput,
+  $('have-panel'),
+  $('have-list'),
+  (text) => ingMatches(text).slice(0, 6).map((p) => ({ kind: 'ing' as const, p })),
+  (o, qs) => {
+    if (o.kind !== 'ing') return '';
+    // When it matched another name ("thai ginger" for galangal), say so.
+    const others = data.ing[o.p].slice(4) as string[];
+    const main = ingNames[o.p][0];
+    const via = main.startsWith(qs) || main.includes(` ${qs}`)
+      ? ''
+      : others.find((_, k) => ingNames[o.p][k + 1].startsWith(qs) || ingNames[o.p][k + 1].includes(` ${qs}`)) || '';
+    return `<span class="opt-text"><span class="opt-name">${esc(ingName(o.p))}${via ? ` <span class="opt-meta">(${esc(via)})</span>` : ''}</span><span class="opt-meta">in ${plural(
+      ingRecipes[o.p],
+      'recipe',
+    )}</span></span>`;
+  },
+);
+
+const qSuggest = new Suggest(
+  qInput,
+  $('q-panel'),
+  $('q-list'),
+  (text) => {
+    const hits = search({ q: text });
+    return [...hits.slice(0, 5).map((h, n) => ({ kind: 'recipe' as const, h, n: n + 1 })), ...(hits.length ? [{ kind: 'all' as const, n: hits.length }] : [])];
+  },
+  (o) => {
     if (o.kind === 'recipe') {
       const r = o.h.r;
       const thumb = r.img
-        ? `<img class="opt-thumb" src="${esc(r.img)}" alt="" loading="lazy" referrerpolicy="no-referrer" width="40" height="40">`
+        ? `<img class="opt-thumb" src="${esc(r.img)}" alt="" loading="lazy" referrerpolicy="no-referrer" width="44" height="44">`
         : `<span class="opt-thumb" aria-hidden="true"></span>`;
-      return `<div role="option" id="${id}" aria-selected="false" data-n="${n}">${thumb}<span class="opt-text"><span>${highlight(
-        r.name,
-        qw,
-      )}</span><span class="opt-meta">${esc(r.src.name)}${r.min ? ` · ${fmtTime(r.min)}` : ''}</span></span></div>`;
+      return `${thumb}<span class="opt-text"><span>${highlight(r.name, words(qInput.value))}</span><span class="opt-meta">${esc(r.src.name)}${
+        r.min ? `, ${fmtTime(r.min)}` : ''
+      }</span></span>`;
     }
-    return `<div role="option" id="${id}" aria-selected="false" data-n="${n}"><span class="opt-text"><span>See all ${plural(
-      hits.length,
-      'result',
-    )} for “${esc(raw)}”</span></span></div>`;
-  };
-  let html = '';
-  let n = 0;
-  if (ings.length)
-    html += `<div role="group" aria-labelledby="g-ing"><div class="group-label" id="g-ing" role="presentation">Search by ingredient</div>${ings
-      .map(() => opt(options[n], n++))
-      .join('')}</div>`;
-  const recipeCount = Math.min(4, hits.length);
-  if (recipeCount)
-    html += `<div role="group" aria-labelledby="g-rec"><div class="group-label" id="g-rec" role="presentation">Recipes</div>${Array.from(
-      { length: recipeCount },
-      () => opt(options[n], n++),
-    ).join('')}</div>`;
-  html += opt(options[n], n);
-  listbox.innerHTML = html;
-  panel.hidden = false;
-  input.setAttribute('aria-expanded', 'true');
-  input.removeAttribute('aria-activedescendant');
-}
+    if (o.kind === 'all') return `<span class="opt-text"><span class="opt-name">See all ${plural(o.n, 'recipe')}</span></span>`;
+    return '';
+  },
+);
 
-function closeList() {
-  panel.hidden = true;
-  input.setAttribute('aria-expanded', 'false');
-  input.removeAttribute('aria-activedescendant');
-  options = [];
-  active = -1;
-}
-
-function setActive(n: number) {
-  active = n;
-  for (const el of listbox.querySelectorAll('[role="option"]')) el.setAttribute('aria-selected', String(el.id === `opt-${n}`));
-  if (n < 0) return input.removeAttribute('aria-activedescendant');
-  input.setAttribute('aria-activedescendant', `opt-${n}`);
-  $(`opt-${n}`).scrollIntoView({ block: 'nearest' });
-}
-
-function choose(n: number) {
-  const o = options[n];
+function choose(s: Suggest, n: number) {
+  const o = s.options[n];
   if (!o) return;
   if (o.kind === 'ing') {
-    input.value = '';
-    state.q = '';
+    haveInput.value = '';
     addIngredient(o.p, 'suggestions');
+    haveInput.focus();
   } else if (o.kind === 'recipe') {
     openedRecipe(o.h.r.src.id, o.n, 'suggestions');
     location.href = o.h.r.url;
-  } else {
-    submit();
-  }
+  } else submit();
 }
 
 // ---------------------------------------------------------------------------------------
 // Actions
 
 function addIngredient(p: number, from: string) {
-  closeList();
+  haveSuggest.close();
   if (!state.with.includes(p)) state.with.push(p);
   state.shown = PAGE;
+  state.picked = -1;
   render();
   writeUrl(true);
   track('Added Ingredient', { experiment: EXPERIMENT, ingredient_id: data.ing[p][0], added_from: from });
@@ -609,12 +652,22 @@ function addIngredient(p: number, from: string) {
 }
 
 function submit() {
-  closeList();
-  state.q = input.value.trim();
+  haveSuggest.close();
+  qSuggest.close();
+  // Text left in "I have" counts too: take its best ingredient match.
+  const leftover = haveInput.value.trim();
+  if (leftover) {
+    const best = ingMatches(leftover)[0];
+    if (best != null && !state.with.includes(best)) state.with.push(best);
+    haveInput.value = '';
+  }
+  state.q = qInput.value.trim();
   state.shown = PAGE;
+  state.picked = -1;
   render();
   writeUrl(true);
   searched();
+  if (matchMedia('(max-width: 40rem)').matches) (document.activeElement as HTMLElement | null)?.blur();
 }
 
 function searched() {
@@ -629,13 +682,7 @@ function searched() {
 }
 
 function openedRecipe(source: string, position: number, from: string) {
-  track('Opened Recipe', {
-    experiment: EXPERIMENT,
-    source,
-    position,
-    opened_from: from,
-    ingredient_count: state.with.length,
-  });
+  track('Opened Recipe', { experiment: EXPERIMENT, source, position, opened_from: from, ingredient_count: state.with.length });
 }
 
 // ---------------------------------------------------------------------------------------
@@ -668,78 +715,81 @@ function readUrl() {
   state.shown = PAGE;
 }
 
+
 // ---------------------------------------------------------------------------------------
 // Events
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();
-  if (active >= 0) return choose(active);
+  if (haveSuggest.active >= 0 && document.activeElement === haveInput) return choose(haveSuggest, haveSuggest.active);
+  if (qSuggest.active >= 0 && document.activeElement === qInput) return choose(qSuggest, qSuggest.active);
+  // Enter in "I have" adds the best match, so you can type "ginger, Enter, tofu, Enter".
+  if (document.activeElement === haveInput && haveInput.value.trim()) {
+    const best = ingMatches(haveInput.value)[0];
+    if (best != null) {
+      haveInput.value = '';
+      return addIngredient(best, 'typed');
+    }
+  }
   submit();
 });
 
-input.addEventListener('input', () => (data ? suggest() : undefined));
-input.addEventListener('focus', () => input.value.trim() && data && suggest());
-input.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-    if (panel.hidden) {
-      if (data && input.value.trim()) suggest();
-      e.preventDefault();
-      return;
+for (const s of [haveSuggest, qSuggest]) {
+  s.input.addEventListener('input', () => {
+    // A comma in "I have" finishes the ingredient.
+    if (s === haveSuggest && s.input.value.includes(',')) {
+      const best = ingMatches(s.input.value.replace(/,/g, ''))[0];
+      s.input.value = '';
+      if (best != null) return addIngredient(best, 'typed');
     }
-    e.preventDefault();
-    const last = options.length - 1;
-    setActive(e.key === 'ArrowDown' ? (active >= last ? 0 : active + 1) : active <= 0 ? last : active - 1);
-  } else if (e.key === 'Escape' && !panel.hidden) {
-    e.preventDefault();
-    closeList();
-  } else if (e.key === 'Backspace' && !input.value && state.with.length) {
-    // Backspace in an empty field takes off the last ingredient, like a tag field.
-    state.with.pop();
-    render();
-    writeUrl(false);
-  }
-});
-input.addEventListener('search', () => {
-  // The field's own clear button.
-  if (!input.value && state.q) submit();
-});
-
-// Keep focus in the field when an option is clicked.
-listbox.addEventListener('mousedown', (e) => e.preventDefault());
-listbox.addEventListener('click', (e) => {
-  const el = (e.target as HTMLElement).closest<HTMLElement>('[role="option"]');
-  if (el) choose(Number(el.dataset.n));
-});
-form.addEventListener('focusout', (e) => {
-  if (!form.contains(e.relatedTarget as Node)) closeList();
-});
-document.addEventListener('click', (e) => {
-  if (!form.contains(e.target as Node)) closeList();
-});
+    s.open();
+  });
+  s.input.addEventListener('focus', () => s.input.value.trim() && s.open());
+  s.input.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      s.move(e.key === 'ArrowDown' ? 1 : -1);
+    } else if (e.key === 'Escape' && !s.panel.hidden) {
+      e.preventDefault();
+      s.close();
+    } else if (s === haveSuggest && e.key === 'Backspace' && !s.input.value && state.with.length) {
+      // Backspace in an empty "I have" takes off the last ingredient, like a tag field.
+      state.with.pop();
+      render();
+      writeUrl(false);
+    }
+  });
+  // Keep focus in the field when an option is clicked.
+  s.list.addEventListener('mousedown', (e) => e.preventDefault());
+  s.list.addEventListener('click', (e) => {
+    const el = (e.target as HTMLElement).closest<HTMLElement>('[role="option"]');
+    if (el) choose(s, Number(el.dataset.n));
+  });
+  s.input.addEventListener('blur', () => setTimeout(() => document.activeElement !== s.input && s.close(), 0));
+}
 
 app.addEventListener('click', (e) => {
   const el = (e.target as HTMLElement).closest<HTMLElement>('button, a');
   if (!el) return;
   if (el.dataset.add) addIngredient(Number(el.dataset.add), 'popular');
   else if (el.dataset.try) {
-    input.value = el.dataset.try;
+    qInput.value = el.dataset.try;
     submit();
   } else if (el.dataset.remove) {
     state.with = state.with.filter((p) => p !== Number(el.dataset.remove));
     state.shown = PAGE;
     render();
     writeUrl(true);
-    input.focus();
+    haveInput.focus();
   } else if (el.dataset.fix) {
     if (el.dataset.fix === 'clear') clearAll();
     else emptyFixes[Number(el.dataset.fix)]?.();
     state.shown = PAGE;
     render();
     writeUrl(true);
-  } else if (el.dataset.pos) {
-    openedRecipe(el.dataset.srcId || '', Number(el.dataset.pos), 'results');
-  } else if (el.dataset.srcId === 'youtube') {
-    openedRecipe('youtube', 0, 'videos');
+    haveInput.focus();
+  } else if (el.dataset.srcId) {
+    openedRecipe(el.dataset.srcId, Number(el.dataset.pos || 0), el.dataset.from || 'results');
   } else if (el.dataset.other) {
     track('Opened Other Search', { experiment: EXPERIMENT, site: el.dataset.other });
   }
@@ -751,6 +801,8 @@ function clearAll() {
   state.sites.clear();
   state.time = 0;
   state.cuisine = '';
+  state.picked = -1;
+  haveInput.value = '';
 }
 
 $('clear-all').addEventListener('click', () => {
@@ -758,8 +810,11 @@ $('clear-all').addEventListener('click', () => {
   state.shown = PAGE;
   render();
   writeUrl(true);
-  input.focus();
+  haveInput.focus();
 });
+
+$('lucky').addEventListener('click', () => data && pickRandom());
+$('lucky-again').addEventListener('click', () => data && pickRandom());
 
 moreBtn.addEventListener('click', () => {
   const first = state.shown;
@@ -769,14 +824,14 @@ moreBtn.addEventListener('click', () => {
   resultsEl.querySelectorAll<HTMLAnchorElement>('h3 a')[first]?.focus();
 });
 
-// A photo that won't load (moved, blocked) falls back to the site's name.
-resultsEl.addEventListener(
+// A photo that won't load (moved, blocked) gives way to a plain "No photo".
+app.addEventListener(
   'error',
   (e) => {
     const img = e.target as HTMLImageElement;
     if (img.tagName !== 'IMG') return;
-    const name = img.closest<HTMLElement>('.card')?.querySelector('.src')?.textContent?.split(' · ')[0] || '';
-    img.replaceWith(Object.assign(document.createElement('span'), { className: 'no-photo', textContent: name }));
+    if (img.classList.contains('opt-thumb')) return void (img.style.visibility = 'hidden');
+    img.replaceWith(Object.assign(document.createElement('span'), { className: 'no-photo', textContent: 'No photo' }));
   },
   true,
 );

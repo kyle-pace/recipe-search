@@ -1,154 +1,157 @@
 ---
-// Recipe search: one search box across the recipe sites Kyle trusts, from our own index
+// Recipe search: one search across the recipe sites Kyle trusts, from our own index
 // (public/recipe-search/index.json, built from data/ by scripts/build-index.mjs).
-// The page is a shell; src/scripts/search.ts loads the index and does the searching in
-// the browser. Patterns came from a Mobbin pass (collection "Recipe search"):
-// typeahead with "see all", ingredient chips, one row of filter chips, photo cards that
-// name their site, and one-tap fixes when nothing matches.
-// It's a standalone lab, not a page of kylepace.dev: LabLayout gives it only a back link,
-// a footer line, display settings and analytics. Its look is src/styles/theme.css.
+// src/scripts/search.ts loads the index and searches it in the browser.
+//
+// The page is the sentence people actually say when they cook: "I have ginger and tofu",
+// "I want to make mapo tofu". design/PLAN.md has the reasoning. It's a standalone lab:
+// LabLayout gives it only a back link, a footer line, display settings and analytics;
+// its look is src/styles/theme.css.
 import LabLayout from 'kp-design/layouts/LabLayout.astro';
-import { StatusBadge } from 'kp-design';
 import '../../styles/theme.css';
 ---
 
 <LabLayout
   title="Recipe search"
-  description="One search box across the recipe sites I trust: The Woks of Life, Hot Thai Kitchen and Smitten Kitchen. Search by dish or by what you have; every result opens on the creator’s own site."
+  description="Search The Woks of Life, Hot Thai Kitchen and Smitten Kitchen at once, by dish or by what you have. Every recipe opens on its own site."
   image="/recipe-search/og.png"
-  imageAlt="Recipe search: one search box across the recipe sites I trust, on kylepace.dev."
-  themeColor={{ light: '#f6f7f4', dark: '#111614' }}
+  imageAlt="Recipe search: I have ginger, green onion and tofu. Recipes from The Woks of Life, Hot Thai Kitchen and Smitten Kitchen."
+  themeColor={{ light: '#ffffff', dark: '#121314' }}
 >
   <link slot="head" rel="preload" href="/recipe-search/index.json" as="fetch" crossorigin="anonymous" />
-  <StatusBadge slot="bar" status="in-progress" />
+  <a slot="bar" class="about-link" href="#about">About</a>
 
   <div class="page">
-  <header class="intro">
-    <p class="brand"><span class="brand-mark" aria-hidden="true"></span>Recipe search</p>
-    <h1>One search box for the recipe sites I trust.</h1>
-    <p class="lede prose">
-      Search by dish, or add what you have and see what it makes. Every result opens on the creator’s own site.
-    </p>
-  </header>
+    <header class="top">
+      <h1>Recipe search</h1>
+      <p class="from" id="from">Searches The Woks of Life, Hot Thai Kitchen and Smitten Kitchen. Every recipe opens on its own site.</p>
+    </header>
 
-  <div class="app" id="app" data-state="loading">
-    <form class="search" role="search" id="search-form" action="/recipe-search/" method="get">
-      <label class="visually-hidden" for="q">Search recipes or add an ingredient</label>
-      <div class="field">
-        <svg class="field-icon" aria-hidden="true" viewBox="0 0 24 24" width="22" height="22"
-          ><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"></circle><path
-            d="m15.5 15.5 5 5"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"></path></svg
-        >
-        <input
-          id="q"
-          name="q"
-          type="search"
-          autocomplete="off"
-          spellcheck="false"
-          placeholder="Dish or ingredient"
-          role="combobox"
-          aria-autocomplete="list"
-          aria-expanded="false"
-          aria-controls="suggestions"
-          aria-describedby="q-hint"
-        />
-        <button class="go" type="submit">Search</button>
+    <div class="app" id="app" data-state="loading">
+      <form class="ask" id="search-form" role="search" action="/recipe-search/" method="get" aria-label="Recipes">
+        <div class="line">
+          <label class="say" for="have">I have</label>
+          <ul class="words" id="with-chips" aria-label="Your ingredients"></ul>
+          <span class="field">
+            <input
+              id="have"
+              type="text"
+              autocomplete="off"
+              autocapitalize="none"
+              spellcheck="false"
+              enterkeyhint="done"
+              placeholder="an ingredient"
+              role="combobox"
+              aria-autocomplete="list"
+              aria-expanded="false"
+              aria-controls="have-list"
+              aria-describedby="have-hint"
+            />
+            <span class="panel" id="have-panel" hidden>
+              <span class="list" id="have-list" role="listbox" aria-label="Ingredients"></span>
+            </span>
+          </span>
+          <span id="have-hint" class="visually-hidden">Type an ingredient and pick it from the list. Backspace removes the last one.</span>
+        </div>
+
+        <div class="line">
+          <label class="say" for="q">I want to make</label>
+          <span class="field">
+            <input
+              id="q"
+              name="q"
+              type="text"
+              autocomplete="off"
+              spellcheck="false"
+              enterkeyhint="search"
+              placeholder="any dish"
+              role="combobox"
+              aria-autocomplete="list"
+              aria-expanded="false"
+              aria-controls="q-list"
+            />
+            <span class="panel" id="q-panel" hidden>
+              <span class="list" id="q-list" role="listbox" aria-label="Recipes"></span>
+            </span>
+          </span>
+        </div>
+
+        <div class="actions">
+          <button class="go" type="submit">Find recipes</button>
+          <button class="lucky" type="button" id="lucky">Pick one at random</button>
+        </div>
+      </form>
+
+      <div class="filters" role="group" aria-label="Narrow it down">
+        <button class="filter" type="button" popovertarget="f-cuisine" id="f-cuisine-btn">Cuisine: <span id="f-cuisine-value">any</span></button>
+        <button class="filter" type="button" popovertarget="f-site" id="f-site-btn">Site: <span id="f-site-value">any</span></button>
+        <button class="filter" type="button" popovertarget="f-time" id="f-time-btn">Time: <span id="f-time-value">any</span></button>
+        <button class="clear-all" type="button" id="clear-all" hidden>Start over</button>
       </div>
-      <p id="q-hint" class="visually-hidden">
-        As you type, suggestions appear below. Pick an ingredient to search by what you have.
-      </p>
-      <div class="suggestions" id="suggestions-panel" hidden>
-        <div id="suggestions" role="listbox" aria-label="Suggestions"></div>
+
+      <div class="pop" id="f-cuisine" popover>
+        <fieldset><legend>Cuisine</legend><div class="options" id="f-cuisine-options"></div></fieldset>
       </div>
-    </form>
+      <div class="pop" id="f-site" popover>
+        <fieldset><legend>Sites</legend><div class="options" id="f-site-options"></div></fieldset>
+      </div>
+      <div class="pop" id="f-time" popover>
+        <fieldset><legend>Ready in</legend><div class="options" id="f-time-options"></div></fieldset>
+      </div>
 
-    <div class="with" id="with" hidden>
-      <span class="with-label" id="with-label">Uses</span>
-      <ul class="chips" id="with-chips" aria-labelledby="with-label"></ul>
+      <p class="status" id="status" role="status" aria-live="polite">Loading the recipes…</p>
+
+      <section class="start" id="start" aria-label="Ideas" hidden>
+        <p id="popular"></p>
+        <p id="try"></p>
+      </section>
+
+      <section class="picked" id="picked" aria-labelledby="picked-title" hidden tabindex="-1">
+        <h2 id="picked-title">Picked at random</h2>
+        <div id="picked-card"></div>
+        <button class="lucky" type="button" id="lucky-again">Pick another</button>
+      </section>
+
+      <h2 class="visually-hidden" id="results-title">Recipes</h2>
+      <ol class="results" id="results" aria-labelledby="results-title"></ol>
+      <button class="more" type="button" id="more" hidden>Show more</button>
+
+      <section class="videos" id="videos" aria-labelledby="videos-title" hidden>
+        <h2 id="videos-title">On YouTube</h2>
+        <ol class="results" id="video-results"></ol>
+      </section>
+
+      <section class="empty" id="empty" aria-label="Nothing found" hidden>
+        <p id="fixes"></p>
+      </section>
+
+      <p class="also" id="also" hidden></p>
+
+      <noscript>
+        <p class="status">
+          Search runs in your browser, so it needs JavaScript. You can still search
+          <a href="https://thewoksoflife.com/?s=">The Woks of Life</a>,
+          <a href="https://hot-thai-kitchen.com/?s=">Hot Thai Kitchen</a> and
+          <a href="https://smittenkitchen.com/?s=">Smitten Kitchen</a> directly.
+        </p>
+      </noscript>
     </div>
 
-    <div class="filters" role="group" aria-label="Filters">
-      <button class="filter" type="button" popovertarget="f-site" id="f-site-btn">
-        <span class="filter-name">Site</span><span class="filter-value" id="f-site-value"></span>
-      </button>
-      <button class="filter" type="button" popovertarget="f-time" id="f-time-btn">
-        <span class="filter-name">Time</span><span class="filter-value" id="f-time-value"></span>
-      </button>
-      <button class="filter" type="button" popovertarget="f-cuisine" id="f-cuisine-btn">
-        <span class="filter-name">Cuisine</span><span class="filter-value" id="f-cuisine-value"></span>
-      </button>
-      <button class="clear-all" type="button" id="clear-all" hidden>Clear all</button>
-    </div>
-
-    <div class="pop" id="f-site" popover>
-      <fieldset>
-        <legend>Sites</legend>
-        <div id="f-site-options" class="options"></div>
-      </fieldset>
-    </div>
-    <div class="pop" id="f-time" popover>
-      <fieldset>
-        <legend>Ready in</legend>
-        <div class="options" id="f-time-options"></div>
-      </fieldset>
-    </div>
-    <div class="pop" id="f-cuisine" popover>
-      <fieldset>
-        <legend>Cuisine</legend>
-        <div class="options" id="f-cuisine-options"></div>
-      </fieldset>
-    </div>
-
-    <p class="status" id="status" role="status" aria-live="polite">Loading the recipes…</p>
-
-    <section class="start" id="start" aria-labelledby="start-title" hidden>
-      <h2 id="start-title">Start with what you have</h2>
-      <p class="muted">Pick a few. Recipes that use the most of them come first.</p>
-      <ul class="chips popular" id="popular"></ul>
-      <h2 class="try-title">Or try</h2>
-      <ul class="chips" id="try"></ul>
-    </section>
-
-    <h2 class="visually-hidden" id="results-title">Recipes</h2>
-    <ol class="results" id="results" aria-labelledby="results-title"></ol>
-    <button class="more" type="button" id="more" hidden>Show more</button>
-
-    <section class="videos" id="videos" aria-labelledby="videos-title" hidden>
-      <h2 id="videos-title">On YouTube</h2>
-      <ol class="results video-results" id="video-results"></ol>
-    </section>
-
-    <section class="empty" id="empty" aria-labelledby="empty-title" hidden>
-      <h2 id="empty-title">Nothing matches all of that</h2>
-      <p class="muted" id="empty-hint">Try one of these:</p>
-      <ul class="fixes" id="fixes"></ul>
-    </section>
-
-    <p class="also" id="also" hidden></p>
-
-    <noscript>
-      <p class="status">
-        Search runs in your browser, so it needs JavaScript. You can still search
-        <a href="https://thewoksoflife.com/?s=">The Woks of Life</a>,
-        <a href="https://hot-thai-kitchen.com/?s=">Hot Thai Kitchen</a> and
-        <a href="https://smittenkitchen.com/?s=">Smitten Kitchen</a> directly.
+    <section class="about" id="about" aria-labelledby="about-title" tabindex="-1">
+      <h2 id="about-title">About</h2>
+      <p>
+        I cook from a handful of sites I trust, and searching them one at a time got old. This searches them together,
+        by dish or by what’s in the fridge, and sends you to the creator’s own page for the recipe.
       </p>
-    </noscript>
-  </div>
-
-  <section class="about prose" aria-labelledby="about-title">
-    <h2 id="about-title">What’s in here</h2>
-    <ul id="sources-list" class="sources-list"></ul>
-    <p class="muted">
-      A weekly job reads each site’s sitemap, follows its robots.txt, and keeps only what it takes to find a recipe:
-      the title, link, photo link, ingredient names, time and cuisine. Never the recipe itself. Photos load from each
-      site, only when they’re on screen. <span id="crawled"></span>
-    </p>
-  </section>
-
+      <h3>Where the recipes come from</h3>
+      <ul id="sources-list" class="sources"></ul>
+      <h3>How it works</h3>
+      <p>
+        Once a week, a small program reads each site’s list of recipes, as its robots.txt allows, and keeps the name,
+        link, photo, ingredients, time and cuisine. Never the recipe itself. The search runs in your browser, so what
+        you type stays on your device. Photos load from each site when they’re on screen. <span id="crawled"></span>
+      </p>
+    </section>
   </div>
 
   <script>
@@ -158,67 +161,29 @@ import '../../styles/theme.css';
 
 <style>
   .page {
-    width: min(100% - 2 * var(--gutter), var(--wide));
+    width: min(100% - 2 * var(--gutter), 68rem);
     margin-inline: auto;
-    padding-block: var(--space-6) var(--space-12);
+    padding-block: var(--space-4) var(--space-12);
   }
 
-  .intro {
-    padding-bottom: var(--space-8);
-  }
-
-  .brand {
-    display: flex;
-    gap: var(--space-2);
-    align-items: center;
-    margin: 0 0 var(--space-4);
+  /* The page's name is small and plain: the sentence below is the headline. */
+  .top h1 {
+    margin: 0;
+    font-size: var(--step-1);
     font-weight: 700;
-    color: var(--accent-ink);
-  }
-
-  /* A little bowl, drawn in CSS. */
-  .brand-mark {
-    width: 1.1rem;
-    height: 0.6rem;
-    border-radius: 0 0 1rem 1rem;
-    background: var(--accent);
-    box-shadow: 0 -0.2rem 0 -0.05rem var(--accent-ink);
-  }
-
-  h1 {
-    max-width: 18ch;
-    margin: 0 0 var(--space-4);
-    font-size: clamp(2.2rem, 1.4rem + 3.4vw, 4rem);
-    line-height: 1.05;
-    letter-spacing: -0.025em;
-    text-wrap: balance;
-  }
-
-  h2 {
-    line-height: 1.2;
     letter-spacing: -0.01em;
   }
 
-  .prose {
-    max-width: var(--measure);
+  .from {
+    max-width: 36rem;
+    margin: var(--space-1) 0 0;
+    color: var(--ink-muted);
   }
 
-  .lede {
-    margin: 0;
-  }
-
-  .lede {
+  h2 {
+    margin: 0 0 var(--space-3);
     font-size: var(--step-1);
-    color: var(--ink-muted);
-  }
-
-  .muted {
-    color: var(--ink-muted);
-  }
-
-  /* Elements set to display: flex or block below still hide when [hidden]. */
-  .app [hidden] {
-    display: none !important;
+    line-height: 1.25;
   }
 
   .visually-hidden {
@@ -230,249 +195,240 @@ import '../../styles/theme.css';
     white-space: nowrap;
   }
 
-  /* Search field: the one strong surface on the page. */
-  .search {
-    position: relative;
-    max-width: 48rem;
+  .app [hidden] {
+    display: none !important;
   }
 
-  .field {
+  /* ---------------------------------------------------------------------------------
+     The sentence. Big, light words you say; bold words you add. */
+  .ask {
+    margin-top: var(--space-12);
+  }
+
+  .line {
     display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-1) var(--space-1) var(--space-1) var(--space-4);
-    background: var(--bg-raised);
-    border: 2px solid var(--line);
-    border-radius: 999px;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.15em 0.35em;
+    font-size: clamp(1.75rem, 1.05rem + 3.4vw, 3.6rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
   }
 
-  .field:focus-within {
-    border-color: var(--accent-ink);
+  .line + .line {
+    margin-top: 0.25em;
   }
 
-  .field-icon {
-    flex: none;
+  .say {
+    font-weight: 300;
     color: var(--ink-muted);
   }
 
-  .field input {
-    flex: 1;
-    min-width: 0;
-    min-height: 2.75rem;
+  .words {
+    display: contents;
+    list-style: none;
+  }
+
+  /* An ingredient you've added: marked like a highlighter on a shopping list. */
+  .words :global(button) {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.2em;
+    padding: 0 0.18em;
+    margin: 0;
     border: 0;
+    border-radius: 0.12em;
+    background: var(--scallion-fill);
+    color: var(--ink);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .words :global(.x) {
+    font-weight: 300;
+    font-size: 0.6em;
+    color: var(--ink-muted);
+  }
+
+  .words :global(button:hover .x),
+  .words :global(button:focus-visible .x) {
+    color: var(--chili);
+  }
+
+  .field {
+    position: relative;
+    flex: 1 1 8em;
+    min-width: 6.5em;
+  }
+
+  .field input {
+    width: 100%;
+    padding: 0 0 0.05em;
+    border: 0;
+    border-bottom: 0.08em solid var(--field-rule);
+    border-radius: 0;
     background: transparent;
     color: var(--ink);
     font: inherit;
-    font-size: var(--step-1);
-  }
-
-  .field input:focus {
-    outline: none;
+    font-weight: 700;
+    letter-spacing: inherit;
   }
 
   .field input::placeholder {
     color: var(--ink-muted);
-    opacity: 1;
+    font-weight: 300;
+    opacity: 0.75;
   }
 
-  .field input::-webkit-search-cancel-button {
+  .field input:focus {
+    outline: none;
+    border-bottom-color: var(--accent-ink);
+  }
+
+  /* Suggestions: a plain list under the word you're typing. */
+  .panel {
+    position: absolute;
+    z-index: 5;
+    top: calc(100% + 0.35rem);
+    left: 0;
+    width: min(26rem, calc(100vw - 2 * var(--gutter)));
+    padding: var(--space-2);
+    background: var(--bg-raised);
+    border: 1px solid var(--line);
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 30px rgb(0 0 0 / 0.14);
+    font-size: 1rem;
+    letter-spacing: normal;
+    line-height: 1.35;
+  }
+
+  .list {
+    display: block;
+  }
+
+  .panel :global([role='option']) {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+    min-height: 2.75rem;
+    padding: var(--space-2) var(--space-3);
+    border-radius: 0.35rem;
     cursor: pointer;
   }
 
-  .go {
+  .panel :global([role='option'][aria-selected='true']) {
+    background: var(--scallion-fill);
+  }
+
+  .panel :global(.opt-thumb) {
     flex: none;
-    min-height: 2.75rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.35rem;
+    object-fit: cover;
+    background: var(--line);
+  }
+
+  .panel :global(.opt-text) {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .panel :global(.opt-meta) {
+    font-size: var(--step--1);
+    color: var(--ink-muted);
+  }
+
+  .panel :global([aria-selected='true'] .opt-meta) {
+    color: var(--ink);
+  }
+
+  .panel :global(.opt-name) {
+    font-weight: 700;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-6);
+    align-items: center;
+    margin-top: var(--space-8);
+  }
+
+  .go {
+    min-height: 3rem;
     padding: 0 var(--space-6);
     border: 0;
-    border-radius: 999px;
-    background: var(--ink);
+    border-radius: 0.4rem;
+    background: var(--accent-ink);
     color: var(--bg);
     font: inherit;
     font-weight: 700;
     cursor: pointer;
   }
 
-  /* Typeahead */
-  .suggestions {
-    position: absolute;
-    z-index: 5;
-    inset: calc(100% + var(--space-2)) 0 auto 0;
-    padding: var(--space-2);
-    background: var(--bg-raised);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    box-shadow: 0 12px 32px rgb(0 0 0 / 0.18);
-  }
-
-  .suggestions :global(.group-label) {
-    margin: var(--space-2) var(--space-3) var(--space-1);
-    font-size: var(--step--1);
-    font-weight: 700;
-    color: var(--ink-muted);
-  }
-
-  .suggestions :global([role='option']) {
-    display: flex;
-    gap: var(--space-3);
-    align-items: center;
+  .lucky,
+  .clear-all,
+  .more,
+  .empty :global(button),
+  .start :global(button) {
     min-height: 2.75rem;
-    padding: var(--space-2) var(--space-3);
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-  }
-
-  .suggestions :global([role='option'][aria-selected='true']) {
-    background: color-mix(in oklab, var(--accent) 22%, transparent);
-    outline: 2px solid var(--accent-ink);
-    outline-offset: -2px;
-  }
-
-  .suggestions :global([aria-selected='true'] .opt-meta) {
-    color: var(--ink);
-  }
-
-  .suggestions :global(.opt-thumb) {
-    flex: none;
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: var(--radius-sm);
-    object-fit: cover;
-    background: var(--line);
-  }
-
-  .suggestions :global(.opt-text) {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-  }
-
-  .suggestions :global(.opt-meta) {
-    font-size: var(--step--1);
-    color: var(--ink-muted);
-  }
-
-  .suggestions :global(.opt-plus) {
-    flex: none;
-    display: grid;
-    place-items: center;
-    width: 1.75rem;
-    height: 1.75rem;
-    border-radius: 999px;
-    border: 1.5px solid var(--accent-ink);
-    color: var(--accent-ink);
-    font-weight: 700;
-  }
-
-  /* Chips: ingredients you're using, popular ingredients and suggested searches. */
-  .chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
     padding: 0;
-    margin: 0;
-    list-style: none;
-  }
-
-  .chips :global(button) {
-    display: inline-flex;
-    gap: var(--space-2);
-    align-items: center;
-    min-height: 2.75rem;
-    padding: 0 var(--space-4);
-    border: 1.5px solid var(--line);
-    border-radius: 999px;
-    background: var(--bg-raised);
-    color: var(--ink);
-    font: inherit;
-    cursor: pointer;
-  }
-
-  .chips :global(button:hover) {
-    border-color: var(--accent-ink);
-  }
-
-  .chips :global(.chip-count) {
-    font-size: var(--step--1);
-    color: var(--ink-muted);
-  }
-
-  .with {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-3);
-    align-items: center;
-    margin-top: var(--space-4);
-  }
-
-  .with-label {
-    font-weight: 700;
-  }
-
-  .with :global(.chips button) {
-    background: color-mix(in oklab, var(--accent) 20%, var(--bg-raised));
-    border-color: var(--accent-ink);
-  }
-
-  .chips :global(.x) {
-    font-size: 1.25em;
-    line-height: 1;
-  }
-
-  /* One row of filters, Walmart and Upwork style. */
-  .filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-    align-items: center;
-    margin-top: var(--space-4);
-  }
-
-  .filter {
-    display: inline-flex;
-    gap: 0;
-    align-items: center;
-    min-height: 2.75rem;
-    padding: 0 var(--space-4);
-    border: 1.5px solid var(--line);
-    border-radius: 999px;
-    background: transparent;
-    color: var(--ink);
-    font: inherit;
-    cursor: pointer;
-  }
-
-  .filter::after {
-    content: '';
-    width: 0.45em;
-    height: 0.45em;
-    margin-left: var(--space-3);
-    border-right: 2px solid currentColor;
-    border-bottom: 2px solid currentColor;
-    transform: translateY(-25%) rotate(45deg);
-  }
-
-  .filter[data-active] {
-    border-color: var(--accent-ink);
-    background: color-mix(in oklab, var(--accent) 20%, transparent);
-  }
-
-  .filter-value:not(:empty)::before {
-    content: ': ';
-  }
-
-  .filter-value {
-    font-weight: 700;
-  }
-
-  .clear-all {
-    min-height: 2.75rem;
-    padding: 0 var(--space-3);
     border: 0;
     background: none;
     color: var(--accent-ink);
     font: inherit;
     text-decoration: underline;
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.2em;
     cursor: pointer;
+  }
+
+  .start :global(button),
+  .empty :global(button) {
+    min-height: 0;
+    padding-block: 0.4rem;
+  }
+
+  .lucky {
+    font-weight: 700;
+  }
+
+  /* ---------------------------------------------------------------------------------
+     Filters: words, not pills. */
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-6);
+    align-items: center;
+    margin-top: var(--space-6);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--line);
+  }
+
+  .filter {
+    min-height: 2.75rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--ink-muted);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .filter span {
+    color: var(--ink);
+    font-weight: 700;
+    text-decoration: underline dotted;
+    text-decoration-thickness: 0.1em;
+    text-underline-offset: 0.25em;
+  }
+
+  .filter[data-active] span {
+    color: var(--accent-ink);
+    text-decoration-style: solid;
   }
 
   .pop {
@@ -481,12 +437,12 @@ import '../../styles/theme.css';
     max-width: min(22rem, calc(100vw - 2 * var(--gutter)));
     max-height: min(26rem, 70vh);
     overflow: auto;
-    padding: var(--space-4);
+    padding: var(--space-4) var(--space-6);
     background: var(--bg-raised);
     color: var(--ink);
     border: 1px solid var(--line);
-    border-radius: var(--radius);
-    box-shadow: 0 12px 32px rgb(0 0 0 / 0.2);
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 30px rgb(0 0 0 / 0.16);
   }
 
   .pop fieldset {
@@ -510,8 +466,8 @@ import '../../styles/theme.css';
   }
 
   .options :global(input) {
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 1.2rem;
+    height: 1.2rem;
     accent-color: var(--accent-ink);
   }
 
@@ -520,16 +476,16 @@ import '../../styles/theme.css';
     padding-left: var(--space-4);
     color: var(--ink-muted);
     font-size: var(--step--1);
+    font-variant-numeric: tabular-nums;
   }
 
-  /* On phones, filter menus come up from the bottom. */
   @media (max-width: 40rem) {
     .pop {
       inset: auto 0 0 0 !important;
       max-width: none;
       width: 100%;
-      border-radius: var(--radius) var(--radius) 0 0;
-      padding-bottom: calc(var(--space-6) + env(safe-area-inset-bottom));
+      border-radius: 0.75rem 0.75rem 0 0;
+      padding-bottom: calc(var(--space-8) + env(safe-area-inset-bottom));
     }
   }
 
@@ -553,285 +509,240 @@ import '../../styles/theme.css';
 
   .status :global(strong) {
     color: var(--ink);
+    font-variant-numeric: tabular-nums;
   }
 
-  .start h2,
-  .empty h2,
-  .videos h2 {
-    font-size: var(--step-1);
-    margin: 0 0 var(--space-2);
-  }
-
-  .start .muted {
+  .start p {
+    max-width: 44rem;
     margin: 0 0 var(--space-4);
+    line-height: 2;
+    color: var(--ink-muted);
   }
 
-  .start .try-title {
-    margin-top: var(--space-8);
-    margin-bottom: var(--space-4);
-  }
-
-  /* Results: photo cards that say whose recipe it is. */
+  /* ---------------------------------------------------------------------------------
+     Results: rows, photo on the left, like a page from a recipe index. */
   .results {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-    gap: var(--space-6) var(--space-4);
+    grid-template-columns: 1fr;
+    gap: var(--space-6) var(--space-12);
     padding: 0;
     margin: 0;
     list-style: none;
   }
 
-  .results :global(.card) {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+  @media (min-width: 60rem) {
+    .results {
+      grid-template-columns: 1fr 1fr;
+    }
   }
 
-  .results :global(.photo) {
+  .results :global(.row),
+  .picked :global(.row) {
     position: relative;
+    display: grid;
+    grid-template-columns: 8.5rem 1fr;
+    gap: var(--space-4);
+    align-items: start;
+  }
+
+  @media (max-width: 30rem) {
+    .results :global(.row) {
+      grid-template-columns: 6.5rem 1fr;
+      gap: var(--space-3);
+    }
+  }
+
+  :global(.row .photo) {
+    grid-row: 1;
+    grid-column: 1;
     aspect-ratio: 4 / 3;
     overflow: hidden;
-    border-radius: var(--radius);
-    background: color-mix(in oklab, var(--src) 18%, var(--bg-raised));
+    border-radius: 0.35rem;
+    background: var(--line);
   }
 
-  .results :global(.photo img) {
+  :global(.row .photo img) {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
   }
 
-  .results :global(.photo .no-photo) {
-    position: absolute;
-    inset: 0;
+  :global(.row .no-photo) {
     display: grid;
     place-items: center;
-    padding: var(--space-4);
+    height: 100%;
+    padding: var(--space-2);
+    font-size: var(--step--1);
     text-align: center;
-    font-weight: 700;
+    color: var(--ink-muted);
+  }
+
+  :global(.row .text) {
+    grid-row: 1;
+    grid-column: 2;
+  }
+
+  :global(.row h3) {
+    margin: 0 0 var(--space-1);
     font-size: var(--step-1);
-    color: var(--src-ink);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
   }
 
-  .results :global(.time) {
-    position: absolute;
-    left: var(--space-2);
-    bottom: var(--space-2);
-    padding: 0.15em 0.6em;
-    border-radius: 999px;
-    background: rgb(20 19 23 / 0.82);
-    color: #f3efe8;
-    font-size: var(--step--1);
-    font-weight: 700;
-  }
-
-  .results :global(.badge-yt) {
-    position: absolute;
-    right: var(--space-2);
-    top: var(--space-2);
-    padding: 0.15em 0.6em;
-    border-radius: 999px;
-    background: #fff;
-    color: #b00000;
-    font-size: var(--step--1);
-    font-weight: 700;
-  }
-
-  .results :global(h3) {
-    margin: var(--space-3) 0 var(--space-1);
-    font-size: var(--step-0);
-    line-height: 1.3;
-  }
-
-  .results :global(h3 a) {
+  :global(.row h3 a) {
     color: var(--ink);
     text-decoration: none;
   }
 
-  /* The whole card is the link's hit area; the title stays the accessible name. */
-  .results :global(h3 a::after) {
+  /* The whole row is the link's hit area; the name stays the accessible name. */
+  :global(.row h3 a::after) {
     content: '';
     position: absolute;
-    inset: 0;
-    border-radius: var(--radius);
+    inset: -0.25rem;
   }
 
-  .results :global(h3 a:focus-visible) {
+  :global(.row h3 a:focus-visible) {
     outline: none;
   }
 
-  .results :global(h3 a:focus-visible::after) {
+  :global(.row h3 a:focus-visible::after) {
     outline: 3px solid var(--accent-ink);
-    outline-offset: 3px;
+    outline-offset: 2px;
+    border-radius: 0.4rem;
   }
 
-  .results :global(.card:hover h3 a) {
+  :global(.row:hover h3 a) {
     text-decoration: underline;
     text-decoration-color: var(--accent);
+    text-underline-offset: 0.15em;
   }
 
-  .results :global(.src) {
-    display: flex;
-    gap: var(--space-2);
-    align-items: center;
+  :global(.row .meta),
+  :global(.row .uses) {
     margin: 0;
     font-size: var(--step--1);
     color: var(--ink-muted);
   }
 
-  .results :global(.src-mark) {
-    flex: none;
-    width: 0.7rem;
-    height: 0.7rem;
-    border-radius: 3px;
-    background: var(--src);
+  :global(.row .uses) {
+    margin-top: var(--space-1);
+    color: var(--ink);
   }
 
-  .results :global(.uses) {
-    margin: var(--space-1) 0 0;
-    font-size: var(--step--1);
-  }
-
-  .results :global(.uses strong) {
-    color: var(--accent-ink);
-  }
-
-  .results :global(mark) {
-    background: color-mix(in oklab, var(--accent) 35%, transparent);
+  :global(.row mark) {
+    background: var(--scallion-fill);
     color: inherit;
-    border-radius: 2px;
+    border-radius: 0.1em;
   }
 
   .more {
     display: block;
-    margin: var(--space-8) auto 0;
-    min-height: 2.75rem;
-    padding: 0 var(--space-8);
-    border: 1.5px solid var(--ink);
-    border-radius: 999px;
-    background: transparent;
-    color: var(--ink);
-    font: inherit;
+    margin-top: var(--space-8);
     font-weight: 700;
-    cursor: pointer;
+  }
+
+  .picked {
+    margin: var(--space-4) 0 var(--space-12);
+    padding: var(--space-6);
+    border-radius: 0.6rem;
+    background: var(--scallion-fill);
+  }
+
+  .picked:focus {
+    outline: none;
+  }
+
+  .picked :global(.row) {
+    grid-template-columns: minmax(8rem, 16rem) 1fr;
+  }
+
+  .picked :global(.row h3) {
+    font-size: var(--step-2);
+  }
+
+  .picked :global(.meta) {
+    color: var(--ink);
+  }
+
+  .picked .lucky {
+    margin-top: var(--space-4);
+    color: var(--ink);
+  }
+
+  @media (max-width: 30rem) {
+    .picked :global(.row) {
+      grid-template-columns: 1fr;
+    }
   }
 
   .videos {
     margin-top: var(--space-12);
   }
 
-  .videos .results :global(.photo) {
-    aspect-ratio: 16 / 9;
-  }
-
-  /* Nothing found: one-tap ways out, Pinterest style. */
-  .fixes {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-    padding: 0;
-    margin: var(--space-4) 0 0;
-    list-style: none;
-  }
-
-  .fixes :global(button) {
-    min-height: 2.75rem;
-    padding: 0 var(--space-4);
-    border: 0;
-    border-radius: 999px;
-    background: color-mix(in oklab, var(--ink) 9%, transparent);
-    color: var(--ink);
-    font: inherit;
-    cursor: pointer;
-  }
-
-  .fixes :global(button:hover) {
-    background: color-mix(in oklab, var(--ink) 15%, transparent);
+  .empty p {
+    max-width: 44rem;
+    line-height: 1.9;
   }
 
   .also {
     margin-top: var(--space-12);
-    padding-top: var(--space-4);
+    color: var(--ink-muted);
+  }
+
+  /* ---------------------------------------------------------------------------------
+     Where these come from. */
+  .about {
+    max-width: 40rem;
+    margin-top: var(--space-16);
+    padding-top: var(--space-6);
     border-top: 1px solid var(--line);
     color: var(--ink-muted);
   }
 
-  .about {
-    margin-top: var(--space-16);
+  .about h2,
+  .about h3 {
+    color: var(--ink);
   }
 
-  .about h2 {
-    font-size: var(--step-1);
+  .about h3 {
+    margin: var(--space-6) 0 var(--space-2);
+    font-size: var(--step-0);
   }
 
-  .sources-list {
+  .about:focus {
+    outline: none;
+  }
+
+  .about-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    color: var(--ink-muted);
+    font-size: var(--step--1);
+    text-decoration: none;
+  }
+
+  .about-link:hover {
+    color: var(--ink);
+    text-decoration: underline;
+  }
+
+  .sources {
     padding: 0;
+    margin: 0 0 var(--space-4);
     list-style: none;
   }
 
-  .sources-list :global(li) {
-    display: flex;
-    gap: var(--space-2);
-    align-items: baseline;
+  .sources :global(li) {
     padding: var(--space-1) 0;
   }
 
-  .sources-list :global(.src-mark) {
-    flex: none;
-    width: 0.7rem;
-    height: 0.7rem;
-    border-radius: 3px;
-    background: var(--src);
-    transform: translateY(0.05em);
+  .sources :global(a) {
+    font-weight: 700;
   }
 
-  .sources-list :global(.count),
-  .sources-list :global(.why) {
-    color: var(--ink-muted);
-  }
-
-  .app[data-state='loading'] .filters,
   .app[data-state='loading'] .results {
     opacity: 0.5;
-  }
-
-  /* Each site's own tint, like book spines on a shelf: a fill for marks and a
-     text-safe shade, in light and dark. Names always sit next to the color. */
-  .app,
-  .about {
-    --src: var(--line);
-    --src-ink: var(--ink);
-  }
-
-  :global([data-src='woks']) {
-    --src: #c8382c;
-    --src-ink: light-dark(#a3271f, #ee8a80);
-  }
-
-  :global([data-src='htk']) {
-    --src: #d79a22;
-    --src-ink: light-dark(#85570a, #e2b15a);
-  }
-
-  :global([data-src='sk']) {
-    --src: #8a5cc4;
-    --src-ink: light-dark(#6a3f9e, #c3a2ec);
-  }
-
-  :global([data-src='joc']) {
-    --src: #3f74b8;
-    --src-ink: light-dark(#2b5c99, #8cb4ec);
-  }
-
-  :global([data-src='maangchi']) {
-    --src: #c4447f;
-    --src-ink: light-dark(#a8336a, #ef8fbd);
-  }
-
-  :global([data-src='youtube']) {
-    --src: #d01a1a;
-    --src-ink: light-dark(#b00000, #f08a8a);
   }
 </style>
