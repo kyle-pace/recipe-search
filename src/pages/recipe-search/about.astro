@@ -121,13 +121,33 @@ const total = { recipes: index.recipes.length, videos: index.videos.rows.length 
     <section aria-labelledby="how">
       <h2 id="how">How it works</h2>
       <p>
-        Once a week, a small program reads each site’s list of recipes and keeps the name, link, photo, ingredients, time and
-        cuisine. Never the recipe itself: every result sends you to the creator’s page. Videos come from YouTube’s own API.
-        {crawled && ` Last updated ${crawled}.`}
+        It’s a real search engine, just a small one: the same three parts as any other, built for one subject and a
+        hand-picked list of cooks instead of the whole web.
+      </p>
+      <h3>1. The crawler</h3>
+      <p>
+        Once a week, a small program visits each site. It reads the site’s robots.txt and follows its rules, reads the
+        sitemap (the site’s own list of its pages), and fetches only pages that are new or changed, one at a time, a few
+        seconds apart. From each recipe it keeps the name, link, photo link, ingredients, time and cuisine. Never the
+        method or the writing around it: every result sends you to the creator’s page. Videos come from YouTube’s own
+        API, without Shorts.{crawled && ` Last updated ${crawled}.`}
+      </p>
+      <h3>2. The index</h3>
+      <p>
+        Each week’s results are packed into one small file, the index, with every ingredient matched to a shared list of
+        ingredient names, so “scallions” and “green onions” are the same thing and “pork” covers pork belly.
+      </p>
+      <h3>3. Search and ranking</h3>
+      <p>
+        The index is small enough (a few hundred kilobytes) to download once, so the search runs right in your
+        browser, with no search server. Your words are matched against recipe names, ingredients, cuisines and
+        creators, with matches in the name counting most. With ingredients added, recipes that use the most of them and
+        need the fewest other things come first.
       </p>
       <p>
-        The search runs in your browser, so what you type stays on your device. Photos load from each creator’s site when
-        they come on screen. Anonymous counts, like how often a recipe gets opened, go to the site’s analytics; see the
+        That’s also why it’s private and free to run: what you type never leaves your device, and there’s nothing to
+        host but a few files. Photos load from each creator’s site when they come on screen. Anonymous counts, like how
+        often a recipe gets opened, go to the site’s analytics; see the
         <a href="https://kylepace.dev/privacy/">privacy page</a>.
       </p>
     </section>
@@ -208,6 +228,10 @@ const total = { recipes: index.recipes.length, videos: index.videos.rows.length 
   h3 {
     margin: 0;
     font-size: var(--step-0);
+  }
+
+  section > h3 {
+    margin: var(--space-6) 0 var(--space-1);
   }
 
   h3 a {

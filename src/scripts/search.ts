@@ -612,8 +612,8 @@ function renderFilterButtons() {
 const keepPunct = (html: string) => html.replace(/(<button[^>]*>[^<]*<\/button>[,.])/g, '<span class="keep">$1</span>');
 
 function buildStart() {
-  const names = data.sources.map((s) => s.name);
-  $('from').textContent = `${data.recipes.length.toLocaleString()} recipes from ${andList(names)}, and ${data.videos.rows.length.toLocaleString()} videos. Every one opens on its creator’s own site.`;
+  // Totals, not names: the list of creators is under the box and on the About page.
+  $('from').textContent = `${plural(data.recipes.length, 'recipe')} and ${plural(data.videos.rows.length, 'video')} from ${creators.length} creators. Every one opens on its creator’s own site.`;
   const tries = TRY.filter((t) => search({ q: t, with: [] }).length)
     .slice(0, 4)
     .map((t) => `<button type="button" data-try="${esc(t)}">${esc(t)}</button>`);
