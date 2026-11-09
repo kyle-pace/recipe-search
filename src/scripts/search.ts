@@ -15,8 +15,10 @@ type Index = {
   built: string;
   crawled: string;
   sources: Source[];
-  paused: { name: string; site: string; why: string }[];
-  videos: { sources: { name: string; channel: string }[]; rows: VideoRow[] };
+  paused: { id: string; name: string; site: string; why: string }[];
+  videos: { sources: { id: string; name: string; channel: string }[]; rows: VideoRow[] };
+  /** Ways to support each creator, by source id (data/support.json). */
+  support: Record<string, { label: string; url: string; book?: boolean }[]>;
   linkOnly: { name: string; search: string }[];
   cuisines: [string, number][];
   popular: number[];
@@ -368,6 +370,18 @@ function renderAlso() {
   also.innerHTML = `Not here? Search ${orList(links)} for “${esc(term)}”.`;
 }
 
+/** "Support them: Patreon, YouTube, or their books Hot Thai Kitchen and Sabai." */
+function supportLine(id: string): string {
+  const all = data.support[id] || [];
+  if (!all.length) return '';
+  const a = (l: { label: string; url: string; book?: boolean }) =>
+    `<a href="${esc(l.url)}" data-support="${esc(id)}" data-kind="${l.book ? 'book' : 'link'}">${l.book ? `<cite>${esc(l.label)}</cite>` : esc(l.label)}</a>`;
+  const links = all.filter((l) => !l.book).map(a);
+  const books = all.filter((l) => l.book).map(a);
+  const bookPart = books.length ? `${books.length === 1 ? 'their book' : 'their books'} ${andList(books)}` : '';
+  return `<p class="support">Support them: ${orList([...links, bookPart].filter(Boolean))}.</p>`;
+}
+
 // ---------------------------------------------------------------------------------------
 // Pick one at random: from what you're looking at, or from everything.
 
@@ -398,7 +412,7 @@ function renderPicked() {
   const r = recipes[state.picked];
   const used = state.with.filter((p) => r.pos.has(p));
   const missing = r.own.filter((p) => !covers(state.with, p)).length;
-  $('picked-card').innerHTML = row({ r, score: 0, used, missing }, 0, words(state.q), 'random');
+  $('picked-card').innerHTML = row({ r, score: 0, used, missing }, 0, words(state.q), 'random') + supportLine(r.src.id);
   box.hidden = false;
 }
 
@@ -502,13 +516,15 @@ function buildAbout() {
   const names = data.sources.map((s) => s.name);
   $('from').textContent = `Searches ${andList(names)}. Every recipe opens on its own site.`;
   const items = [
-    ...data.sources.map((s) => `<li><a href="${esc(s.site)}">${esc(s.name)}</a>, ${plural(s.count, 'recipe')}</li>`),
-    ...data.paused.map((s) => `<li><a href="${esc(s.site)}">${esc(s.name)}</a>, coming back once its site lets the weekly program in</li>`),
+    ...data.sources.map((s) => `<li><a href="${esc(s.site)}">${esc(s.name)}</a>, ${plural(s.count, 'recipe')}${supportLine(s.id)}</li>`),
+    ...data.paused.map(
+      (s) => `<li><a href="${esc(s.site)}">${esc(s.name)}</a>, coming back once its site lets the weekly program in${supportLine(s.id)}</li>`,
+    ),
     ...data.videos.sources.map(
       (v) =>
         `<li><a href="${esc(v.channel)}">${esc(v.name)}</a>, ${
           data.videos.rows.length ? plural(data.videos.rows.length, 'video') : 'videos on YouTube, coming soon'
-        }</li>`,
+        }${supportLine(v.id)}</li>`,
     ),
     ...data.linkOnly
       .filter((l) => !/youtube/.test(l.search))
@@ -790,6 +806,8 @@ app.addEventListener('click', (e) => {
     haveInput.focus();
   } else if (el.dataset.srcId) {
     openedRecipe(el.dataset.srcId, Number(el.dataset.pos || 0), el.dataset.from || 'results');
+  } else if (el.dataset.support) {
+    track('Opened Support Link', { experiment: EXPERIMENT, source: el.dataset.support, link_kind: el.dataset.kind || 'link' });
   } else if (el.dataset.other) {
     track('Opened Other Search', { experiment: EXPERIMENT, site: el.dataset.other });
   }

@@ -143,6 +143,11 @@ import '../../styles/theme.css';
         I cook from a handful of sites I trust, and searching them one at a time got old. This searches them together,
         by dish or by what’s in the fridge, and sends you to the creator’s own page for the recipe.
       </p>
+      <p>
+        These recipes are free because the people who make them put in the work. If one becomes a favorite, back them:
+        each site below has its own ways, from memberships to cookbooks. Book links go to Bookshop.org, which pays the
+        author and an independent bookstore.
+      </p>
       <h3>Where the recipes come from</h3>
       <ul id="sources-list" class="sources"></ul>
       <h3>How it works</h3>
@@ -735,7 +740,27 @@ import '../../styles/theme.css';
   }
 
   .sources :global(li) {
-    padding: var(--space-1) 0;
+    padding: var(--space-2) 0;
+  }
+
+  :global(.support) {
+    margin: var(--space-1) 0 0;
+    font-size: var(--step--1);
+    color: var(--ink-muted);
+  }
+
+  :global(.support a),
+  .sources :global(.support a) {
+    font-weight: 400;
+  }
+
+  .picked :global(.support) {
+    margin-top: var(--space-4);
+    color: var(--ink);
+  }
+
+  .picked :global(.support a) {
+    color: var(--ink);
   }
 
   .sources :global(a) {

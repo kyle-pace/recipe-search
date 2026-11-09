@@ -181,14 +181,28 @@ const cuisines = [...cuisineCount].filter(([, n]) => n >= 5).sort((a, b) => b[1]
 
 const paused = sources.recipes
   .filter((s) => s.paused || !srcList.some((x) => x.id === s.id))
-  .map((s) => ({ name: s.name, site: s.site, why: s.paused ? 'paused' : 'not indexed yet' }));
+  .map((s) => ({ id: s.id, name: s.name, site: s.site, why: s.paused ? 'paused' : 'not indexed yet' }));
+
+// Ways to support each creator (data/support.json, hand-maintained). Books become
+// Bookshop.org links by ISBN, which sends the sale to the author and an indie shop.
+const supportFile = join(root, 'data/support.json');
+const supportRaw = existsSync(supportFile) ? JSON.parse(readFileSync(supportFile, 'utf8')) : {};
+const support = Object.fromEntries(
+  Object.entries(supportRaw)
+    .filter(([id]) => !id.startsWith('_'))
+    .map(([id, v]) => [
+      id,
+      [...(v.links || []), ...(v.books || []).map((b) => ({ label: b.title, url: `https://bookshop.org/book/${b.isbn}`, book: true }))],
+    ]),
+);
 
 const index = {
   built: new Date().toISOString().slice(0, 10),
   crawled: (status.run || '').slice(0, 10),
   sources: srcList,
   paused,
-  videos: { sources: (sources.videos || []).map((v) => ({ name: v.name, channel: v.channel })), rows: videos },
+  videos: { sources: (sources.videos || []).map((v) => ({ id: v.id, name: v.name, channel: v.channel })), rows: videos },
+  support,
   linkOnly: (sources.link_only || []).map((l) => ({ name: l.name, search: l.search })),
   cuisines,
   popular,

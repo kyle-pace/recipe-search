@@ -1,0 +1,54 @@
+{
+  "_about": "Ways to support each creator, shown on the search page (About and the random pick). Hand-maintained: only links checked on the creator's own site or channel. Books link to Bookshop.org by ISBN-13 (no affiliate id). Checked 2026-11-08.",
+  "woks": {
+    "links": [{ "label": "YouTube", "url": "https://www.youtube.com/@Thewoksoflife1" }],
+    "books": [{ "title": "The Woks of Life", "isbn": "9780593233894" }]
+  },
+  "htk": {
+    "links": [
+      { "label": "Patreon", "url": "https://www.patreon.com/pailinskitchen" },
+      { "label": "YouTube", "url": "https://www.youtube.com/@PailinsKitchen" }
+    ],
+    "books": [
+      { "title": "Hot Thai Kitchen", "isbn": "9780525613442" },
+      { "title": "Sabai", "isbn": "9780525611714" }
+    ]
+  },
+  "sk": {
+    "links": [{ "label": "YouTube", "url": "https://www.youtube.com/smittenkitchening" }],
+    "books": [
+      { "title": "Smitten Kitchen Keepers", "isbn": "9780593318782" },
+      { "title": "Smitten Kitchen Every Day", "isbn": "9781101874813" },
+      { "title": "The Smitten Kitchen Cookbook", "isbn": "9780307595652" }
+    ]
+  },
+  "joc": {
+    "links": [
+      { "label": "JOC Plus membership", "url": "https://www.justonecookbook.com/joc-plus/joc-plus-membership/" },
+      { "label": "Cookbooks", "url": "https://www.justonecookbook.com/cookbook/" },
+      { "label": "YouTube", "url": "https://www.youtube.com/@JustOneCookbook" }
+    ],
+    "books": []
+  },
+  "maangchi": {
+    "links": [
+      { "label": "YouTube", "url": "https://www.youtube.com/@Maangchi" },
+      { "label": "Newsletter", "url": "https://maangchi.substack.com/" }
+    ],
+    "books": [
+      { "title": "Maangchi’s Big Book of Korean Cooking", "isbn": "9781328988126" },
+      { "title": "Maangchi’s Real Korean Cooking", "isbn": "9780544129894" }
+    ]
+  },
+  "kenji": {
+    "links": [
+      { "label": "Patreon", "url": "https://www.patreon.com/kenjilopezalt" },
+      { "label": "YouTube", "url": "https://www.youtube.com/@JKenjiLopezAlt" }
+    ],
+    "books": [
+      { "title": "The Food Lab", "isbn": "9780393081084" },
+      { "title": "The Wok", "isbn": "9780393541212" },
+      { "title": "Every Night Is Pizza Night", "isbn": "9781324005254" }
+    ]
+  }
+}
