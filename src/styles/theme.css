@@ -1,0 +1,16 @@
+/*
+  Recipe search's own look. It's a standalone lab (kp-design's LabLayout), so it takes
+  kp-design's tokens and makes them its own: a quiet kitchen palette, off-white and
+  herb green, with each recipe site's tint (on the page) as the only other color.
+  Every pair here meets WCAG AA (4.5:1 for text) in light and dark.
+*/
+:root {
+  --bg: light-dark(#f6f7f4, #111614);
+  --bg-raised: light-dark(#ffffff, #18201c);
+  --ink: light-dark(#1d2421, #e5ebe7);
+  --ink-muted: light-dark(#56605a, #a3aea7);
+  --line: light-dark(#dde3dc, #2a332f);
+  --accent: #3fae90;
+  --accent-ink: light-dark(#0d6a59, #62cdb3);
+  --radius: 1.1rem;
+}

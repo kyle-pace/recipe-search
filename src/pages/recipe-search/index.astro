@@ -5,21 +5,26 @@
 // the browser. Patterns came from a Mobbin pass (collection "Recipe search"):
 // typeahead with "see all", ingredient chips, one row of filter chips, photo cards that
 // name their site, and one-tap fixes when nothing matches.
-import DevLayout from 'kp-design/layouts/DevLayout.astro';
+// It's a standalone lab, not a page of kylepace.dev: LabLayout gives it only a back link,
+// a footer line, display settings and analytics. Its look is src/styles/theme.css.
+import LabLayout from 'kp-design/layouts/LabLayout.astro';
 import { StatusBadge } from 'kp-design';
+import '../../styles/theme.css';
 ---
 
-<DevLayout
+<LabLayout
   title="Recipe search"
   description="One search box across the recipe sites I trust: The Woks of Life, Hot Thai Kitchen and Smitten Kitchen. Search by dish or by what you have; every result opens on the creator’s own site."
-  accent="mint"
   image="/recipe-search/og.png"
   imageAlt="Recipe search: one search box across the recipe sites I trust, on kylepace.dev."
+  themeColor={{ light: '#f6f7f4', dark: '#111614' }}
 >
   <link slot="head" rel="preload" href="/recipe-search/index.json" as="fetch" crossorigin="anonymous" />
+  <StatusBadge slot="bar" status="in-progress" />
 
+  <div class="page">
   <header class="intro">
-    <p class="eyebrow"><a href="https://kylepace.dev/labs/">Labs</a> <StatusBadge status="in-progress" /></p>
+    <p class="brand"><span class="brand-mark" aria-hidden="true"></span>Recipe search</p>
     <h1>One search box for the recipe sites I trust.</h1>
     <p class="lede prose">
       Search by dish, or add what you have and see what it makes. Every result opens on the creator’s own site.
@@ -144,28 +149,62 @@ import { StatusBadge } from 'kp-design';
     </p>
   </section>
 
+  </div>
+
   <script>
     import '../../scripts/search.ts';
   </script>
-</DevLayout>
+</LabLayout>
 
 <style>
+  .page {
+    width: min(100% - 2 * var(--gutter), var(--wide));
+    margin-inline: auto;
+    padding-block: var(--space-6) var(--space-12);
+  }
+
   .intro {
-    padding-bottom: var(--space-6);
+    padding-bottom: var(--space-8);
   }
 
-  .intro h1 {
-    max-width: 20ch;
-  }
-
-  .eyebrow {
+  .brand {
     display: flex;
     gap: var(--space-2);
     align-items: center;
+    margin: 0 0 var(--space-4);
+    font-weight: 700;
+    color: var(--accent-ink);
   }
 
-  .eyebrow a {
-    color: inherit;
+  /* A little bowl, drawn in CSS. */
+  .brand-mark {
+    width: 1.1rem;
+    height: 0.6rem;
+    border-radius: 0 0 1rem 1rem;
+    background: var(--accent);
+    box-shadow: 0 -0.2rem 0 -0.05rem var(--accent-ink);
+  }
+
+  h1 {
+    max-width: 18ch;
+    margin: 0 0 var(--space-4);
+    font-size: clamp(2.2rem, 1.4rem + 3.4vw, 4rem);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+
+  h2 {
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .prose {
+    max-width: var(--measure);
+  }
+
+  .lede {
+    margin: 0;
   }
 
   .lede {

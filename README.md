@@ -39,7 +39,8 @@ npm run preview   # builds, then runs it the way Cloudflare will
 | Searching, typeahead, filters, URL state | `src/scripts/search.ts` |
 | The index (generated, not committed) | `public/recipe-search/index.json`, from `scripts/build-index.mjs` |
 | Ingredient matching | `vendor/kitchen-catalog/` (refresh with `npm run sync-catalog`) |
-| Page shell (header, footer, analytics) | `DevLayout` from [kp-design](https://github.com/kyle-pace/kp-design) |
+| Page shell (back link, footer line, analytics) | `LabLayout` from [kp-design](https://github.com/kyle-pace/kp-design) |
+| Its own look (colors) | `src/styles/theme.css` |
 | Share card | `design/og.html`, rendered to `public/recipe-search/og.png` |
 | Outside hosts (recipe photos) | `.agents/allowed-hosts.txt` |
 
