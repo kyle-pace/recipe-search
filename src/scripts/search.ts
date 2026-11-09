@@ -503,13 +503,18 @@ function renderFilterButtons() {
 // ---------------------------------------------------------------------------------------
 // Ideas for an empty page, and where the recipes come from
 
+/** Keeps the comma or period after a word button on the button's line. */
+const keepPunct = (html: string) => html.replace(/(<button[^>]*>[^<]*<\/button>[,.])/g, '<span class="keep">$1</span>');
+
 function buildStart() {
   const pop = data.popular.map((p) => `<button type="button" data-add="${p}">${esc(ingName(p))}</button>`);
-  $('popular').innerHTML = `Have any of these? ${andList(pop).replace(/ and (?=<button[^>]*>[^<]*<\/button>$)/, ' or ')}.`;
+  $('popular').innerHTML = keepPunct(
+    `Have any of these? ${andList(pop).replace(/ and (?=<button[^>]*>[^<]*<\/button>$)/, ' or ')}.`,
+  );
   const tries = TRY.filter((t) => search({ q: t, with: [] }).length).map(
     (t) => `<button type="button" data-try="${esc(t)}">${esc(t)}</button>`,
   );
-  $('try').innerHTML = `Or look up ${orList(tries)}.`;
+  $('try').innerHTML = keepPunct(`Or look up ${orList(tries)}.`);
 }
 
 function buildAbout() {
