@@ -20,7 +20,7 @@ recipes:
     format: json-ld
     default_cuisine: Japanese
     allowed: true                      # only site search is off limits
-    paused: refuses cloud servers (HTTP 403 on its post sitemap from GitHub Actions, 2026-11-02)
+    paused: Cloudflare bot protection blocks automated requests (HTTP 403 on its sitemap from GitHub Actions and from a home connection, with or without our crawler's name; robots.txt allows us; checked 2026-11-08). Needs the site to allow us
     size: 1,000 to 2,000 posts
   - id: htk
     name: Hot Thai Kitchen
@@ -46,9 +46,9 @@ recipes:
     format: json-ld                    # older recipes have an empty ingredient list; match them by title and keywords
     default_cuisine: Korean
     allowed: true                      # blocks AI training bots only (checked 2026-11-01)
-    paused: refuses cloud servers (HTTP 403 on its sitemap from GitHub Actions, 2026-11-02)
+    paused: Cloudflare bot protection blocks automated requests (HTTP 403 on its sitemap from GitHub Actions and from a home connection, with or without our crawler's name; robots.txt allows us; checked 2026-11-08). Needs the site to allow us
     size: 451 recipes (of 2,278 posts)
-    note: her site refuses cloud servers for now, so her YouTube channel (under videos) carries her recipes meanwhile
+    note: her site blocks automated requests for now, so her YouTube channel (under videos) carries her recipes meanwhile
 
 # YouTube channels, through the official YouTube Data API only (uploads list;
 # titles, short descriptions and thumbnails, no transcripts). `site` ties a
