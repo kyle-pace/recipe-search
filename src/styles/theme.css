@@ -1,19 +1,20 @@
 /*
   Recipe search's own look (design/PLAN.md). It's a standalone lab, so it takes
-  kp-design's tokens and makes them its own: rice-white or near-black, soy-dark text,
-  scallion green for the words you add, chili for removing. No other color; the
-  photos bring it. Every text pair meets WCAG AA in light and dark, and the field rule
-  meets 3:1 as a UI boundary.
+  kp-design's tokens and makes them its own: a cool off-white or near-black with a
+  green cast, and one deep seaweed green ("nori", Kyle's pick, 2026-11-08) for
+  links, tags, focus and the search button; chili for removing. No other color; the
+  photos bring it. Every text pair meets WCAG AA in light and dark, and the field
+  rule meets 3:1 as a UI boundary.
 */
 :root {
-  --bg: light-dark(#ffffff, #121314);
-  --bg-raised: light-dark(#ffffff, #1b1d1e);
-  --ink: light-dark(#141414, #f1f1ee);
-  --ink-muted: light-dark(#5d625f, #a6aba8);
-  --line: light-dark(#e4e6e1, #2a2d2b);
-  --field-rule: light-dark(#8a908c, #6e7471);
-  --accent: #3a9a46;
-  --accent-ink: light-dark(#2c7a36, #86d08e);
-  --scallion-fill: light-dark(#d6efd2, #24442a);
-  --chili: light-dark(#b8261a, #ff8f80);
+  --bg: light-dark(#f7f8f6, #101413);
+  --bg-raised: light-dark(#ffffff, #171c1b);
+  --ink: light-dark(#13201d, #e9f0ee);
+  --ink-muted: light-dark(#566461, #a0aeaa);
+  --line: light-dark(#dfe5e2, #26302e);
+  --field-rule: light-dark(#86948f, #66736f);
+  --accent: #1d6b5a;
+  --accent-ink: light-dark(#1d6b5a, #7fc9b6);
+  --scallion-fill: light-dark(#d9ece6, #1f3a34);
+  --chili: light-dark(#b3261e, #ff8f80);
 }

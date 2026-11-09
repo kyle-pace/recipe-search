@@ -38,14 +38,17 @@ Its own page (`/recipe-search/about/`), built at build time from the index: why 
 
 ## Color
 
+"Nori" (Kyle's pick from three directions, November 8): a cool off-white with a green cast, and one deep seaweed green. The earlier bright scallion green read as odd.
+
 | Name | Light | Dark | Use |
 | --- | --- | --- | --- |
-| Rice | #FFFFFF | #121314 | Page |
-| Soy | #141414 | #F1F1EE | Text |
-| Ash | #5D625F | #A6ABA8 | Secondary text |
-| Scallion | #2C7A36 / fill #D6EFD2 | #86D08E / fill #24442A | Tags, focus, links, the search button |
-| Chili | #B8261A | #FF8F80 | Removing |
-| Shelf | #E4E6E1 | #2A2D2B | Dividers |
+| Page | #F7F8F6 | #101413 | Background |
+| Raised | #FFFFFF | #171C1B | The box, menus |
+| Ink | #13201D | #E9F0EE | Text |
+| Muted | #566461 | #A0AEAA | Secondary text |
+| Nori | #1D6B5A / fill #D9ECE6 | #7FC9B6 / fill #1F3A34 | Tags, focus, links, the search button |
+| Chili | #B3261E | #FF8F80 | Removing |
+| Line | #DFE5E2 | #26302E | Dividers |
 
 No source tints: the photos carry the color.
 
