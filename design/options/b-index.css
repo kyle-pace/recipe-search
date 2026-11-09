@@ -1,0 +1,54 @@
+/* Option B: The index. Results read like the index at the back of a cookbook:
+   one column of names, the time set to the right on a dotted leader, the creator
+   underneath, a small square photo. Your search is set large as the index letter. */
+:root {
+  --bg: light-dark(#f6f4ef, #161514);
+  --bg-raised: light-dark(#fffdf9, #1e1c1a);
+  --ink: light-dark(#1c1a17, #e6e1d8);
+  --ink-muted: light-dark(#625d55, #a39d93);
+  --line: light-dark(#e2ddd3, #2b2926);
+  --field-rule: light-dark(#8c867b, #716b62);
+  --accent-ink: light-dark(#1d6b5a, #8ec3b5);
+  --scallion-fill: light-dark(#e1ece6, #25302c);
+}
+
+#page .results mark, #page .row mark { background: none; color: inherit; }
+
+#page { width: min(100% - 2 * var(--gutter), 46rem); }
+#page .search { max-width: none; }
+#page .box { border-width: 1px; border-radius: 0.25rem; }
+#page .go { background: var(--ink); color: var(--bg); border-radius: 0.2rem; }
+
+/* The index letter: what you searched for, large. */
+#page .index-head {
+  margin: var(--space-8) 0 0; font-size: var(--step-3); font-weight: 700;
+  letter-spacing: -0.02em; line-height: 1; text-transform: capitalize;
+}
+#page .status { margin: var(--space-2) 0 var(--space-6); font-size: var(--step--1); }
+
+/* Filters become one line of small text under the box. */
+#page .filters { border-top: 0; padding-top: 0; margin-top: var(--space-2); gap: 0 var(--space-4); font-size: var(--step--1); }
+#page .filter span { text-decoration: none; font-weight: 600; }
+#page .filter span::after { content: ' ▾'; color: var(--ink-muted); font-weight: 400; }
+#page .lucky, #page .clear-all, #page .more { color: var(--ink); font-weight: 400; font-size: inherit; text-decoration-color: var(--field-rule); }
+@media (max-width: 40rem) { #page .filter[id='f-show-btn'] { display: none; } }
+
+/* Entries: one column, hairlines between, no big type. */
+#page .results { grid-template-columns: 1fr !important; gap: 0; border-top: 1px solid var(--line); }
+#page .results > li { border-bottom: 1px solid var(--line); }
+#page .results .row { grid-template-columns: 3.5rem 1fr; gap: var(--space-4); padding-block: var(--space-3); align-items: center; }
+#page .row .photo { aspect-ratio: 1; border-radius: 0.2rem; }
+#page .row .no-photo { font-size: 0.6rem; }
+#page .row .text { display: grid; grid-template-columns: 1fr auto; column-gap: var(--space-2); align-items: baseline; }
+#page .row h3 { grid-column: 1; grid-row: 1; margin: 0; font-size: var(--step-0); font-weight: 400; line-height: 1.35; letter-spacing: 0; display: flex; align-items: baseline; gap: var(--space-2); }
+#page .row h3 a { flex: 0 1 auto; }
+#page .row h3::after { content: ''; flex: 1 1 1.5rem; min-width: 1.5rem; border-bottom: 2px dotted var(--field-rule); translate: 0 -0.3em; }
+#page .row .time { grid-column: 2; grid-row: 1; font-variant-numeric: tabular-nums; color: var(--ink); white-space: nowrap; }
+#page .row .meta { grid-column: 1 / -1; grid-row: 2; margin-top: 0.1rem; }
+#page .row .uses { grid-column: 1 / -1; }
+#page .videos h2 { font-size: var(--step-1); }
+
+/* Home: left-aligned and quieter. */
+#page .start button { color: var(--ink); text-decoration-color: var(--field-rule); }
+#page .start p { line-height: 1.7; font-size: var(--step--1); }
+#page #creators { display: none; }

@@ -1,0 +1,45 @@
+/* Option C: Contact sheet. The photos are the color, so the page gets out of their way:
+   a neutral near-black (dark mode as a gallery wall), square crops edge to edge with a
+   thin gap, small plain captions. No card boxes, badges or overlays on the photos. */
+:root {
+  --bg: light-dark(#fafaf9, #0f0f0f);
+  --bg-raised: light-dark(#ffffff, #1a1a1a);
+  --ink: light-dark(#161616, #e4e4e2);
+  --ink-muted: light-dark(#5e5e5b, #9d9d99);
+  --line: light-dark(#e4e4e1, #262626);
+  --field-rule: light-dark(#8a8a86, #6c6c68);
+  --accent-ink: light-dark(#1d6b5a, #8ec3b5);
+  --scallion-fill: light-dark(#e1ece6, #233029);
+}
+
+#page .results mark, #page .row mark { background: none; color: inherit; }
+#page .box { border-width: 1px; }
+#page .go { background: var(--ink); color: var(--bg); }
+
+#page .filters { border-top: 0; padding-top: 0; margin-top: var(--space-3); gap: 0 var(--space-4); font-size: var(--step--1); }
+#page .filter span { text-decoration: none; font-weight: 600; }
+#page .filter span::after { content: ' ▾'; color: var(--ink-muted); font-weight: 400; }
+#page .lucky, #page .clear-all, #page .more { color: var(--ink); font-weight: 400; text-decoration-color: var(--field-rule); }
+@media (max-width: 40rem) {
+  #page .filters { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); }
+  #page .filters > * { flex: none; }
+  #page .filter[id='f-show-btn'] { display: none; }
+}
+#page .status { font-size: var(--step--1); margin: var(--space-4) 0 var(--space-4); }
+
+/* The sheet: 2 across on phones, 4 on wide screens, a 3px gap, square crops. */
+#page .results { grid-template-columns: repeat(2, 1fr) !important; gap: var(--space-6) 3px; }
+@media (min-width: 48rem) { #page .results { grid-template-columns: repeat(3, 1fr) !important; } }
+@media (min-width: 64rem) { #page .results { grid-template-columns: repeat(4, 1fr) !important; } }
+@media (max-width: 40rem) { #page .results { margin-inline: calc(-1 * var(--gutter)); } #page .row .text { padding-inline: var(--space-2); } }
+#page .results .row { grid-template-columns: 1fr; grid-template-rows: auto auto; gap: var(--space-2); }
+#page .row .photo { grid-row: 1; grid-column: 1; aspect-ratio: 1; border-radius: 0; }
+#page .row .text { grid-row: 2; grid-column: 1; padding-right: var(--space-2); }
+#page .row h3 { font-size: var(--step--1); font-weight: 600; line-height: 1.3; letter-spacing: 0;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+#page .row .meta { font-size: 0.8rem; margin-top: 0.1rem; }
+#page .row .meta .cuisine { display: none; }
+
+#page .start button { color: var(--ink); text-decoration-color: var(--field-rule); }
+#page .start p { line-height: 1.7; font-size: var(--step--1); }
+#page #creators { display: none; }
