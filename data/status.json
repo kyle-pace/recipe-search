@@ -1,14 +1,20 @@
 {
- "run": "2026-11-02T20:47:02.008Z",
+ "run": "2026-11-09T06:20:52.713Z",
  "options": {
   "limit": null,
   "delayMs": 4000
  },
  "sources": {
+  "kenji": {
+   "id": "kenji",
+   "name": "J. Kenji López-Alt",
+   "result": "ok",
+   "count": 876
+  },
   "woks": {
    "id": "woks",
    "name": "The Woks of Life",
-   "result": "ok",
+   "result": "not run",
    "fetched": 1588,
    "added": 1368,
    "updated": 0,
@@ -22,13 +28,13 @@
   "joc": {
    "id": "joc",
    "name": "Just One Cookbook",
-   "result": "paused",
+   "result": "not run",
    "error": "refuses cloud servers (HTTP 403 on its post sitemap from GitHub Actions, 2026-11-02)"
   },
   "htk": {
    "id": "htk",
    "name": "Hot Thai Kitchen",
-   "result": "ok",
+   "result": "not run",
    "fetched": 474,
    "added": 414,
    "updated": 0,
@@ -42,7 +48,7 @@
   "sk": {
    "id": "sk",
    "name": "Smitten Kitchen",
-   "result": "ok",
+   "result": "not run",
    "fetched": 979,
    "added": 444,
    "updated": 0,
@@ -58,14 +64,8 @@
   "maangchi": {
    "id": "maangchi",
    "name": "Maangchi",
-   "result": "paused",
+   "result": "not run",
    "error": "refuses cloud servers (HTTP 403 on its sitemap from GitHub Actions, 2026-11-02)"
-  },
-  "kenji": {
-   "id": "kenji",
-   "name": "J. Kenji López-Alt",
-   "result": "skipped",
-   "error": "no YOUTUBE_API_KEY secret yet"
   }
  },
  "alerts": []
