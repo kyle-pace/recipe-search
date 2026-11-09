@@ -4,7 +4,18 @@
 
 **Second pass** made the query a sentence ("I have ___ / I want to make ___") set very large. It was distinctive, but two fields and a sentence asked people to learn a new way to search, and the About section sat under the app.
 
-**Third pass (this one):** Kyle's call. A search engine is the right model for a search engine: one box, centered, with the explanation on its own page. What keeps it from looking generated is in the details below, not in a novel layout.
+**Third pass:** Kyle's call. A search engine is the right model for a search engine: one box, centered, with the explanation on its own page. What keeps it from looking generated is in the details below, not in a novel layout.
+
+**Fourth pass, "Hushed" (November 9, Kyle's pick of three):** the third pass, with the volume down. It read as cluttered, worst in dark mode: the bright mint did six jobs (button, actions, idea links, active filter, highlights, focus), every result title had its matching word boxed in green, two columns of big bold near-white titles glowed, the filters wrapped to three lines on a phone, and the home page was a wall of about 25 green links. The fixes:
+
+- **Color does one job.** Nori is only for tags, focus and the underline under a filter that's set. The search button and every action are ink.
+- **No highlights in result names.** Every result matches, so marking the words again is noise. The suggestions still highlight as you type.
+- **Quieter titles:** body size, semi-bold (600).
+- **Filters on one short line,** small, each with a ▾. On phones the line scrolls sideways and fades at the edge.
+- **Softer dark mode:** a lifted charcoal (#151918) and an off-white (#DFE5E2) instead of near-black and near-white.
+- **Home:** the ideas are smaller, in ink, and the creator line names two creators and links to the full list on About.
+
+The other two directions considered: a cookbook-index list (one column, time on a dotted leader) and a contact sheet of square photos. Their stylesheets are on the `design-options` branch.
 
 ## The subject
 
@@ -28,7 +39,7 @@ Home                                       Results
 
 ## The box
 
-- Square-shouldered (0.5rem corners), a 2px rule, the search button inside on the right as a green square with a magnifier. Not a pill.
+- Square-shouldered (0.5rem corners), a 1px rule at 3:1 contrast, the search button inside on the right as an ink square with a magnifier. Not a pill.
 - Tags: ingredients are filled with scallion green; creators are outlined in it and read "from Maangchi", so the two kinds look different without color alone.
 - Suggestions group by what they do: things to add (creators, ingredients, each labeled "Creator" or "Ingredient") above a rule, recipes to open below, then "Search for …".
 
@@ -42,13 +53,14 @@ Its own page (`/recipe-search/about/`), built at build time from the index: why 
 
 | Name | Light | Dark | Use |
 | --- | --- | --- | --- |
-| Page | #F7F8F6 | #101413 | Background |
-| Raised | #FFFFFF | #171C1B | The box, menus |
-| Ink | #13201D | #E9F0EE | Text |
-| Muted | #566461 | #A0AEAA | Secondary text |
-| Nori | #1D6B5A / fill #D9ECE6 | #7FC9B6 / fill #1F3A34 | Tags, focus, links, the search button |
+| Page | #F7F8F6 | #151918 | Background |
+| Raised | #FFFFFF | #1C2120 | The box, menus |
+| Ink | #13201D | #DFE5E2 | Text, the search button, actions |
+| Muted | #566461 | #98A39F | Secondary text |
+| Field rule | #848F8B | #69756F | The box's border, underlines under actions |
+| Nori | #1D6B5A / fill #E3EFEB | #8EC3B5 / fill #23302D | Tags, focus, a filter that's set. Nothing else. |
 | Chili | #B3261E | #FF8F80 | Removing |
-| Line | #DFE5E2 | #26302E | Dividers |
+| Line | #E3E8E5 | #262C2B | Dividers |
 
 No source tints: the photos carry the color.
 

@@ -1,20 +1,22 @@
 /*
   Recipe search's own look (design/PLAN.md). It's a standalone lab, so it takes
-  kp-design's tokens and makes them its own: a cool off-white or near-black with a
-  green cast, and one deep seaweed green ("nori", Kyle's pick, 2026-11-08) for
-  links, tags, focus and the search button; chili for removing. No other color; the
-  photos bring it. Every text pair meets WCAG AA in light and dark, and the field
-  rule meets 3:1 as a UI boundary.
+  kp-design's tokens and makes them its own: a cool off-white or soft charcoal with a
+  green cast, ink for text and controls, and one deep seaweed green ("nori", Kyle's
+  pick, 2026-11-08) kept for the tags, focus and active filters only ("Hushed", Kyle's
+  pick, 2026-11-09); chili for removing. The photos bring the color. Dark mode is a
+  lifted charcoal and an off-white, not near-black and near-white, so nothing glows.
+  Every text pair meets WCAG AA in light and dark, and the field rule meets 3:1 as a
+  UI boundary.
 */
 :root {
-  --bg: light-dark(#f7f8f6, #101413);
-  --bg-raised: light-dark(#ffffff, #171c1b);
-  --ink: light-dark(#13201d, #e9f0ee);
-  --ink-muted: light-dark(#566461, #a0aeaa);
-  --line: light-dark(#dfe5e2, #26302e);
-  --field-rule: light-dark(#86948f, #66736f);
+  --bg: light-dark(#f7f8f6, #151918);
+  --bg-raised: light-dark(#ffffff, #1c2120);
+  --ink: light-dark(#13201d, #dfe5e2);
+  --ink-muted: light-dark(#566461, #98a39f);
+  --line: light-dark(#e3e8e5, #262c2b);
+  --field-rule: light-dark(#848f8b, #69756f);
   --accent: #1d6b5a;
-  --accent-ink: light-dark(#1d6b5a, #7fc9b6);
-  --scallion-fill: light-dark(#d9ece6, #1f3a34);
+  --accent-ink: light-dark(#1d6b5a, #8ec3b5);
+  --scallion-fill: light-dark(#e3efeb, #23302d);
   --chili: light-dark(#b3261e, #ff8f80);
 }

@@ -615,7 +615,9 @@ function usesLine(h: Hit): string {
   return `<p class="uses">Uses ${used}${not.length && n > 1 ? ` (not ${orList(not)})` : ''}${plus}</p>`;
 }
 
-function row(h: Hit, position: number, q: string[], from = 'results'): string {
+// Result names aren't highlighted: every result matches, so marking the words again is
+// noise. Suggestions still highlight, since there it shows what you've typed so far.
+function row(h: Hit, position: number, _q: string[], from = 'results'): string {
   const { r } = h;
   const photo = r.img
     ? `<img src="${esc(r.img)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" width="480" height="360">`
@@ -623,7 +625,7 @@ function row(h: Hit, position: number, q: string[], from = 'results'): string {
   // The name comes first in the page so screen readers hear it first; CSS puts the photo on the left.
   return `<article class="row">
     <div class="text">
-      <h3><a href="${esc(r.url)}" data-pos="${position}" data-src-id="${esc(r.src.id)}" data-key="${esc(r.key)}" data-from="${from}">${highlight(r.name, q)}</a></h3>
+      <h3><a href="${esc(r.url)}" data-pos="${position}" data-src-id="${esc(r.src.id)}" data-key="${esc(r.key)}" data-from="${from}">${esc(r.name)}</a></h3>
       <p class="meta">${metaLine(r)}</p>${usesLine(h)}
     </div>
     <div class="photo">${photo}</div>
@@ -750,7 +752,7 @@ function renderVideos(hits: VideoRow[], q: string[], only: boolean) {
     .map(
       (v) => `<li><article class="row">
       <div class="text">
-        <h3><a href="https://www.youtube.com/watch?v=${esc(v[2])}" data-src-id="youtube" data-from="videos">${highlight(v[1], q)}</a></h3>
+        <h3><a href="https://www.youtube.com/watch?v=${esc(v[2])}" data-src-id="youtube" data-from="videos">${esc(v[1])}</a></h3>
         <p class="meta">Video on YouTube, from ${esc(chans[v[0]].name)}</p>
       </div>
       <div class="photo"><img src="https://i.ytimg.com/vi/${esc(v[2])}/mqdefault.jpg" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" width="320" height="180"></div>
@@ -946,8 +948,11 @@ function buildStart() {
   $('try').innerHTML = keepPunct(`Try ${orList(tries)}.`);
   const pop = data.popular.slice(0, POPULAR_SHOWN).map((p) => `<button type="button" data-add="${p}">${esc(ingName(p))}</button>`);
   $('popular').innerHTML = keepPunct(`Or start with what you have: ${orList(pop)}.`);
-  const who = creators.map((c) => `<button type="button" data-creator="${esc(c.id)}">${esc(c.name)}</button>`);
-  $('creators').innerHTML = keepPunct(`Or see everything from ${orList(who)}.`);
+  // Two creators, not all of them: the full list (with ways to support each) is on About.
+  const who = creators.slice(0, 2).map((c) => `<button type="button" data-creator="${esc(c.id)}">${esc(c.name)}</button>`);
+  $('creators').innerHTML = keepPunct(
+    `Or start with a creator, like ${orList(who)}. <a href="/recipe-search/about/#who">See all ${creators.length}</a>.`,
+  );
 }
 
 // ---------------------------------------------------------------------------------------
