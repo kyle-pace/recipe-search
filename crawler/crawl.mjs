@@ -81,7 +81,9 @@ async function crawlSite(src) {
   const robots = robotsFor(robotsRes.status === 200 ? robotsRes.text : '', BOT);
   const sitemapUrl = new URL(src.sitemap, src.site).href;
   if (!robots.allowed('/') && !robots.allowed(sitemapUrl)) return { ...out, result: 'blocked', error: 'robots.txt disallows us' };
-  const pause = Math.max(delayMs, (robots.crawlDelay || 0) * 1000);
+  // A site can ask for more time between requests (robots.txt Crawl-delay), and so can
+  // sources.yaml (delay_seconds) for a site that has told us we're too quick (HTTP 429).
+  const pause = Math.max(delayMs, (robots.crawlDelay || 0) * 1000, (src.delay_seconds || 0) * 1000);
 
   const include = src.include ? new RegExp(src.include) : null;
   const entries = await readSitemaps(sitemapUrl, (u, o) => getOk(u, o), { include, log });

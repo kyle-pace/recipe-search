@@ -79,6 +79,7 @@ recipes:
   - id: sudachi
     name: Sudachi
     site: https://sudachirecipes.com
+    delay_seconds: 12                  # answered HTTP 429 (too many requests) after about 500 pages at 4 seconds apart, 2026-11-09
     sitemap: /sitemap_index.xml        # listed in robots.txt
     format: json-ld
     default_cuisine: Japanese
