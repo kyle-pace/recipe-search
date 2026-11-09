@@ -48,7 +48,7 @@ const CUISINE = {
   'thai-inspired': 'Thai',
   'asian fusion': 'Asian',
   'southeast asian': 'Asian',
-  'western': 'American',
+  'western': 'Western', // what the sites wrote; RecipeTin Eats is Australian, so not "American"
   'north american': 'American',
 };
 const cuisineOf = (c, fallback) => {

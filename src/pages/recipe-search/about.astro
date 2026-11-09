@@ -16,10 +16,10 @@ const channels: { id: string; name: string; channel: string; site: string; count
 
 const n = (x: number, one: string) => `${x.toLocaleString('en-US')} ${x === 1 ? one : one + 's'}`;
 
-type Row = { id: string; name: string; url: string; recipes: number; videos: number; channel?: string; paused?: boolean };
+type Row = { id: string; name: string; url: string; recipes: number; videos: number; channel?: string; paused?: 'blocked' | 'new' };
 const rows: Row[] = [
   ...index.sources.map((s: any) => ({ id: s.id, name: s.name, url: s.site, recipes: s.count, videos: 0 })),
-  ...index.paused.map((s: any) => ({ id: s.id, name: s.name, url: s.site, recipes: 0, videos: 0, paused: true })),
+  ...index.paused.map((s: any) => ({ id: s.id, name: s.name, url: s.site, recipes: 0, videos: 0, paused: s.why === 'paused' ? 'blocked' : 'new' })),
 ];
 for (const c of channels) {
   const owner = rows.find((r) => r.id === (c.site || c.id));
@@ -72,7 +72,8 @@ const total = { recipes: index.recipes.length, videos: index.videos.rows.length 
                 </h3>
                 <p class="has">
                   {has.join(' and ')}
-                  {r.paused && (r.videos ? '. Recipes come back once their site lets the weekly program in.' : ': back once their site lets the weekly program in.')}
+                  {r.paused === 'blocked' && (r.videos ? '. Recipes come back once their site lets the weekly program in.' : 'Recipes come back once their site lets the weekly program in.')}
+                  {r.paused === 'new' && (r.videos ? '. Recipes arrive with the next weekly update.' : 'Recipes arrive with the next weekly update.')}
                 </p>
                 {(links.length > 0 || books.length > 0) && (
                   <p class="support">
