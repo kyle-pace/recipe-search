@@ -14,8 +14,8 @@ import { track } from 'kp-design/analytics';
 type Source = { id: string; name: string; site: string; host: string; count: number };
 // [catalog id, name, recipes naming it, parent positions, ...other names]
 type Ing = [string, string, number, number[], ...string[]];
-// [source, name, url (path on the site), minutes, cuisine, ingredient positions (with parents), own positions, photo, keywords]
-type RecipeRow = [number, string, string, number | null, string, number[], number[], string, string];
+// [source, name, url (path on the site), minutes, cuisine, ingredient positions (with parents), own positions, photo, keywords, opens lately]
+type RecipeRow = [number, string, string, number | null, string, number[], number[], string, string, number?];
 // [channel index, title, video id, published date, ingredient positions]
 type VideoRow = [number, string, string, string, number[]];
 type Channel = { id: string; name: string; channel: string; site: string; count: number };
@@ -49,6 +49,10 @@ type Recipe = {
   pos: Set<number>;
   own: number[];
   img: string;
+  /** "woks:/mapo-tofu/": the recipe's id in analytics and in data/popularity.json. */
+  key: string;
+  /** Opens in the last 90 days, across everyone (counts only). */
+  opens: number;
   title: string[];
   titleText: string;
   other: string[];
@@ -145,7 +149,7 @@ async function load() {
   data.ing.forEach((g, p) => ingById.set(g[0], p));
   ingRecipes = data.ing.map(() => 0);
   recipes = data.recipes.map((row, i) => {
-    const [s, name, url, min, cuisine, pos, own, img, kw] = row;
+    const [s, name, url, min, cuisine, pos, own, img, kw, opens = 0] = row;
     const src = data.sources[s];
     for (const p of pos) ingRecipes[p]++;
     const title = words(name);
@@ -165,6 +169,8 @@ async function load() {
       pos: new Set(pos),
       own,
       img,
+      key: `${src.id}:${url}`,
+      opens,
       title,
       titleText: ` ${title.join(' ')} `,
       other: [...new Set(other)],
@@ -482,7 +488,7 @@ function search(opts: { q?: string; with?: number[]; skip?: Skip; loose?: boolea
       if (!used.length) continue;
       missing = r.own.filter((p) => !covers(chosen, p)).length;
     }
-    hits.push({ r, score: t, used, missing });
+    hits.push({ r, score: t + popBonus(r), used, missing });
   }
   hits.sort(
     (a, b) =>
@@ -492,7 +498,49 @@ function search(opts: { q?: string; with?: number[]; skip?: Skip; loose?: boolea
       Number(!!b.r.img) - Number(!!a.r.img) ||
       (q.length || chosen.length ? (a.r.min ?? 999) - (b.r.min ?? 999) : a.r.name.localeCompare(b.r.name)),
   );
-  return hits;
+  return mix(hits, chosen.length > 0);
+}
+
+/**
+ * Recipes people open more rank a little higher: up to 4 points, on a log scale, so a
+ * popular recipe beats an equally good match but never a clearly better one (a word in
+ * the name is worth 6 to 8).
+ */
+const popBonus = (r: Recipe) => Math.min(4, Math.log2(1 + r.opens));
+
+/**
+ * Take turns between creators. Within each tier (same number of your ingredients used),
+ * the next pick is the best recipe that's nearly as good as the best one left (within a
+ * couple of points, or needing at most one more ingredient) whose creator hasn't appeared
+ * in the last three picks. Close calls get mixed; a clearly better match still comes first.
+ */
+function mix(hits: Hit[], byIngredients: boolean): Hit[] {
+  const out: Hit[] = [];
+  const tierOf = (h: Hit) => (byIngredients ? String(h.used.length) : '');
+  const BAND = 2;
+  for (let i = 0; i < hits.length; ) {
+    let j = i;
+    while (j < hits.length && tierOf(hits[j]) === tierOf(hits[i])) j++;
+    const pool = hits.slice(i, j);
+    const recent: string[] = [];
+    while (pool.length) {
+      const top = pool[0];
+      const close = (h: Hit) => (byIngredients ? h.missing <= top.missing + 1 : h.score >= top.score - BAND);
+      let pick = 0;
+      for (let k = 0; k < Math.min(pool.length, 300) && close(pool[k]); k++) {
+        if (!recent.includes(pool[k].r.src.id)) {
+          pick = k;
+          break;
+        }
+      }
+      const [h] = pool.splice(pick, 1);
+      out.push(h);
+      recent.push(h.r.src.id);
+      if (recent.length > 3) recent.shift();
+    }
+    i = j;
+  }
+  return out;
 }
 
 /**
@@ -575,7 +623,7 @@ function row(h: Hit, position: number, q: string[], from = 'results'): string {
   // The name comes first in the page so screen readers hear it first; CSS puts the photo on the left.
   return `<article class="row">
     <div class="text">
-      <h3><a href="${esc(r.url)}" data-pos="${position}" data-src-id="${esc(r.src.id)}" data-from="${from}">${highlight(r.name, q)}</a></h3>
+      <h3><a href="${esc(r.url)}" data-pos="${position}" data-src-id="${esc(r.src.id)}" data-key="${esc(r.key)}" data-from="${from}">${highlight(r.name, q)}</a></h3>
       <p class="meta">${metaLine(r)}</p>${usesLine(h)}
     </div>
     <div class="photo">${photo}</div>
@@ -1037,7 +1085,7 @@ function choose(n: number) {
     addIngredient(o.p, 'suggestions');
     qInput.focus();
   } else if (o.kind === 'recipe') {
-    openedRecipe(o.h.r.src.id, o.n, 'suggestions');
+    openedRecipe(o.h.r.src.id, o.n, 'suggestions', o.h.r.key);
     location.href = o.h.r.url;
   } else submit();
 }
@@ -1101,8 +1149,16 @@ function searched() {
   });
 }
 
-function openedRecipe(source: string, position: number, from: string) {
-  track('Opened Recipe', { experiment: EXPERIMENT, source, position, opened_from: from, ingredient_count: state.with.length });
+function openedRecipe(source: string, position: number, from: string, key = '') {
+  // recipe_key ("woks:/mapo-tofu/") is what the daily popularity count adds up.
+  track('Opened Recipe', {
+    experiment: EXPERIMENT,
+    source,
+    position,
+    opened_from: from,
+    ingredient_count: state.with.length,
+    ...(key ? { recipe_key: key } : {}),
+  });
 }
 
 // ---------------------------------------------------------------------------------------
@@ -1242,7 +1298,7 @@ app.addEventListener('click', (e) => {
     writeUrl(true);
     qInput.focus();
   } else if (el.dataset.srcId) {
-    openedRecipe(el.dataset.srcId, Number(el.dataset.pos || 0), el.dataset.from || 'results');
+    openedRecipe(el.dataset.srcId, Number(el.dataset.pos || 0), el.dataset.from || 'results', el.dataset.key);
   } else if (el.dataset.support) {
     track('Opened Support Link', { experiment: EXPERIMENT, source: el.dataset.support, link_kind: el.dataset.kind || 'link' });
   } else if (el.dataset.other) {

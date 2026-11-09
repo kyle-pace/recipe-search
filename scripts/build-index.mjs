@@ -79,6 +79,10 @@ const ingIndex = new Map(); // id -> position in ing[]
 const ing = []; // [id, name, recipeCount, parent positions, ...other names]
 const cuisineCount = new Map();
 const recipes = [];
+// How often each recipe was opened lately, by "<source id>:<url as stored>"
+// (data/popularity.json, written daily by scripts/popularity.mjs from Amplitude).
+const popFile = join(root, 'data/popularity.json');
+const popularity = existsSync(popFile) ? JSON.parse(readFileSync(popFile, 'utf8')).opens || {} : {};
 const unmatched = new Map();
 let lines = 0;
 let matched = 0;
@@ -140,7 +144,7 @@ for (const s of sources.recipes) {
     // Smaller photos where the host can resize (WordPress.com's image CDN takes ?w=).
     let img = s.photos === false ? '' : r.img || '';
     if (img.startsWith('https://i0.wp.com/')) img = img.replace(/\?.*$/, '') + '?w=480&quality=80&ssl=1';
-    recipes.push([srcIdx, name, url, minutes(r.t), cuisine, pos, own, img, kw.join(' · ')]);
+    recipes.push([srcIdx, name, url, minutes(r.t), cuisine, pos, own, img, kw.join(' · '), popularity[`${s.id}:${url}`] || 0]);
     srcList[srcIdx].count++;
   }
 }

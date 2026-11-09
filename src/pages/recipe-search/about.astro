@@ -142,7 +142,9 @@ const total = { recipes: index.recipes.length, videos: index.videos.rows.length 
         The index is small enough (a few hundred kilobytes) to download once, so the search runs right in your
         browser, with no search server. Your words are matched against recipe names, ingredients, cuisines and
         creators, with matches in the name counting most. With ingredients added, recipes that use the most of them and
-        need the fewest other things come first.
+        need the fewest other things come first. Recipes people open more often get a small boost (once a day, the
+        site counts how often each recipe was opened in the last 90 days: counts only, nothing about who), and when two
+        recipes are about as good a match, creators take turns so one site doesn’t fill the page.
       </p>
       <p>
         It reads plain phrases too. Filler like “easy” or “how to make” is ignored, and likely typos are fixed (it says

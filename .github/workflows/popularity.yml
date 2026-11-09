@@ -1,0 +1,40 @@
+name: Popularity
+
+# Daily: count how often each recipe was opened in the last 90 days (Amplitude, the
+# kylepace.dev project) and commit data/popularity.json when it changes. That push
+# rebuilds the site (Workers Builds), so recipes people open rank a little higher.
+on:
+  schedule:
+    - cron: '41 13 * * *' # 5:41 or 6:41 am Seattle time
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: crawl # never at the same time as a crawl, which also commits data/
+  cancel-in-progress: false
+
+jobs:
+  popularity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Count opens
+        env:
+          AMPLITUDE_API_KEY: ${{ secrets.AMPLITUDE_API_KEY }}
+          AMPLITUDE_SECRET_KEY: ${{ secrets.AMPLITUDE_SECRET_KEY }}
+        run: node scripts/popularity.mjs
+      - name: Commit
+        run: |
+          git config user.name "recipe-search popularity"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/popularity.json 2>/dev/null || true
+          if git diff --cached --quiet; then echo "No changes"; exit 0; fi
+          git commit -m "Popularity $(date -u +%Y-%m-%d)"
+          git pull --rebase origin main
+          git push origin HEAD:main

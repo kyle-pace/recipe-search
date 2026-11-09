@@ -6,6 +6,7 @@ import { extractRecipe } from '../lib/extract.mjs';
 import { ingredientName } from '../lib/ingredients.mjs';
 import { toMinutes } from '../lib/text.mjs';
 import { toVideo, seconds, fetchChannelVideos } from '../lib/youtube.mjs';
+import { totals } from '../lib/popularity.mjs';
 
 test('robots: AI-bot blocks leave us alone; wp-json stays off limits', () => {
   const txt = `User-agent: GPTBot\nDisallow: /\n\nUser-agent: CCBot\nDisallow: /\n\nUser-agent: *\nDisallow: /wp-json/\nDisallow: /wp-admin/\nAllow: /wp-admin/admin-ajax.php\n`;
@@ -180,4 +181,10 @@ test('YouTube: video length from ISO 8601', () => {
   assert.equal(seconds('PT1M5S'), 65);
   assert.equal(seconds('PT1H2M'), 3720);
   assert.equal(seconds('P0D'), 0);
+});
+
+test('popularity: sums each recipe\'s opens and skips events without a recipe', () => {
+  const data = { series: [[1, 2, 0], [0, 0, 5], [3]], seriesLabels: [[0, 'woks:/mapo-tofu/'], [0, 'htk:/green-curry/'], [0, '(none)']] };
+  assert.deepEqual(totals(data), { 'woks:/mapo-tofu/': 3, 'htk:/green-curry/': 5 });
+  assert.deepEqual(totals({ series: [[2]], seriesLabels: ['sk:/scones/'] }), { 'sk:/scones/': 2 });
 });
