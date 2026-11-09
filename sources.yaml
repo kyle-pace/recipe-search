@@ -48,14 +48,48 @@ recipes:
     allowed: true                      # blocks AI training bots only (checked 2026-11-01)
     paused: refuses cloud servers (HTTP 403 on its sitemap from GitHub Actions, 2026-11-02)
     size: 451 recipes (of 2,278 posts)
-    note: her YouTube videos are embedded in her recipe pages, so her channel isn't added separately
+    note: her site refuses cloud servers for now, so her YouTube channel (under videos) carries her recipes meanwhile
 
+# YouTube channels, through the official YouTube Data API only (uploads list;
+# titles, short descriptions and thumbnails, no transcripts). `site` ties a
+# channel to its recipe site above, for the About list, support links and the
+# Site filter. Added 2026-11-08 (Kyle: every source that has a channel).
 videos:
   - id: kenji
     name: J. Kenji López-Alt
     channel: https://www.youtube.com/@JKenjiLopezAlt
-    via: youtube-data-api              # uploads list; titles and descriptions only, no transcripts
+    via: youtube-data-api
     note: kenjilopezalt.com and his Patreon have no recipe data to index
+  - id: woks-yt
+    name: The Woks of Life
+    site: woks
+    channel: https://www.youtube.com/@Thewoksoflife1
+    via: youtube-data-api
+  - id: htk-yt
+    name: Hot Thai Kitchen
+    site: htk
+    channel: https://www.youtube.com/@PailinsKitchen
+    via: youtube-data-api
+  - id: sk-yt
+    name: Smitten Kitchen
+    site: sk
+    channel: https://www.youtube.com/@smittenkitchening
+    via: youtube-data-api
+  - id: joc-yt
+    name: Just One Cookbook
+    site: joc
+    channel: https://www.youtube.com/@JustOneCookbook
+    via: youtube-data-api
+  - id: maangchi-yt
+    name: Maangchi
+    site: maangchi
+    channel: https://www.youtube.com/@Maangchi
+    via: youtube-data-api
+  - id: ccd
+    name: Chinese Cooking Demystified
+    channel: https://www.youtube.com/@ChineseCookingDemystified
+    via: youtube-data-api
+    note: regional Chinese technique videos; no recipe site to index (added at Kyle's yes, 2026-11-08)
 
 link_only:
   - name: Serious Eats

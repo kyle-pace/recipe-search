@@ -10,13 +10,15 @@ type Source = { id: string; name: string; site: string; host: string; count: num
 type Ing = [string, string, number, number[], ...string[]];
 // [source, name, url (path on the site), minutes, cuisine, ingredient positions (with parents), own positions, photo, keywords]
 type RecipeRow = [number, string, string, number | null, string, number[], number[], string, string];
-type VideoRow = [string, string, string, string, number[]];
+// [channel index, title, video id, published date, ingredient positions]
+type VideoRow = [number, string, string, string, number[]];
+type Channel = { id: string; name: string; channel: string; site: string; count: number };
 type Index = {
   built: string;
   crawled: string;
   sources: Source[];
   paused: { id: string; name: string; site: string; why: string }[];
-  videos: { sources: { id: string; name: string; channel: string }[]; rows: VideoRow[] };
+  videos: { sources: Channel[]; rows: VideoRow[] };
   /** Ways to support each creator, by source id (data/support.json). */
   support: Record<string, { label: string; url: string; book?: boolean }[]>;
   linkOnly: { name: string; search: string }[];
@@ -337,13 +339,16 @@ let emptyFixes: (() => void)[] = [];
 
 function renderVideos(q: string[]) {
   const rows = data.videos.rows;
-  if (!rows.length || !q.length || state.sites.size) return;
+  if (!rows.length || !q.length) return;
+  const chans = data.videos.sources;
   const hits = rows
     .filter((v) => {
+      // With a Site filter on, only that site's own channel.
+      if (state.sites.size && !state.sites.has(chans[v[0]].site)) return false;
       const t = words(v[1]);
       return q.every((w, n) => t.some((x) => x === w || (n === q.length - 1 && x.startsWith(w))));
     })
-    .slice(0, 4);
+    .slice(0, 6);
   if (!hits.length) return;
   $('videos').hidden = false;
   $('video-results').innerHTML = hits
@@ -351,7 +356,7 @@ function renderVideos(q: string[]) {
       (v) => `<li><article class="row">
       <div class="text">
         <h3><a href="https://www.youtube.com/watch?v=${esc(v[2])}" data-src-id="youtube" data-from="videos">${highlight(v[1], q)}</a></h3>
-        <p class="meta">Video on YouTube, from ${esc(v[0])}</p>
+        <p class="meta">Video on YouTube, from ${esc(chans[v[0]].name)}</p>
       </div>
       <div class="photo"><img src="https://i.ytimg.com/vi/${esc(v[2])}/mqdefault.jpg" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" width="320" height="180"></div>
     </article></li>`,
@@ -520,17 +525,28 @@ function buildStart() {
 function buildAbout() {
   const names = data.sources.map((s) => s.name);
   $('from').textContent = `Searches ${andList(names)}. Every recipe opens on its own site.`;
+  // A site's own channel goes on the site's line: "1,368 recipes and 312 videos".
+  const chans = data.videos.sources;
+  const videosOf = (id: string) => {
+    const c = chans.find((c) => c.site === id && c.count);
+    return c ? ` and <a href="${esc(c.channel)}">${plural(c.count, 'video')}</a>` : '';
+  };
   const items = [
-    ...data.sources.map((s) => `<li><a href="${esc(s.site)}">${esc(s.name)}</a>, ${plural(s.count, 'recipe')}${supportLine(s.id)}</li>`),
-    ...data.paused.map(
-      (s) => `<li><a href="${esc(s.site)}">${esc(s.name)}</a>, coming back once its site lets the weekly program in${supportLine(s.id)}</li>`,
+    ...data.sources.map(
+      (s) => `<li><a href="${esc(s.site)}">${esc(s.name)}</a>, ${plural(s.count, 'recipe')}${videosOf(s.id)}${supportLine(s.id)}</li>`,
     ),
-    ...data.videos.sources.map(
-      (v) =>
-        `<li><a href="${esc(v.channel)}">${esc(v.name)}</a>, ${
-          data.videos.rows.length ? plural(data.videos.rows.length, 'video') : 'videos on YouTube, coming soon'
-        }${supportLine(v.id)}</li>`,
-    ),
+    ...data.paused.map((s) => {
+      const c = chans.find((c) => c.site === s.id && c.count);
+      return `<li><a href="${esc(s.site)}">${esc(s.name)}</a>, ${
+        c ? `<a href="${esc(c.channel)}">${plural(c.count, 'video')}</a> for now; its recipes come back once its site lets the weekly program in` : 'coming back once its site lets the weekly program in'
+      }${supportLine(s.id)}</li>`;
+    }),
+    ...chans
+      .filter((c) => !c.site)
+      .map(
+        (c) =>
+          `<li><a href="${esc(c.channel)}">${esc(c.name)}</a>, ${c.count ? plural(c.count, 'video') : 'videos on YouTube, coming soon'}${supportLine(c.id)}</li>`,
+      ),
     ...data.linkOnly
       .filter((l) => !/youtube/.test(l.search))
       .map((l) => `<li>${esc(l.name)}, as a link to its own search, since its owner doesn’t allow automated collection</li>`),

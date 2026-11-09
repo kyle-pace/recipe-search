@@ -146,16 +146,19 @@ for (const s of sources.recipes) {
 }
 
 // Videos from the YouTube Data API, once the key is in place (crawler/lib/youtube.mjs).
+// Each row: [channel index, title, video id, published date, ingredient positions].
 const videos = [];
+const channels = [];
 for (const v of sources.videos || []) {
   const file = join(root, 'data', `${v.id}.json`);
-  if (!existsSync(file)) continue;
-  const rows = JSON.parse(readFileSync(file, 'utf8'));
+  const rows = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : [];
+  const ci = channels.length;
+  channels.push({ id: v.id, name: v.name, channel: v.channel, site: v.site || '', count: rows.length });
   for (const row of rows) {
     const ids = new Set();
     const m = match(catalog, decode(row.n));
     if (m && !catalog.items[m.id].product) for (const id of withParents(m.id)) ids.add(id);
-    videos.push([v.name, decode(row.n), row.id, row.p || '', [...ids].map(ingPos)]);
+    videos.push([ci, decode(row.n), row.id, row.p || '', [...ids].map(ingPos)]);
   }
 }
 
@@ -201,7 +204,7 @@ const index = {
   crawled: (status.run || '').slice(0, 10),
   sources: srcList,
   paused,
-  videos: { sources: (sources.videos || []).map((v) => ({ id: v.id, name: v.name, channel: v.channel })), rows: videos },
+  videos: { sources: channels, rows: videos },
   support,
   linkOnly: (sources.link_only || []).map((l) => ({ name: l.name, search: l.search })),
   cuisines,
