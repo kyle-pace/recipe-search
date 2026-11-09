@@ -12,7 +12,9 @@ permissions:
   contents: write
 
 concurrency:
-  group: crawl # never at the same time as a crawl, which also commits data/
+  # Its own queue: it only writes data/popularity.json, which the crawl never touches,
+  # and sharing the crawl's queue would let a waiting run cancel a waiting crawl.
+  group: popularity
   cancel-in-progress: false
 
 jobs:
