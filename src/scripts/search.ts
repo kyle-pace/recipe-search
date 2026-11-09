@@ -1,8 +1,14 @@
-// Recipe search, in the browser. Loads the index once (about 150 KB over the wire), then
+// Recipe search, in the browser. Loads the index once (about 290 KB over the wire), then
 // every keystroke searches it locally: no server, no search service, nothing typed ever
-// leaves the page. The query is a sentence: "I have <ingredients>" (#have, chips) and
-// "I want to make <dish>" (#q). State lives in the URL (?q=, &with=, &site=, &time=,
-// &cuisine=), so searches can be shared and the back button works.
+// leaves the page.
+//
+// One search box (#q). Words you type search recipe names, ingredients and cuisines.
+// Picking an ingredient or a creator from the suggestions turns it into a tag in the box:
+// ingredient tags rank recipes by how many of them they use, creator tags narrow to that
+// creator's recipes and videos. With nothing searched, the page is just the box (home);
+// after a search, the box moves up and results fill the page (results).
+// State lives in the URL (?q=, &with=, &site=, &time=, &cuisine=), so searches can be
+// shared and the back button works. (`site` holds creator ids, for older links.)
 import { track } from 'kp-design/analytics';
 
 type Source = { id: string; name: string; site: string; host: string; count: number };
@@ -28,6 +34,9 @@ type Index = {
   recipes: RecipeRow[];
 };
 
+/** Whoever made it: a site, a site and its channel, or a channel alone. */
+type Creator = { id: string; name: string; recipes: number; videos: number; words: string[] };
+
 type Recipe = {
   i: number;
   src: Source;
@@ -48,12 +57,13 @@ type Hit = { r: Recipe; score: number; used: number[]; missing: number };
 const EXPERIMENT = 'recipe-search';
 const PAGE = 24;
 const TIMES = [15, 30, 45, 60];
-const TRY = ['mapo tofu', 'pad thai', 'dumplings', 'noodle soup', 'fried rice', 'green curry', 'chocolate cake', 'scones'];
+const TRY = ['mapo tofu', 'pad thai', 'dumplings', 'green curry', 'fried rice', 'scones'];
+const POPULAR_SHOWN = 5;
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
+const page = $('page');
 const app = $('app');
 const form = $<HTMLFormElement>('search-form');
-const haveInput = $<HTMLInputElement>('have');
 const qInput = $<HTMLInputElement>('q');
 const statusEl = $('status');
 const resultsEl = $<HTMLOListElement>('results');
@@ -92,6 +102,8 @@ function words(text: string): string[] {
 
 let data: Index;
 let recipes: Recipe[] = [];
+let creators: Creator[] = [];
+const creatorById = new Map<string, Creator>();
 let ingNames: string[][] = []; // per position: its names, as words joined by spaces
 let ingRecipes: number[] = []; // per position: how many recipes use it (directly or as a kind of it)
 const ingById = new Map<string, number>();
@@ -99,13 +111,15 @@ const ingById = new Map<string, number>();
 const state = {
   q: '',
   with: [] as number[],
-  sites: new Set<string>(),
+  sites: new Set<string>(), // creator ids
   time: 0,
   cuisine: '',
   shown: PAGE,
   picked: -1, // a recipe picked at random, by index into recipes
 };
 
+/** The creator a channel belongs to: its site's id, or its own. */
+const creatorOfChannel = (k: number) => data.videos.sources[k].site || data.videos.sources[k].id;
 
 // ---------------------------------------------------------------------------------------
 // Loading
@@ -119,6 +133,7 @@ async function load() {
     statusEl.textContent = 'The recipes didn’t load. Refresh the page to try again.';
     return;
   }
+  buildCreators();
   ingNames = data.ing.map((g) => [g[1], ...(g.slice(4) as string[])].map((n) => words(n).join(' ')));
   data.ing.forEach((g, p) => ingById.set(g[0], p));
   ingRecipes = data.ing.map(() => 0);
@@ -127,7 +142,12 @@ async function load() {
     const src = data.sources[s];
     for (const p of pos) ingRecipes[p]++;
     const title = words(name);
-    const other = [...words(kw), ...words(cuisine), ...pos.flatMap((p) => ingNames[p].join(' ').split(' '))];
+    const other = [
+      ...words(kw),
+      ...words(cuisine),
+      ...creatorById.get(src.id)!.words,
+      ...pos.flatMap((p) => ingNames[p].join(' ').split(' ')),
+    ];
     return {
       i,
       src,
@@ -145,10 +165,25 @@ async function load() {
   });
   buildFilters();
   buildStart();
-  buildAbout();
   readUrl();
   app.dataset.state = 'ready';
   render();
+}
+
+function buildCreators() {
+  const add = (id: string, name: string) => {
+    let c = creatorById.get(id);
+    if (!c) {
+      c = { id, name, recipes: 0, videos: 0, words: words(name) };
+      creatorById.set(id, c);
+      creators.push(c);
+    }
+    return c;
+  };
+  for (const s of data.sources) add(s.id, s.name).recipes = s.count;
+  for (const s of data.paused) add(s.id, s.name);
+  data.videos.sources.forEach((ch, k) => (add(creatorOfChannel(k), ch.name).videos += ch.count));
+  creators = creators.filter((c) => c.recipes || c.videos);
 }
 
 // ---------------------------------------------------------------------------------------
@@ -174,14 +209,16 @@ function covers(chosen: number[], p: number): boolean {
   return chosen.includes(p) || data.ing[p][3].some((parent) => chosen.includes(parent));
 }
 
-function passesFilters(r: Recipe, skip?: 'site' | 'time' | 'cuisine'): boolean {
+type Skip = 'site' | 'time' | 'cuisine';
+
+function passesFilters(r: Recipe, skip?: Skip): boolean {
   if (skip !== 'site' && state.sites.size && !state.sites.has(r.src.id)) return false;
   if (skip !== 'time' && state.time && (r.min == null || r.min > state.time)) return false;
   if (skip !== 'cuisine' && state.cuisine && r.cuisine !== state.cuisine) return false;
   return true;
 }
 
-function search(opts: { q?: string; with?: number[]; skip?: 'site' | 'time' | 'cuisine' } = {}): Hit[] {
+function search(opts: { q?: string; with?: number[]; skip?: Skip } = {}): Hit[] {
   const q = words(opts.q ?? state.q);
   const chosen = opts.with ?? state.with;
   const hits: Hit[] = [];
@@ -207,6 +244,33 @@ function search(opts: { q?: string; with?: number[]; skip?: 'site' | 'time' | 'c
       (q.length || chosen.length ? (a.r.min ?? 999) - (b.r.min ?? 999) : a.r.name.localeCompare(b.r.name)),
   );
   return hits;
+}
+
+/**
+ * Videos for the search: shown when there are words, or a creator is picked. Words match
+ * the title (or the channel's name); ingredients alone match ingredients named in the
+ * title. Takes turns between channels, newest first within each, so one prolific
+ * channel doesn't fill the list.
+ */
+function searchVideos(opts: { q?: string; skip?: Skip } = {}): VideoRow[] {
+  const q = words(opts.q ?? state.q);
+  const sites = opts.skip === 'site' ? new Set<string>() : state.sites;
+  if (!q.length && !sites.size) return [];
+  const chanWords = data.videos.sources.map((c) => words(c.name));
+  const matched = data.videos.rows.filter((v) => {
+    if (sites.size && !sites.has(creatorOfChannel(v[0]))) return false;
+    if (q.length) {
+      const t = [...words(v[1]), ...chanWords[v[0]]];
+      return q.every((w, n) => t.some((x) => x === w || (n === q.length - 1 && x.startsWith(w))));
+    }
+    return !state.with.length || v[4].some((p) => state.with.includes(p));
+  });
+  const byChannel = new Map<number, VideoRow[]>();
+  for (const v of matched) byChannel.set(v[0], [...(byChannel.get(v[0]) || []), v]);
+  const queues = [...byChannel.values()].sort((a, b) => b.length - a.length);
+  const out: VideoRow[] = [];
+  for (let round = 0; queues.some((qq) => qq.length > round); round++) for (const qq of queues) if (qq[round]) out.push(qq[round]);
+  return out;
 }
 
 const isBlank = () => !state.q && !state.with.length && !state.sites.size && !state.time && !state.cuisine;
@@ -266,11 +330,12 @@ function row(h: Hit, position: number, q: string[], from = 'results'): string {
 function render() {
   const q = words(state.q);
   qInput.value = state.q;
-  renderWith();
+  renderTags();
   renderFilterButtons();
   renderPicked();
 
   const blank = isBlank();
+  page.dataset.mode = blank && state.picked < 0 ? 'home' : 'results';
   $('start').hidden = !blank;
   $('empty').hidden = true;
   $('also').hidden = true;
@@ -279,37 +344,46 @@ function render() {
   if (blank) {
     resultsEl.innerHTML = '';
     moreBtn.hidden = true;
-    statusEl.innerHTML = `<strong>${data.recipes.length.toLocaleString()}</strong> recipes to choose from.`;
+    statusEl.innerHTML = '';
     return;
   }
 
   const hits = search();
+  const videos = searchVideos();
   const shown = hits.slice(0, state.shown);
   resultsEl.innerHTML = shown.map((h, n) => `<li>${row(h, n + 1, q)}</li>`).join('');
   moreBtn.hidden = hits.length <= state.shown;
   moreBtn.textContent = `Show ${Math.min(PAGE, hits.length - shown.length)} more of ${(hits.length - shown.length).toLocaleString()}`;
 
   const count = `<strong>${hits.length.toLocaleString()}</strong>`;
-  if (!hits.length) statusEl.textContent = 'Nothing matches all of that.';
+  const vids = videos.length ? ` and ${plural(videos.length, 'video')} on YouTube` : '';
+  if (!hits.length && videos.length) statusEl.innerHTML = `<strong>${videos.length.toLocaleString()}</strong> ${videos.length === 1 ? 'video' : 'videos'} on YouTube.`;
+  else if (!hits.length) statusEl.textContent = 'Nothing matches all of that.';
   else if (state.with.length > 1)
-    statusEl.innerHTML = `${count} ${hits.length === 1 ? 'recipe uses' : 'recipes use'} at least one of them. The ones that use the most come first.`;
-  else statusEl.innerHTML = `${count} ${hits.length === 1 ? 'recipe' : 'recipes'}.`;
+    statusEl.innerHTML = `${count} ${hits.length === 1 ? 'recipe uses' : 'recipes use'} at least one of them${vids}. The ones that use the most come first.`;
+  else statusEl.innerHTML = `${count} ${hits.length === 1 ? 'recipe' : 'recipes'}${vids}.`;
 
-  if (!hits.length) renderEmpty();
-  renderVideos(q);
+  if (!hits.length && !videos.length) renderEmpty();
+  // Six videos under the recipes; a page at a time when there are only videos (a
+  // YouTube-only creator like Kenji).
+  const only = !hits.length;
+  renderVideos(videos.slice(0, only ? state.shown : 6), q, only);
+  const moreV = $<HTMLButtonElement>('more-videos');
+  moreV.hidden = !only || videos.length <= state.shown;
+  moreV.textContent = `Show ${Math.min(PAGE, videos.length - state.shown)} more of ${(videos.length - state.shown).toLocaleString()}`;
   renderAlso();
 }
 
-function renderWith() {
-  $('with-chips').innerHTML = state.with
-    .map(
-      (p, n) =>
-        `<li><button type="button" data-remove="${p}" aria-label="Remove ${esc(ingName(p))}">${esc(ingName(p))}<span class="x" aria-hidden="true">×</span></button>${
-          n < state.with.length - 1 ? '' : ''
-        }</li>`,
-    )
-    .join('');
-  haveInput.placeholder = state.with.length ? 'and…' : 'an ingredient';
+/** Creator and ingredient tags, inside the box before the text. */
+function renderTags() {
+  const tag = (attr: string, value: string | number, label: string, kind: string) =>
+    `<li><button type="button" class="tag tag-${kind}" ${attr}="${esc(value)}" aria-label="Remove ${esc(label)}">${esc(label)}<span class="x" aria-hidden="true">×</span></button></li>`;
+  $('with-chips').innerHTML = [
+    ...[...state.sites].map((id) => tag('data-remove-creator', id, `from ${creatorById.get(id)?.name || id}`, 'creator')),
+    ...state.with.map((p) => tag('data-remove', p, ingName(p), 'ing')),
+  ].join('');
+  $('box').toggleAttribute('data-tags', !!(state.sites.size || state.with.length));
+  qInput.placeholder = state.sites.size || state.with.length ? 'and…' : 'A dish, ingredient or creator';
 }
 
 function renderEmpty() {
@@ -321,7 +395,7 @@ function renderEmpty() {
   }
   if (state.q && state.with.length)
     fixes.push({ label: `any dish, not just “${state.q}”`, n: search({ q: '' }).length, apply: () => (state.q = '') });
-  if (state.sites.size) fixes.push({ label: 'any site', n: search({ skip: 'site' }).length, apply: () => state.sites.clear() });
+  if (state.sites.size) fixes.push({ label: 'any creator', n: search({ skip: 'site' }).length, apply: () => state.sites.clear() });
   if (state.time) fixes.push({ label: 'any time', n: search({ skip: 'time' }).length, apply: () => (state.time = 0) });
   if (state.cuisine) fixes.push({ label: 'any cuisine', n: search({ skip: 'cuisine' }).length, apply: () => (state.cuisine = '') });
   const useful = fixes.filter((f) => f.n > 0).sort((a, b) => b.n - a.n);
@@ -337,26 +411,11 @@ function renderEmpty() {
 }
 let emptyFixes: (() => void)[] = [];
 
-function renderVideos(q: string[]) {
-  const rows = data.videos.rows;
-  if (!rows.length || !q.length) return;
-  const chans = data.videos.sources;
-  const matched = rows.filter((v) => {
-    // With a Site filter on, only that site's own channel.
-    if (state.sites.size && !state.sites.has(chans[v[0]].site)) return false;
-    const t = words(v[1]);
-    return q.every((w, n) => t.some((x) => x === w || (n === q.length - 1 && x.startsWith(w))));
-  });
-  // Take turns between channels (newest first within each), so one prolific channel
-  // doesn't fill all six spots.
-  const byChannel = new Map<number, VideoRow[]>();
-  for (const v of matched) byChannel.set(v[0], [...(byChannel.get(v[0]) || []), v]);
-  const queues = [...byChannel.values()].sort((a, b) => b.length - a.length);
-  const hits: VideoRow[] = [];
-  for (let round = 0; hits.length < 6 && queues.some((qq) => qq.length > round); round++)
-    for (const qq of queues) if (qq[round] && hits.length < 6) hits.push(qq[round]);
+function renderVideos(hits: VideoRow[], q: string[], only: boolean) {
   if (!hits.length) return;
+  const chans = data.videos.sources;
   $('videos').hidden = false;
+  $('videos').toggleAttribute('data-only', only);
   $('video-results').innerHTML = hits
     .map(
       (v) => `<li><article class="row">
@@ -402,7 +461,7 @@ function pickRandom() {
   let next = pool[Math.floor(Math.random() * pool.length)].r.i;
   if (pool.length > 1 && next === state.picked) next = pool[(pool.findIndex((h) => h.r.i === next) + 1) % pool.length].r.i;
   state.picked = next;
-  renderPicked();
+  render();
   const box = $('picked');
   box.focus({ preventScroll: true });
   box.scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
@@ -431,10 +490,10 @@ function renderPicked() {
 // Filters: words that open a menu of native radios and checkboxes.
 
 function buildFilters() {
-  $('f-site-options').innerHTML = data.sources
+  $('f-site-options').innerHTML = creators
     .map(
-      (s) =>
-        `<label><input type="checkbox" name="site" value="${esc(s.id)}"> ${esc(s.name)} <span class="count">${s.count.toLocaleString()}</span></label>`,
+      (c) =>
+        `<label><input type="checkbox" name="site" value="${esc(c.id)}"> ${esc(c.name)} <span class="count"></span></label>`,
     )
     .join('');
   $('f-time-options').innerHTML = [0, ...TIMES]
@@ -481,21 +540,27 @@ function buildFilters() {
 
 /** Each option's count, given everything else you've picked, so "Thai 12" means 12 here. */
 function updateCounts(pop: HTMLElement) {
-  const kind = pop.id.slice(2) as 'site' | 'time' | 'cuisine';
+  const kind = pop.id.slice(2) as Skip;
   const hits = isBlank() ? recipes.map((r) => ({ r })) : search({ skip: kind });
+  const vids = kind === 'site' ? (state.q ? searchVideos({ skip: 'site' }) : data.videos.rows) : [];
   for (const label of pop.querySelectorAll('label')) {
     const el = label.querySelector('input')!;
-    let n = 0;
-    if (kind === 'site') n = hits.filter((h) => h.r.src.id === el.value).length;
-    if (kind === 'time') n = Number(el.value) ? hits.filter((h) => h.r.min != null && h.r.min <= Number(el.value)).length : hits.length;
-    if (kind === 'cuisine') n = el.value ? hits.filter((h) => h.r.cuisine === el.value).length : hits.length;
-    label.querySelector('.count')!.textContent = n.toLocaleString();
+    let text = '';
+    if (kind === 'site') {
+      const n = hits.filter((h) => h.r.src.id === el.value).length;
+      const v = creatorById.get(el.value)!.recipes ? 0 : vids.filter((x) => creatorOfChannel(x[0]) === el.value).length;
+      text = v ? plural(v, 'video') : n.toLocaleString();
+    }
+    if (kind === 'time')
+      text = (Number(el.value) ? hits.filter((h) => h.r.min != null && h.r.min <= Number(el.value)).length : hits.length).toLocaleString();
+    if (kind === 'cuisine') text = (el.value ? hits.filter((h) => h.r.cuisine === el.value).length : hits.length).toLocaleString();
+    label.querySelector('.count')!.textContent = text;
   }
 }
 
 function renderFilterButtons() {
   const site =
-    state.sites.size === 1 ? data.sources.find((s) => state.sites.has(s.id))!.name : state.sites.size ? `${state.sites.size} sites` : '';
+    state.sites.size === 1 ? creatorById.get([...state.sites][0])?.name || '' : state.sites.size ? `${state.sites.size} creators` : '';
   const set = (id: string, value: string) => {
     $(`${id}-value`).textContent = value || 'any';
     $(`${id}-btn`).toggleAttribute('data-active', !!value);
@@ -508,115 +573,88 @@ function renderFilterButtons() {
     if (el.name === 'time') el.checked = Number(el.value) === state.time;
     if (el.name === 'cuisine') el.checked = el.value === state.cuisine;
   }
-  $('clear-all').hidden = !(filterCount() || state.with.length || state.q);
+  $('clear-all').hidden = isBlank();
 }
 
 // ---------------------------------------------------------------------------------------
-// Ideas for an empty page, and where the recipes come from
+// Ideas under the box on the home page
 
 /** Keeps the comma or period after a word button on the button's line. */
 const keepPunct = (html: string) => html.replace(/(<button[^>]*>[^<]*<\/button>[,.])/g, '<span class="keep">$1</span>');
 
 function buildStart() {
-  const pop = data.popular.map((p) => `<button type="button" data-add="${p}">${esc(ingName(p))}</button>`);
-  $('popular').innerHTML = keepPunct(
-    `Have any of these? ${andList(pop).replace(/ and (?=<button[^>]*>[^<]*<\/button>$)/, ' or ')}.`,
-  );
-  const tries = TRY.filter((t) => search({ q: t, with: [] }).length).map(
-    (t) => `<button type="button" data-try="${esc(t)}">${esc(t)}</button>`,
-  );
-  $('try').innerHTML = keepPunct(`Or look up ${orList(tries)}.`);
-}
-
-function buildAbout() {
   const names = data.sources.map((s) => s.name);
-  $('from').textContent = `Searches ${andList(names)}. Every recipe opens on its own site.`;
-  // A site's own channel goes on the site's line: "1,368 recipes and 312 videos".
-  const chans = data.videos.sources;
-  const videosOf = (id: string) => {
-    const c = chans.find((c) => c.site === id && c.count);
-    return c ? ` and <a href="${esc(c.channel)}">${plural(c.count, 'video')}</a>` : '';
-  };
-  const items = [
-    ...data.sources.map(
-      (s) => `<li><a href="${esc(s.site)}">${esc(s.name)}</a>, ${plural(s.count, 'recipe')}${videosOf(s.id)}${supportLine(s.id)}</li>`,
-    ),
-    ...data.paused.map((s) => {
-      const c = chans.find((c) => c.site === s.id && c.count);
-      return `<li><a href="${esc(s.site)}">${esc(s.name)}</a>, ${
-        c ? `<a href="${esc(c.channel)}">${plural(c.count, 'video')}</a> for now; its recipes come back once its site lets the weekly program in` : 'coming back once its site lets the weekly program in'
-      }${supportLine(s.id)}</li>`;
-    }),
-    ...chans
-      .filter((c) => !c.site)
-      .map(
-        (c) =>
-          `<li><a href="${esc(c.channel)}">${esc(c.name)}</a>, ${c.count ? plural(c.count, 'video') : 'videos on YouTube, coming soon'}${supportLine(c.id)}</li>`,
-      ),
-    ...data.linkOnly
-      .filter((l) => !/youtube/.test(l.search))
-      .map((l) => `<li>${esc(l.name)}, as a link to its own search, since its owner doesn’t allow automated collection</li>`),
-  ];
-  $('sources-list').innerHTML = items.join('');
-  if (data.crawled) {
-    const d = new Date(data.crawled + 'T12:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-    $('crawled').textContent = `Last updated ${d}.`;
-  }
+  $('from').textContent = `${data.recipes.length.toLocaleString()} recipes from ${andList(names)}, and ${data.videos.rows.length.toLocaleString()} videos. Every one opens on its creator’s own site.`;
+  const tries = TRY.filter((t) => search({ q: t, with: [] }).length)
+    .slice(0, 4)
+    .map((t) => `<button type="button" data-try="${esc(t)}">${esc(t)}</button>`);
+  $('try').innerHTML = keepPunct(`Try ${orList(tries)}.`);
+  const pop = data.popular.slice(0, POPULAR_SHOWN).map((p) => `<button type="button" data-add="${p}">${esc(ingName(p))}</button>`);
+  $('popular').innerHTML = keepPunct(`Or start with what you have: ${orList(pop)}.`);
+  const who = creators.map((c) => `<button type="button" data-creator="${esc(c.id)}">${esc(c.name)}</button>`);
+  $('creators').innerHTML = keepPunct(`Or see everything from ${orList(who)}.`);
 }
 
 // ---------------------------------------------------------------------------------------
-// Suggestions under each word (the ARIA combobox pattern: focus stays in the field,
-// arrows move the highlighted option, Enter picks it)
+// Suggestions under the box (the ARIA combobox pattern: focus stays in the field, arrows
+// move the highlighted option, Enter picks it). Creators and ingredients first, as things
+// to add; then recipes to open; then a plain search for the words.
 
-type Option = { kind: 'ing'; p: number } | { kind: 'recipe'; h: Hit; n: number } | { kind: 'all'; n: number };
+type Option =
+  | { kind: 'creator'; c: Creator }
+  | { kind: 'ing'; p: number }
+  | { kind: 'recipe'; h: Hit; n: number }
+  | { kind: 'all'; n: number; text: string };
 
-class Suggest {
-  options: Option[] = [];
-  active = -1;
-  constructor(
-    public input: HTMLInputElement,
-    public panel: HTMLElement,
-    public list: HTMLElement,
-    public build: (text: string) => Option[],
-    public label: (o: Option, qs: string) => string,
-  ) {}
+const suggest = {
+  options: [] as Option[],
+  active: -1,
+  panel: $('q-panel'),
+  list: $('q-list'),
 
   open() {
-    const text = this.input.value.trim();
+    const text = qInput.value.trim();
     if (!data || !text) return this.close();
-    this.options = this.build(text);
+    this.options = buildOptions(text);
     if (!this.options.length) return this.close();
     this.active = -1;
-    const qs = words(text).join(' ');
     this.list.innerHTML = this.options
-      .map((o, n) => `<span role="option" id="${this.input.id}-opt-${n}" aria-selected="false" data-n="${n}">${this.label(o, qs)}</span>`)
+      .map((o, n) => `<span role="option" id="q-opt-${n}" aria-selected="false" data-n="${n}" data-kind="${o.kind}">${optionLabel(o, text)}</span>`)
       .join('');
     this.panel.hidden = false;
-    this.input.setAttribute('aria-expanded', 'true');
-    this.input.removeAttribute('aria-activedescendant');
-  }
+    qInput.setAttribute('aria-expanded', 'true');
+    qInput.removeAttribute('aria-activedescendant');
+  },
 
   close() {
     this.panel.hidden = true;
-    this.input.setAttribute('aria-expanded', 'false');
-    this.input.removeAttribute('aria-activedescendant');
+    qInput.setAttribute('aria-expanded', 'false');
+    qInput.removeAttribute('aria-activedescendant');
     this.options = [];
     this.active = -1;
-  }
+  },
 
   move(by: number) {
     if (this.panel.hidden) return this.open();
     const last = this.options.length - 1;
     this.active = by > 0 ? (this.active >= last ? 0 : this.active + 1) : this.active <= 0 ? last : this.active - 1;
-    for (const el of this.list.querySelectorAll('[role="option"]'))
-      el.setAttribute('aria-selected', String(el.id === `${this.input.id}-opt-${this.active}`));
-    this.input.setAttribute('aria-activedescendant', `${this.input.id}-opt-${this.active}`);
-    $(`${this.input.id}-opt-${this.active}`).scrollIntoView({ block: 'nearest' });
-  }
-}
+    for (const el of this.list.querySelectorAll('[role="option"]')) el.setAttribute('aria-selected', String(el.id === `q-opt-${this.active}`));
+    qInput.setAttribute('aria-activedescendant', `q-opt-${this.active}`);
+    $(`q-opt-${this.active}`).scrollIntoView({ block: 'nearest' });
+  },
+};
+
+const creatorMatches = (text: string): Creator[] => {
+  const q = words(text);
+  if (!q.length) return [];
+  return creators.filter(
+    (c) => !state.sites.has(c.id) && q.every((t, n) => c.words.some((w) => w === t || (n === q.length - 1 && w.startsWith(t)))),
+  );
+};
 
 const ingMatches = (text: string): number[] => {
   const qs = words(text).join(' ');
+  if (!qs) return [];
   const quality = (p: number) => (ingNames[p].some((n) => n === qs) ? 3 : ingNames[p].some((n) => n.startsWith(qs)) ? 2 : 1);
   return data.ing
     .map((_, p) => p)
@@ -624,56 +662,59 @@ const ingMatches = (text: string): number[] => {
     .sort((a, b) => quality(b) - quality(a) || ingRecipes[b] - ingRecipes[a]);
 };
 
-const haveSuggest = new Suggest(
-  haveInput,
-  $('have-panel'),
-  $('have-list'),
-  (text) => ingMatches(text).slice(0, 6).map((p) => ({ kind: 'ing' as const, p })),
-  (o, qs) => {
-    if (o.kind !== 'ing') return '';
+function buildOptions(text: string): Option[] {
+  const out: Option[] = creatorMatches(text)
+    .slice(0, 2)
+    .map((c) => ({ kind: 'creator' as const, c }));
+  if (text.length > 1) out.push(...ingMatches(text).slice(0, 3).map((p) => ({ kind: 'ing' as const, p })));
+  const hits = search({ q: text });
+  out.push(...hits.slice(0, 4).map((h, n) => ({ kind: 'recipe' as const, h, n: n + 1 })));
+  if (hits.length) out.push({ kind: 'all', n: hits.length, text });
+  return out;
+}
+
+function optionLabel(o: Option, text: string): string {
+  const qs = words(text).join(' ');
+  if (o.kind === 'creator') {
+    const has = [o.c.recipes ? plural(o.c.recipes, 'recipe') : '', o.c.videos ? plural(o.c.videos, 'video') : ''].filter(Boolean);
+    return `<span class="opt-text"><span class="opt-name">${esc(o.c.name)}</span><span class="opt-meta">Creator, ${andList(has)}</span></span>`;
+  }
+  if (o.kind === 'ing') {
     // When it matched another name ("thai ginger" for galangal), say so.
     const others = data.ing[o.p].slice(4) as string[];
     const main = ingNames[o.p][0];
-    const via = main.startsWith(qs) || main.includes(` ${qs}`)
-      ? ''
-      : others.find((_, k) => ingNames[o.p][k + 1].startsWith(qs) || ingNames[o.p][k + 1].includes(` ${qs}`)) || '';
-    return `<span class="opt-text"><span class="opt-name">${esc(ingName(o.p))}${via ? ` <span class="opt-meta">(${esc(via)})</span>` : ''}</span><span class="opt-meta">in ${plural(
+    const via =
+      main.startsWith(qs) || main.includes(` ${qs}`)
+        ? ''
+        : others.find((_, k) => ingNames[o.p][k + 1].startsWith(qs) || ingNames[o.p][k + 1].includes(` ${qs}`)) || '';
+    return `<span class="opt-text"><span class="opt-name">${esc(ingName(o.p))}${via ? ` <span class="opt-meta">(${esc(via)})</span>` : ''}</span><span class="opt-meta">Ingredient, in ${plural(
       ingRecipes[o.p],
       'recipe',
     )}</span></span>`;
-  },
-);
+  }
+  if (o.kind === 'recipe') {
+    const r = o.h.r;
+    const thumb = r.img
+      ? `<img class="opt-thumb" src="${esc(r.img)}" alt="" loading="lazy" referrerpolicy="no-referrer" width="44" height="44">`
+      : `<span class="opt-thumb" aria-hidden="true"></span>`;
+    return `${thumb}<span class="opt-text"><span>${highlight(r.name, words(text))}</span><span class="opt-meta">${esc(r.src.name)}${
+      r.min ? `, ${fmtTime(r.min)}` : ''
+    }</span></span>`;
+  }
+  return `<span class="opt-text"><span class="opt-name">Search for “${esc(o.text)}”</span><span class="opt-meta">${plural(o.n, 'recipe')}</span></span>`;
+}
 
-const qSuggest = new Suggest(
-  qInput,
-  $('q-panel'),
-  $('q-list'),
-  (text) => {
-    const hits = search({ q: text });
-    return [...hits.slice(0, 5).map((h, n) => ({ kind: 'recipe' as const, h, n: n + 1 })), ...(hits.length ? [{ kind: 'all' as const, n: hits.length }] : [])];
-  },
-  (o) => {
-    if (o.kind === 'recipe') {
-      const r = o.h.r;
-      const thumb = r.img
-        ? `<img class="opt-thumb" src="${esc(r.img)}" alt="" loading="lazy" referrerpolicy="no-referrer" width="44" height="44">`
-        : `<span class="opt-thumb" aria-hidden="true"></span>`;
-      return `${thumb}<span class="opt-text"><span>${highlight(r.name, words(qInput.value))}</span><span class="opt-meta">${esc(r.src.name)}${
-        r.min ? `, ${fmtTime(r.min)}` : ''
-      }</span></span>`;
-    }
-    if (o.kind === 'all') return `<span class="opt-text"><span class="opt-name">See all ${plural(o.n, 'recipe')}</span></span>`;
-    return '';
-  },
-);
-
-function choose(s: Suggest, n: number) {
-  const o = s.options[n];
+function choose(n: number) {
+  const o = suggest.options[n];
   if (!o) return;
-  if (o.kind === 'ing') {
-    haveInput.value = '';
+  if (o.kind === 'creator') {
+    qInput.value = '';
+    addCreator(o.c.id, 'suggestions');
+    qInput.focus();
+  } else if (o.kind === 'ing') {
+    qInput.value = '';
     addIngredient(o.p, 'suggestions');
-    haveInput.focus();
+    qInput.focus();
   } else if (o.kind === 'recipe') {
     openedRecipe(o.h.r.src.id, o.n, 'suggestions');
     location.href = o.h.r.url;
@@ -683,42 +724,47 @@ function choose(s: Suggest, n: number) {
 // ---------------------------------------------------------------------------------------
 // Actions
 
-function addIngredient(p: number, from: string) {
-  haveSuggest.close();
-  if (!state.with.includes(p)) state.with.push(p);
-  state.shown = PAGE;
-  state.picked = -1;
-  render();
-  writeUrl(true);
-  track('Added Ingredient', { experiment: EXPERIMENT, ingredient_id: data.ing[p][0], added_from: from });
-  searched();
-}
-
-function submit() {
-  haveSuggest.close();
-  qSuggest.close();
-  // Text left in "I have" counts too: take its best ingredient match.
-  const leftover = haveInput.value.trim();
-  if (leftover) {
-    const best = ingMatches(leftover)[0];
-    if (best != null && !state.with.includes(best)) state.with.push(best);
-    haveInput.value = '';
-  }
+/** Adding a tag keeps any words still in the box as words, and searches. */
+function afterTag() {
+  suggest.close();
   state.q = qInput.value.trim();
   state.shown = PAGE;
   state.picked = -1;
   render();
   writeUrl(true);
   searched();
-  if (matchMedia('(max-width: 40rem)').matches) (document.activeElement as HTMLElement | null)?.blur();
+}
+
+function addIngredient(p: number, from: string) {
+  if (!state.with.includes(p)) state.with.push(p);
+  afterTag();
+  track('Added Ingredient', { experiment: EXPERIMENT, ingredient_id: data.ing[p][0], added_from: from });
+}
+
+function addCreator(id: string, from: string) {
+  state.sites.add(id);
+  afterTag();
+  track('Added Creator', { experiment: EXPERIMENT, creator_id: id, added_from: from });
+}
+
+function submit() {
+  suggest.close();
+  state.q = qInput.value.trim();
+  state.shown = PAGE;
+  state.picked = -1;
+  render();
+  writeUrl(true);
+  searched();
+  if (matchMedia('(max-width: 40rem)').matches) qInput.blur();
 }
 
 function searched() {
-  if (!state.q && !state.with.length) return;
+  if (!state.q && !state.with.length && !state.sites.size) return;
   track('Searched Recipes', {
     experiment: EXPERIMENT,
-    search_type: state.q && state.with.length ? 'both' : state.q ? 'words' : 'ingredients',
+    search_type: state.q && state.with.length ? 'both' : state.q ? 'words' : state.with.length ? 'ingredients' : 'creator',
     ingredient_count: state.with.length,
+    creator_count: state.sites.size,
     filter_count: filterCount(),
     result_count: search().length,
   });
@@ -734,6 +780,7 @@ function openedRecipe(source: string, position: number, from: string) {
 function writeUrl(push: boolean) {
   const u = new URL(location.href);
   u.search = '';
+  u.hash = '';
   if (state.q) u.searchParams.set('q', state.q);
   if (state.with.length) u.searchParams.set('with', state.with.map((p) => data.ing[p][0]).join(','));
   if (state.sites.size) u.searchParams.set('site', [...state.sites].join(','));
@@ -750,87 +797,89 @@ function readUrl() {
     .split(',')
     .map((id) => ingById.get(id))
     .filter((x): x is number => x != null);
-  state.sites = new Set((p.get('site') || '').split(',').filter((id) => data.sources.some((s) => s.id === id)));
+  state.sites = new Set((p.get('site') || '').split(',').filter((id) => creatorById.has(id)));
   const t = Number(p.get('time'));
   state.time = TIMES.includes(t) ? t : 0;
   const c = p.get('cuisine') || '';
   state.cuisine = data.cuisines.some(([name]) => name === c) ? c : '';
   state.shown = PAGE;
+  state.picked = -1;
 }
-
 
 // ---------------------------------------------------------------------------------------
 // Events
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();
-  if (haveSuggest.active >= 0 && document.activeElement === haveInput) return choose(haveSuggest, haveSuggest.active);
-  if (qSuggest.active >= 0 && document.activeElement === qInput) return choose(qSuggest, qSuggest.active);
-  // Enter in "I have" adds the best match, so you can type "ginger, Enter, tofu, Enter".
-  if (document.activeElement === haveInput && haveInput.value.trim()) {
-    const best = ingMatches(haveInput.value)[0];
-    if (best != null) {
-      haveInput.value = '';
-      return addIngredient(best, 'typed');
-    }
-  }
+  if (suggest.active >= 0) return choose(suggest.active);
   submit();
 });
 
-for (const s of [haveSuggest, qSuggest]) {
-  s.input.addEventListener('input', () => {
-    // A comma in "I have" finishes the ingredient.
-    if (s === haveSuggest && s.input.value.includes(',')) {
-      const best = ingMatches(s.input.value.replace(/,/g, ''))[0];
-      s.input.value = '';
-      if (best != null) return addIngredient(best, 'typed');
+qInput.addEventListener('input', () => {
+  // A comma finishes an ingredient (or a creator), like a tag field: "ginger, tofu, ".
+  if (qInput.value.includes(',')) {
+    const text = qInput.value.replace(/,/g, ' ').trim();
+    const ing = ingMatches(text)[0];
+    const creator = creatorMatches(text)[0];
+    if (ing != null || creator) {
+      qInput.value = '';
+      return ing != null ? addIngredient(ing, 'typed') : addCreator(creator.id, 'typed');
     }
-    s.open();
-  });
-  s.input.addEventListener('focus', () => s.input.value.trim() && s.open());
-  s.input.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-      e.preventDefault();
-      s.move(e.key === 'ArrowDown' ? 1 : -1);
-    } else if (e.key === 'Escape' && !s.panel.hidden) {
-      e.preventDefault();
-      s.close();
-    } else if (s === haveSuggest && e.key === 'Backspace' && !s.input.value && state.with.length) {
-      // Backspace in an empty "I have" takes off the last ingredient, like a tag field.
-      state.with.pop();
-      render();
-      writeUrl(false);
-    }
-  });
-  // Keep focus in the field when an option is clicked.
-  s.list.addEventListener('mousedown', (e) => e.preventDefault());
-  s.list.addEventListener('click', (e) => {
-    const el = (e.target as HTMLElement).closest<HTMLElement>('[role="option"]');
-    if (el) choose(s, Number(el.dataset.n));
-  });
-  s.input.addEventListener('blur', () => setTimeout(() => document.activeElement !== s.input && s.close(), 0));
-}
+    qInput.value = qInput.value.replace(/,/g, ' ');
+  }
+  suggest.open();
+});
+qInput.addEventListener('focus', () => qInput.value.trim() && suggest.open());
+qInput.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    suggest.move(e.key === 'ArrowDown' ? 1 : -1);
+  } else if (e.key === 'Escape' && !suggest.panel.hidden) {
+    e.preventDefault();
+    suggest.close();
+  } else if (e.key === 'Backspace' && !qInput.value && qInput.selectionStart === 0 && (state.with.length || state.sites.size)) {
+    // Backspace in an empty box takes off the last tag.
+    if (state.with.length) state.with.pop();
+    else state.sites.delete([...state.sites].at(-1)!);
+    state.shown = PAGE;
+    render();
+    writeUrl(false);
+  }
+});
+// Keep focus in the field when an option is clicked.
+suggest.list.addEventListener('mousedown', (e) => e.preventDefault());
+suggest.list.addEventListener('click', (e) => {
+  const el = (e.target as HTMLElement).closest<HTMLElement>('[role="option"]');
+  if (el) choose(Number(el.dataset.n));
+});
+qInput.addEventListener('blur', () => setTimeout(() => document.activeElement !== qInput && suggest.close(), 0));
+// Clicking the box's empty space puts the cursor in the field.
+$('box').addEventListener('click', (e) => {
+  if (!(e.target as HTMLElement).closest('button, input')) qInput.focus();
+});
 
 app.addEventListener('click', (e) => {
   const el = (e.target as HTMLElement).closest<HTMLElement>('button, a');
   if (!el) return;
   if (el.dataset.add) addIngredient(Number(el.dataset.add), 'popular');
+  else if (el.dataset.creator) addCreator(el.dataset.creator, 'home');
   else if (el.dataset.try) {
     qInput.value = el.dataset.try;
     submit();
-  } else if (el.dataset.remove) {
-    state.with = state.with.filter((p) => p !== Number(el.dataset.remove));
+  } else if (el.dataset.remove || el.dataset.removeCreator) {
+    if (el.dataset.remove) state.with = state.with.filter((p) => p !== Number(el.dataset.remove));
+    else state.sites.delete(el.dataset.removeCreator!);
     state.shown = PAGE;
     render();
     writeUrl(true);
-    haveInput.focus();
+    qInput.focus();
   } else if (el.dataset.fix) {
     if (el.dataset.fix === 'clear') clearAll();
     else emptyFixes[Number(el.dataset.fix)]?.();
     state.shown = PAGE;
     render();
     writeUrl(true);
-    haveInput.focus();
+    qInput.focus();
   } else if (el.dataset.srcId) {
     openedRecipe(el.dataset.srcId, Number(el.dataset.pos || 0), el.dataset.from || 'results');
   } else if (el.dataset.support) {
@@ -847,27 +896,32 @@ function clearAll() {
   state.time = 0;
   state.cuisine = '';
   state.picked = -1;
-  haveInput.value = '';
+  qInput.value = '';
 }
 
-$('clear-all').addEventListener('click', () => {
-  clearAll();
-  state.shown = PAGE;
-  render();
-  writeUrl(true);
-  haveInput.focus();
-});
+for (const id of ['clear-all', 'home-link']) {
+  $(id).addEventListener('click', (e) => {
+    if (!data) return;
+    e.preventDefault();
+    clearAll();
+    state.shown = PAGE;
+    render();
+    writeUrl(true);
+    qInput.focus();
+  });
+}
 
-$('lucky').addEventListener('click', () => data && pickRandom());
-$('lucky-again').addEventListener('click', () => data && pickRandom());
+for (const id of ['lucky', 'lucky-results', 'lucky-again']) $(id).addEventListener('click', () => data && pickRandom());
 
-moreBtn.addEventListener('click', () => {
-  const first = state.shown;
-  state.shown += PAGE;
-  render();
-  // Move focus to the first new result, so keyboard and screen reader users keep their place.
-  resultsEl.querySelectorAll<HTMLAnchorElement>('h3 a')[first]?.focus();
-});
+for (const [btn, list] of [[moreBtn, resultsEl], [$('more-videos'), $('video-results')]] as const) {
+  btn.addEventListener('click', () => {
+    const first = state.shown;
+    state.shown += PAGE;
+    render();
+    // Move focus to the first new result, so keyboard and screen reader users keep their place.
+    list.querySelectorAll<HTMLAnchorElement>('h3 a')[first]?.focus();
+  });
+}
 
 // A photo that won't load (moved, blocked) gives way to a plain "No photo".
 app.addEventListener(

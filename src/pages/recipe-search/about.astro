@@ -1,0 +1,236 @@
+---
+// About Recipe search: why it exists, where the recipes come from (with ways to support
+// each creator), how it works, and a note for site owners, who reach this page from the
+// crawler's user agent. Built at build time from the same index the search uses
+// (public/recipe-search/index.json, written by scripts/build-index.mjs before astro build).
+import LabLayout from 'kp-design/layouts/LabLayout.astro';
+import LabLinks from '../../components/LabLinks.astro';
+import '../../styles/theme.css';
+
+type Link = { label: string; url: string; book?: boolean };
+// Imported, not read from disk: the Cloudflare adapter prerenders inside its own runtime.
+import indexJson from '../../../public/recipe-search/index.json';
+const index: any = indexJson;
+const support: Record<string, Link[]> = index.support;
+const channels: { id: string; name: string; channel: string; site: string; count: number }[] = index.videos.sources;
+
+const n = (x: number, one: string) => `${x.toLocaleString('en-US')} ${x === 1 ? one : one + 's'}`;
+
+type Row = { id: string; name: string; url: string; recipes: number; videos: number; channel?: string; paused?: boolean };
+const rows: Row[] = [
+  ...index.sources.map((s: any) => ({ id: s.id, name: s.name, url: s.site, recipes: s.count, videos: 0 })),
+  ...index.paused.map((s: any) => ({ id: s.id, name: s.name, url: s.site, recipes: 0, videos: 0, paused: true })),
+];
+for (const c of channels) {
+  const owner = rows.find((r) => r.id === (c.site || c.id));
+  if (owner) {
+    owner.videos += c.count;
+    owner.channel = c.channel;
+  } else rows.push({ id: c.id, name: c.name, url: c.channel, recipes: 0, videos: c.count, channel: c.channel });
+}
+const linkOnly: { name: string; search: string }[] = index.linkOnly.filter((l: any) => !/youtube/.test(l.search));
+const crawled = index.crawled
+  ? new Date(index.crawled + 'T12:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+  : '';
+const total = { recipes: index.recipes.length, videos: index.videos.rows.length };
+---
+
+<LabLayout
+  title="About Recipe search"
+  description="Why Recipe search exists, where its recipes and videos come from, how to support the people who make them, and how it works."
+  image="/recipe-search/og-about.png"
+  imageAlt="About Recipe search: where the recipes come from, and how to back the people who make them."
+  themeColor={{ light: '#ffffff', dark: '#121314' }}
+>
+  <LabLinks slot="bar" current="about" />
+
+  <article class="about">
+    <h1>About Recipe search</h1>
+    <p class="lede">
+      I cook from a handful of sites I trust, and searching them one at a time got old.
+      <a href="/recipe-search/">Recipe search</a> looks through all of them at once, by dish, by what’s in the fridge or by who made it, and sends you to the
+      creator’s own page for the recipe.
+    </p>
+
+    <section aria-labelledby="who">
+      <h2 id="who">Where the recipes come from</h2>
+      <p>
+        {n(total.recipes, 'recipe')} and {n(total.videos, 'video')} from these creators. Their recipes are free because they put
+        in the work. If one becomes a favorite, back them: each has their own ways, from memberships to cookbooks. Book links
+        go to Bookshop.org, which pays the author and an independent bookstore.
+      </p>
+      <ul class="creators">
+        {
+          rows.map((r) => {
+            const links = (support[r.id] || []).filter((l) => !l.book);
+            const books = (support[r.id] || []).filter((l) => l.book);
+            const has = [r.recipes ? n(r.recipes, 'recipe') : '', r.videos ? n(r.videos, 'video') : ''].filter(Boolean);
+            return (
+              <li>
+                <h3>
+                  <a href={r.url}>{r.name}</a>
+                </h3>
+                <p class="has">
+                  {has.join(' and ')}
+                  {r.paused && (r.videos ? '. Recipes come back once their site lets the weekly program in.' : ': back once their site lets the weekly program in.')}
+                </p>
+                {(links.length > 0 || books.length > 0) && (
+                  <p class="support">
+                    Support them:{' '}
+                    {links.map((l, k) => (
+                      <>
+                        {k > 0 && ', '}
+                        <a href={l.url} data-support={r.id} data-kind="link">
+                          {l.label}
+                        </a>
+                      </>
+                    ))}
+                    {books.length > 0 && (
+                      <>
+                        {links.length > 0 && ' or '}
+                        {books.length === 1 ? 'their book ' : 'their books '}
+                        {books.map((b, k) => (
+                          <>
+                            {k > 0 && (k === books.length - 1 ? ' and ' : ', ')}
+                            <a href={b.url} data-support={r.id} data-kind="book">
+                              <cite>{b.label}</cite>
+                            </a>
+                          </>
+                        ))}
+                      </>
+                    )}
+                    .
+                  </p>
+                )}
+              </li>
+            );
+          })
+        }
+      </ul>
+      {
+        linkOnly.length > 0 && (
+          <p>
+            {linkOnly.map((l) => l.name).join(' and ')} {linkOnly.length === 1 ? 'is' : 'are'} offered as a link to {linkOnly.length === 1 ? 'its' : 'their'} own search
+            instead, since {linkOnly.length === 1 ? 'its owner doesn’t' : 'their owners don’t'} allow automated collection.
+          </p>
+        )
+      }
+    </section>
+
+    <section aria-labelledby="how">
+      <h2 id="how">How it works</h2>
+      <p>
+        Once a week, a small program reads each site’s list of recipes and keeps the name, link, photo, ingredients, time and
+        cuisine. Never the recipe itself: every result sends you to the creator’s page. Videos come from YouTube’s own API.
+        {crawled && ` Last updated ${crawled}.`}
+      </p>
+      <p>
+        The search runs in your browser, so what you type stays on your device. Photos load from each creator’s site when
+        they come on screen. Anonymous counts, like how often a recipe gets opened, go to the site’s analytics; see the
+        <a href="https://kylepace.dev/privacy/">privacy page</a>.
+      </p>
+    </section>
+
+    <section aria-labelledby="owners">
+      <h2 id="owners">For site owners</h2>
+      <p>
+        The weekly program calls itself <code>RecipeSearchBot</code>. It follows robots.txt, reads one page at a time a few
+        seconds apart, and only fetches pages that are new or changed. To keep it out, add
+        <code>User-agent: RecipeSearchBot</code> and <code>Disallow: /</code> to your robots.txt, and your recipes leave the
+        search on the next weekly run. Questions, or want to be added? Get in touch through
+        <a href="https://kylepace.net/">kylepace.net</a>.
+      </p>
+    </section>
+  </article>
+
+  <script>
+    import { track } from 'kp-design/analytics';
+    document.querySelector('.about')!.addEventListener('click', (e) => {
+      const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[data-support]');
+      if (a) track('Opened Support Link', { experiment: 'recipe-search', source: a.dataset.support!, link_kind: a.dataset.kind || 'link' });
+    });
+  </script>
+</LabLayout>
+
+<style>
+  .about {
+    width: min(100% - 2 * var(--gutter), 42rem);
+    margin-inline: auto;
+    padding-block: var(--space-8) var(--space-16);
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(2rem, 1.5rem + 2.4vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .lede {
+    margin: var(--space-4) 0 0;
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+
+  h2 {
+    margin: var(--space-12) 0 var(--space-3);
+    font-size: var(--step-1);
+    line-height: 1.25;
+  }
+
+  p {
+    max-width: 34em;
+    line-height: 1.6;
+  }
+
+  section > p {
+    color: var(--ink-muted);
+  }
+
+  section > p a,
+  .lede a {
+    color: var(--accent-ink);
+  }
+
+  .creators {
+    padding: 0;
+    margin: var(--space-6) 0;
+    list-style: none;
+    border-top: 1px solid var(--line);
+  }
+
+  .creators li {
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  h3 {
+    margin: 0;
+    font-size: var(--step-0);
+  }
+
+  h3 a {
+    color: var(--ink);
+  }
+
+  .has {
+    margin: var(--space-1) 0 0;
+    color: var(--ink-muted);
+    font-size: var(--step--1);
+  }
+
+  .support {
+    margin: var(--space-1) 0 0;
+    font-size: var(--step--1);
+  }
+
+  .support a {
+    color: var(--accent-ink);
+  }
+
+  code {
+    font-family: inherit;
+    font-weight: 700;
+    color: var(--ink);
+  }
+</style>

@@ -1,0 +1,47 @@
+---
+// The lab's own links in LabLayout's top bar: the search and its About page.
+interface Props {
+  current: 'search' | 'about';
+}
+const { current } = Astro.props;
+const links = [
+  { id: 'search', href: '/recipe-search/', label: 'Search' },
+  { id: 'about', href: '/recipe-search/about/', label: 'About' },
+];
+---
+
+<nav class="lab-links" aria-label="Recipe search">
+  {
+    links.map((l) => (
+      <a href={l.href} aria-current={l.id === current ? 'page' : undefined}>
+        {l.label}
+      </a>
+    ))
+  }
+</nav>
+
+<style>
+  .lab-links {
+    display: flex;
+    gap: var(--space-4);
+  }
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    color: var(--ink-muted);
+    font-size: var(--step--1);
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--ink);
+    text-decoration: underline;
+  }
+
+  a[aria-current='page'] {
+    color: var(--ink);
+    font-weight: 700;
+  }
+</style>

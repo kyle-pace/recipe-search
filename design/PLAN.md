@@ -1,14 +1,40 @@
-# Recipe search: design plan (November 8, 2026, second pass)
+# Recipe search: design plan (November 8, 2026, third pass)
 
-The first pass read as generated: a hero headline over a pill search bar, pills for every control, a grid of identical rounded cards, an eyebrow label, colored squares and middle-dot meta lines. None of it came from the subject.
+**First pass** read as generated: a hero headline over a pill search bar, pills for every control, a grid of identical rounded cards, an eyebrow label, colored squares and middle-dot meta lines.
+
+**Second pass** made the query a sentence ("I have ___ / I want to make ___") set very large. It was distinctive, but two fields and a sentence asked people to learn a new way to search, and the About section sat under the app.
+
+**Third pass (this one):** Kyle's call. A search engine is the right model for a search engine: one box, centered, with the explanation on its own page. What keeps it from looking generated is in the details below, not in a novel layout.
 
 ## The subject
 
-People don't search for recipes in keywords. They say "I have ginger, scallions and some tofu" or "I want to make mapo tofu." The page should be that sentence.
+People look for a recipe three ways: by dish ("mapo tofu"), by what they have ("ginger, tofu") and by who they trust ("something from Maangchi"). One box takes all three. Words are words; an ingredient or a creator picked from the suggestions becomes a tag in the box, marked like a highlighter on a shopping list.
 
-## The one bold thing
+## Two modes
 
-The query is a sentence set large: **I have** ___ and **I want to make** ___. Ingredients you add become words in the sentence, marked like a highlighter on a shopping list. Everything else on the page is quiet.
+- **Home** (nothing searched): the name, one line on what's in it, the box, "Pick one at random", and three short lines of ideas (dishes, ingredients, creators). All centered in the window, like a search engine's front page. No filters.
+- **Results** (after a search): the name shrinks to a link home in the upper left, the box sits under it, then the filters as words (Cuisine, Creator, Time), then results. Left-aligned.
+
+```
+Home                                       Results
+
+          Recipe search                    Recipe search
+   2,226 recipes from …, and 3,761 videos  [ from The Woks of Life × | tofu × | and…   (⌕) ]
+ [ A dish, ingredient or creator     (⌕) ] Cuisine: any  Creator: The Woks of Life  Time: any  Pick one at random  Start over
+          Pick one at random               102 recipes and 4 videos on YouTube.
+   Try mapo tofu, pad thai or dumplings.   [photo] How to Make Frozen Tofu
+                                                   8 hours 25 minutes, Chinese, from The Woks of Life
+```
+
+## The box
+
+- Square-shouldered (0.5rem corners), a 2px rule, the search button inside on the right as a green square with a magnifier. Not a pill.
+- Tags: ingredients are filled with scallion green; creators are outlined in it and read "from Maangchi", so the two kinds look different without color alone.
+- Suggestions group by what they do: things to add (creators, ingredients, each labeled "Creator" or "Ingredient") above a rule, recipes to open below, then "Search for …".
+
+## About
+
+Its own page (`/recipe-search/about/`), built at build time from the index: why it exists, every creator with counts and ways to support them, how it works, and a note for site owners (the crawler's user agent links here). Top bar: Search and About.
 
 ## Color
 
@@ -17,40 +43,16 @@ The query is a sentence set large: **I have** ___ and **I want to make** ___. In
 | Rice | #FFFFFF | #121314 | Page |
 | Soy | #141414 | #F1F1EE | Text |
 | Ash | #5D625F | #A6ABA8 | Secondary text |
-| Scallion | #2C7A36 / fill #CDEBC9 | #86D08E / fill #24442A | The words you add, focus, links |
-| Chili | #B8261A | #FF8F80 | Removing, nothing-found fixes |
-| Shelf | #E4E6E1 | #2A2D2B | Input rule, dividers |
+| Scallion | #2C7A36 / fill #D6EFD2 | #86D08E / fill #24442A | Tags, focus, links, the search button |
+| Chili | #B8261A | #FF8F80 | Removing |
+| Shelf | #E4E6E1 | #2A2D2B | Dividers |
 
 No source tints: the photos carry the color.
 
 ## Type
 
-Atkinson Hyperlegible Next only (the principles). Personality comes from scale and weight: the sentence at about 3.5rem, "I have" in light 300 and Ash, your words in bold 700. Everything else at one or two small sizes. Numbers in tabular figures, not monospace.
+Atkinson Hyperlegible Next only. The name is the one large thing on the home page; in results it drops to the size of a heading. Numbers in tabular figures, not monospace.
 
-## Layout
+## Still true from before
 
-```
-‹ kylepace.dev
-
-Recipe search
-Searches The Woks of Life, Hot Thai Kitchen and Smitten Kitchen.
-
-I have  ginger  tofu  an ingredient___
-I want to make  any dish___________          [Find recipes]
-
-Cuisine: any    Site: any    Time: any
-
-933 recipes use at least one.
-
-[photo]  Cantonese-Style Steamed Tofu
-         25 minutes, Chinese, from The Woks of Life
-         Uses ginger, green onion and tofu, plus 2 more things
-```
-
-Left-aligned throughout. Results are rows (photo left), one column on phones, two on wide screens. No pills anywhere; controls are words.
-
-## Principles
-
-- The page is the sentence. Labels, filters and empty states read as plain language.
-- Spend boldness once (the sentence). No badges, no eyebrows, no decorative color.
-- Structure only where it carries information.
+Results are rows (photo left), one column on phones, two on wide screens. Meta lines are plain sentences ("25 minutes, Chinese, from The Woks of Life"), never middle dots. No pills, eyebrows or badges.

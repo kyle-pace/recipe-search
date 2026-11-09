@@ -20,7 +20,7 @@ import { fetchChannelVideos } from './lib/youtube.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const BOT = 'RecipeSearchBot';
-const UA = `Mozilla/5.0 (compatible; ${BOT}/0.1; +https://kylepace.dev/recipe-search/#about)`;
+const UA = `Mozilla/5.0 (compatible; ${BOT}/0.1; +https://kylepace.dev/recipe-search/about/)`;
 const MIN_DELAY_MS = 3000;
 const REFETCH_WITHOUT_LASTMOD_DAYS = 90;
 const DROP_ALERT = 0.9; // alert when a source keeps fewer than 90% of last run's recipes

@@ -1,24 +1,22 @@
 <!doctype html><html><head><meta charset="utf-8"><style>
 /* Share card for kylepace.dev/recipe-search/ (public/recipe-search/og.png). Render at
-   1200x630 (share-card skill). Dark values from src/styles/theme.css; the sentence is
-   the page's own headline (design/PLAN.md). */
-@font-face{font-family:A;font-weight:300;src:url("../node_modules/@fontsource/atkinson-hyperlegible-next/files/atkinson-hyperlegible-next-latin-300-normal.woff2")}
+   1200x630 (share-card skill). Dark values from src/styles/theme.css; it draws the
+   page's own search box with an ingredient and a creator in it (design/PLAN.md). */
 @font-face{font-family:A;font-weight:400;src:url("../node_modules/@fontsource/atkinson-hyperlegible-next/files/atkinson-hyperlegible-next-latin-400-normal.woff2")}
 @font-face{font-family:A;font-weight:700;src:url("../node_modules/@fontsource/atkinson-hyperlegible-next/files/atkinson-hyperlegible-next-latin-700-normal.woff2")}
 html,body{margin:0}
-body{width:1200px;height:630px;background:#121314;color:#f1f1ee;font-family:A;overflow:hidden;box-sizing:border-box;padding:80px 88px}
-.name{font-size:34px;font-weight:700;margin:0}
-.from{font-size:28px;color:#a6aba8;margin:8px 0 0}
-.line{font-size:88px;letter-spacing:-0.02em;line-height:1.15;margin:0}
-.lines{margin-top:84px}
-.say{font-weight:300;color:#a6aba8}
-.w{font-weight:700;background:#24442a;border-radius:10px;padding:0 14px;margin-left:6px}
-.dish{font-weight:700;border-bottom:7px solid #6e7471}
+body{width:1200px;height:630px;background:#121314;color:#f1f1ee;font-family:A;overflow:hidden;box-sizing:border-box;padding:64px 96px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.name{font-size:96px;font-weight:700;letter-spacing:-0.03em;line-height:1;margin:0}
+.from{font-size:30px;color:#a6aba8;margin:22px 0 0}
+.box{margin-top:56px;width:960px;box-sizing:border-box;display:flex;align-items:center;gap:16px;padding:18px 18px 18px 26px;border:3px solid #86d08e;border-radius:12px;background:#1b1d1e;font-size:36px;text-align:left}
+.tag{font-weight:700;background:#24442a;border-radius:7px;padding:8px 16px}
+.creator{background:none;box-shadow:inset 0 0 0 3px #24442a}
+.x{color:#a6aba8;font-weight:400;margin-left:10px}
+.text{flex:1}
+.go{width:66px;height:66px;border-radius:8px;background:#86d08e;display:grid;place-items:center}
 </style></head><body>
 <p class="name">Recipe search</p>
-<p class="from">The Woks of Life, Hot Thai Kitchen and Smitten Kitchen, at once.</p>
-<div class="lines">
-<p class="line"><span class="say">I have</span> <span class="w">ginger</span> <span class="w">tofu</span></p>
-<p class="line"><span class="say">I want to make</span> <span class="dish">soup</span></p>
-</div>
+<p class="from">The Woks of Life, Hot Thai Kitchen, Smitten Kitchen and more, at once.</p>
+<div class="box"><span class="tag creator">from Hot Thai Kitchen<span class="x">×</span></span><span class="tag">ginger<span class="x">×</span></span><span class="text">curry</span>
+<span class="go"><svg viewBox="0 0 24 24" width="34" height="34"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="#121314" stroke-width="2.4"/><path d="m15.5 15.5 5 5" stroke="#121314" stroke-width="2.4" stroke-linecap="round"/></svg></span></div>
 </body></html>
