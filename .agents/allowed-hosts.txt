@@ -19,3 +19,18 @@ www.maangchi.com
 
 # Thumbnails for J. Kenji López-Alt's YouTube videos, once the YouTube key is in place. Approved by Kyle, 2026-11-08.
 i.ytimg.com
+
+# Recipe photos from The Mala Market's blog, on its own results, lazily and with no referrer. Added under the content-image rule, 2026-11-08.
+blog.themalamarket.com
+
+# Recipe photos from RecipeTin Eats, on its own results, lazily and with no referrer. Added under the content-image rule, 2026-11-08.
+www.recipetineats.com
+
+# Recipe photos from RecipeTin Japan, on its own results, lazily and with no referrer. Added under the content-image rule, 2026-11-08.
+japan.recipetineats.com
+
+# Recipe photos from Sudachi, on its own results, lazily and with no referrer. Added under the content-image rule, 2026-11-08.
+sudachirecipes.com
+
+# Recipe photos from Made With Lau, served by its image CDN (Sanity), on its own results, lazily and with no referrer. Added under the content-image rule, 2026-11-08.
+cdn.sanity.io

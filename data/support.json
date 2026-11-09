@@ -135,5 +135,108 @@
       }
     ],
     "books": []
+  },
+  "mala": {
+    "links": [
+      {
+        "label": "The Mala Market shop",
+        "url": "https://themalamarket.com/"
+      }
+    ],
+    "books": []
+  },
+  "rte": {
+    "links": [
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/@Recipetineats"
+      }
+    ],
+    "books": [
+      {
+        "title": "RecipeTin Eats: Dinner",
+        "isbn": "9781682688427"
+      },
+      {
+        "title": "Delicious Tonight",
+        "isbn": "9781682689479"
+      }
+    ]
+  },
+  "rtj": {
+    "links": [
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/@RecipeTinJapan"
+      }
+    ],
+    "books": []
+  },
+  "sudachi": {
+    "links": [
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/@SudachiRecipes"
+      }
+    ],
+    "books": [
+      {
+        "title": "Japan: The Ultimate Cookbook",
+        "isbn": "9781400345083"
+      }
+    ]
+  },
+  "mwl": {
+    "links": [
+      {
+        "label": "Canto Cooking Club",
+        "url": "https://www.madewithlau.com/club"
+      },
+      {
+        "label": "Newsletter",
+        "url": "https://newsletter.madewithlau.com/"
+      },
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/@MadeWithLau"
+      }
+    ],
+    "books": []
+  },
+  "rhs-yt": {
+    "links": [
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/@redhousespice"
+      }
+    ],
+    "books": [
+      {
+        "title": "Three Meals, Four Seasons",
+        "isbn": "9781837839292"
+      }
+    ]
+  },
+  "fca": {
+    "links": [
+      {
+        "label": "Patreon",
+        "url": "https://www.patreon.com/frenchcookingacademy"
+      },
+      {
+        "label": "The FCA Club",
+        "url": "https://www.thefrenchcookingacademy.com/fcaclub"
+      },
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/@FrenchCookingAcademy"
+      }
+    ],
+    "books": [
+      {
+        "title": "French Cooking Academy",
+        "isbn": "9781645679790"
+      }
+    ]
   }
 }
