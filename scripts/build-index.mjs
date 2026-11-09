@@ -181,6 +181,24 @@ const popular = ing
   .slice(0, 18)
   .map(({ p }) => p);
 
+// "Vegetarian" and "vegan" in a search leave out recipes that use any of these ingredient
+// positions: the catalog's meat and seafood sections, plus animal-based pantry items it
+// files elsewhere (fish sauce, oyster sauce, gelatin, lard, stocks). Vegan also leaves out
+// dairy, eggs and honey. It's a best guess from ingredient lists; the About page says so.
+const ANIMAL = new Set(['dashi', 'fish', 'oyster', 'oysters', 'anchovy', 'anchovies', 'shrimp', 'bonito', 'hondashi', 'gelatin', 'lard', 'chicken', 'beef', 'pork', 'bacon', 'broth', 'stock', 'bouillon', 'worcestershire']);
+const DAIRY_EGG = new Set(['honey', 'butter', 'buttermilk', 'ghee', 'cream', 'milk', 'cheese', 'yogurt', 'egg', 'eggs', 'mayo', 'mayonnaise']);
+// Plant versions and lookalikes: "vegetarian oyster sauce", "king oyster mushrooms", "coconut milk", "peanut butter".
+const PLANT = new Set(['vegetarian', 'vegan', 'plant', 'mushroom', 'mushrooms', 'kombu', 'coconut', 'peanut', 'almond', 'oat', 'soy', 'cashew', 'vegetable', 'tartar']);
+const tokens = (id) => id.split('-');
+const isPlant = (id) => tokens(id).some((t) => PLANT.has(t));
+const hasWord = (id, set) => tokens(id).some((t) => set.has(t)) && !isPlant(id);
+const dietOf = (test) => ing.map((g, p) => (test(g[0], catalog.items[g[0]]) ? p : -1)).filter((p) => p >= 0);
+const notVegetarian = (id, item) => ['meat', 'seafood'].includes(item.section) || (item.section !== 'produce' && hasWord(id, ANIMAL));
+const diet = {
+  vegetarian: dietOf(notVegetarian),
+  vegan: dietOf((id, item) => notVegetarian(id, item) || (item.section === 'dairy-eggs' && !isPlant(id)) || hasWord(id, DAIRY_EGG)),
+};
+
 const cuisines = [...cuisineCount].filter(([, n]) => n >= 5).sort((a, b) => b[1] - a[1]);
 
 const paused = sources.recipes
@@ -210,6 +228,7 @@ const index = {
   linkOnly: (sources.link_only || []).map((l) => ({ name: l.name, search: l.search })),
   cuisines,
   popular,
+  diet,
   ing,
   recipes,
 };

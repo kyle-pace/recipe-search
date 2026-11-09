@@ -274,6 +274,12 @@ import '../../styles/theme.css';
     box-shadow: inset 0 0 0 2px var(--scallion-fill);
   }
 
+  /* Leaving something out ("no pork"): a plain outline, the word "no" says what it means. */
+  .tags :global(.tag-not) {
+    background: transparent;
+    box-shadow: inset 0 0 0 2px var(--field-rule);
+  }
+
   .tags :global(.x) {
     font-weight: 400;
     font-size: 1.15em;
@@ -413,6 +419,7 @@ import '../../styles/theme.css';
   .lucky,
   .clear-all,
   .more,
+  .status :global(button),
   .empty :global(button),
   .start :global(button) {
     min-height: 2.75rem;
@@ -428,7 +435,8 @@ import '../../styles/theme.css';
   }
 
   .start :global(button),
-  .empty :global(button) {
+  .empty :global(button),
+  .status :global(button) {
     min-height: 0;
     padding-block: 0.4rem;
   }

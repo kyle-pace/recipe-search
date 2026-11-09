@@ -30,6 +30,8 @@ type Index = {
   linkOnly: { name: string; search: string }[];
   cuisines: [string, number][];
   popular: number[];
+  /** Ingredient positions a vegetarian or vegan search leaves out. */
+  diet?: { vegetarian: number[]; vegan: number[] };
   ing: Ing[];
   recipes: RecipeRow[];
 };
@@ -115,6 +117,10 @@ const state = {
   time: 0,
   cuisine: '',
   show: '' as '' | 'recipes' | 'videos', // both, or just one kind
+  without: [] as number[], // ingredients to leave out ("no pork")
+  notWords: [] as string[], // words to leave out by title, for things that aren't one ingredient ("no peas")
+  diet: '' as '' | 'vegetarian' | 'vegan',
+  exact: false, // search the words as typed, without fixing typos
   shown: PAGE,
   picked: -1, // a recipe picked at random, by index into recipes
 };
@@ -146,7 +152,7 @@ async function load() {
     const other = [
       ...words(kw),
       ...words(cuisine),
-      ...creatorById.get(src.id)!.words,
+      ...words(src.name),
       ...pos.flatMap((p) => ingNames[p].join(' ').split(' ')),
     ];
     return {
@@ -164,6 +170,7 @@ async function load() {
       other: [...new Set(other)],
     };
   });
+  buildVocab();
   buildFilters();
   buildStart();
   readUrl();
@@ -176,6 +183,7 @@ function buildCreators() {
     let c = creatorById.get(id);
     if (!c) {
       c = { id, name, recipes: 0, videos: 0, words: words(name) };
+      for (const a of CREATOR_ALIASES[id] || []) c.words.push(...words(a).filter((w) => !c!.words.includes(w)));
       creatorById.set(id, c);
       creators.push(c);
     }
@@ -188,21 +196,252 @@ function buildCreators() {
 }
 
 // ---------------------------------------------------------------------------------------
+// Understanding the words. Two layers, both in the browser:
+// - queryWords: what the search matches on. Filler ("easy", "recipe", "how to make") is
+//   ignored, and a word the index has never seen is swapped for the closest one it has
+//   ("dumpligns" -> "dumpling"), unless you asked for exactly what you typed.
+// - understand: on Enter, plain phrases become tags and filters you can see and remove:
+//   "under 30 minutes", "quick", "with tofu and eggs", "no pork", "vegetarian", "from
+//   Maangchi".
+
+const STOP = new Set(
+  ('a an the and or of for to in on my me i im want wanna need make making made cook cooking cooked how what can should ' +
+    'recipe recipes easy easiest simple best good great tasty yummy delicious perfect ultimate authentic classic traditional ' +
+    'homemade home style version idea ideas some something dish dishes food meal meals tonight today please really very ' +
+    'quick quickly fast speedy weeknight dinner dinners lunch supper with using without no from by').split(' '),
+);
+// Other names people use for a creator ("pailin" for Hot Thai Kitchen).
+const CREATOR_ALIASES: Record<string, string[]> = {
+  htk: ['pailin', 'pailins kitchen'],
+  kenji: ['kenji'],
+  rte: ['nagi', 'recipe tin', 'recipetin'],
+  rtj: ['yumiko'],
+  mwl: ['daddy lau', 'lau'],
+  sk: ['smitten', 'deb perelman'],
+  ccd: ['ccd'],
+  fca: ['french cooking'],
+  ab: ['alton', 'good eats'],
+};
+
+const vocab = new Map<string, number>(); // every word in the index, with how often it appears
+
+function buildVocab() {
+  const add = (ws: string[]) => ws.forEach((w) => vocab.set(w, (vocab.get(w) || 0) + 1));
+  for (const r of recipes) add([...r.title, ...r.other]);
+  for (const v of data.videos.rows) add(words(v[1]));
+}
+
+/** Edit distance, giving up past `max` (letters swapped count as one edit). */
+function distance(a: string, b: string, max: number): number {
+  if (Math.abs(a.length - b.length) > max) return max + 1;
+  let prev2: number[] = [];
+  let prev = Array.from({ length: b.length + 1 }, (_, j) => j);
+  for (let i = 1; i <= a.length; i++) {
+    const cur = [i];
+    let best = i;
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + cost);
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) cur[j] = Math.min(cur[j], prev2[j - 2] + 1);
+      best = Math.min(best, cur[j]);
+    }
+    if (best > max) return max + 1;
+    prev2 = prev;
+    prev = cur;
+  }
+  return prev[b.length];
+}
+
+/** The closest word the index knows, if one is close enough to be a typo. */
+function closest(w: string): string {
+  if (w.length < 4 || /\d/.test(w)) return '';
+  const max = w.length >= 7 ? 2 : 1;
+  let best = '';
+  let bestD = max + 1;
+  let bestN = 0;
+  for (const [v, n] of vocab) {
+    if (v.length < 3) continue;
+    const d = distance(w, v, max);
+    if (d < bestD || (d === bestD && n > bestN)) [best, bestD, bestN] = [v, d, n];
+  }
+  return bestD <= max ? best : '';
+}
+
+const queryCache = new Map<string, { words: string[]; fixes: [string, string][] }>();
+
+function queryWords(text: string, exact = state.exact) {
+  const key = `${exact ? 1 : 0}|${text}`;
+  const hit = queryCache.get(key);
+  if (hit) return hit;
+  const all = words(text);
+  const kept = all.filter((w) => !STOP.has(w));
+  const ws = kept.length ? kept : all;
+  const fixes: [string, string][] = [];
+  const out = ws.map((w, n) => {
+    if (exact || !vocab.size || vocab.has(w)) return w;
+    // The last word may still be being typed: a prefix of a known word is fine.
+    if (n === ws.length - 1 && [...vocab.keys()].some((v) => v.startsWith(w))) return w;
+    const fix = closest(w);
+    if (!fix) return w;
+    fixes.push([w, fix]);
+    return fix;
+  });
+  const result = { words: out, fixes };
+  queryCache.set(key, result);
+  return result;
+}
+
+type Understood = {
+  q: string;
+  time: number;
+  with: number[];
+  without: number[];
+  notWords: string[];
+  sites: string[];
+  diet: '' | 'vegetarian' | 'vegan';
+};
+
+/**
+ * The ingredient a phrase names exactly (any of its names, singular or plural). Only an
+ * exact name: a guess like "peas" -> peanuts would quietly leave the wrong recipes out.
+ */
+function ingredientFor(phrase: string, mainName = false): number | null {
+  const qs = words(phrase).join(' ');
+  if (!qs) return null;
+  return (
+    data.ing
+      .map((_, p) => p)
+      .find((p) => ingRecipes[p] > 0 && (mainName ? ingNames[p][0] === qs : ingNames[p].some((n) => n === qs))) ?? null
+  );
+}
+
+/** The longest run of words at the start of a phrase that names an ingredient: "chicken thighs tonight" -> chicken thighs. */
+function takeIngredient(phrase: string, mainName = false): { p: number | null; meat: boolean; rest: string } {
+  const ws = phrase.trim().split(/\s+/).filter(Boolean);
+  if (/^meats?$/.test(ws[0] || '')) return { p: null, meat: true, rest: ws.slice(1).join(' ') };
+  for (let k = Math.min(3, ws.length); k >= 1; k--) {
+    const p = ingredientFor(ws.slice(0, k).join(' '), mainName);
+    if (p != null) return { p, meat: false, rest: ws.slice(k).join(' ') };
+  }
+  return { p: null, meat: false, rest: phrase };
+}
+
+function creatorFor(phrase: string): string | null {
+  const qs = words(phrase).join(' ');
+  if (!qs) return null;
+  const c = creators.find(
+    (c) => c.words.join(' ') === qs || (CREATOR_ALIASES[c.id] || []).some((a) => words(a).join(' ') === qs),
+  );
+  return c?.id ?? null;
+}
+
+function understand(text: string): Understood {
+  const out: Understood = { q: '', time: 0, with: [], without: [], notWords: [], sites: [], diet: '' };
+  // Lowercase, no accents or apostrophes, hyphens as spaces ("pork-free", "López-Alt").
+  let t = ` ${text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[’']/g, '')
+    .replace(/-/g, ' ')
+    .replace(/\s+/g, ' ')} `;
+  const cut = (re: RegExp) => (t = t.replace(re, ' '));
+
+  // Time: "under 30 minutes", "in 20 min", "1 hour", "30-minute"; or just "quick".
+  const time = t.match(/\b(?:under|less than|in|within|at most|max|no more than|up to)?\s*(\d+(?:\.\d+)?)[\s-]*(minutes?|mins?|m|hours?|hrs?|h)\b/);
+  if (time) {
+    const n = Number(time[1]) * (/^h/.test(time[2]) ? 60 : 1);
+    if (n > 0 && n <= 600) out.time = Math.round(n);
+    t = t.replace(time[0], ' ');
+  } else if (/\b(quick|quickly|fast|speedy)\b/.test(t)) out.time = 30;
+
+  // Diet.
+  if (/\b(vegan|plant[\s-]based)\b/.test(t)) out.diet = 'vegan';
+  else if (/\b(vegetarian|veggie|meatless|meat[\s-]free)\b/.test(t)) out.diet = 'vegetarian';
+  cut(/\b(vegan|plant[\s-]based|vegetarian|veggie|meatless|meat[\s-]free)\b/g);
+
+  // "No-bake cookies" and friends are dishes, not leaving something out.
+  t = t.replace(/\bno (bake|knead|churn|cook|boil)\b/g, 'no$1');
+
+  // Leave out: "no pork", "without peanuts or shrimp", "pork-free".
+  const stop = String.raw`(?=\s*(?:,|\bwith\b|\busing\b|\bunder\b|\bin\b|\bfor\b|\bfrom\b|$))`;
+  t = t.replace(new RegExp(String.raw`\b(?:without|no|minus|skip|hold the|not)\s+([a-z][a-z \-]*?(?:\s*(?:,|and|or)\s*[a-z][a-z \-]*?)*)` + stop, 'g'), (all, list: string) => {
+    let kept = '';
+    for (const piece of list.split(/\s*(?:,|\band\b|\bor\b)\s*/)) {
+      // "no meat" means vegetarian; there's no single "meat" ingredient to leave out.
+      // Leave out an ingredient only when the words are its main name: "cilantro" is
+      // filed under fresh herbs, and leaving out every herb isn't what was asked.
+      const { p, meat, rest } = takeIngredient(piece, true);
+      if (meat) out.diet ||= 'vegetarian';
+      else if (p != null) out.without.push(p);
+      else {
+        // Not an ingredient by that name: leave out recipes with the word in their name.
+        const w = piece.trim().split(/\s+/)[0];
+        if (w && !STOP.has(words(w)[0] || '')) out.notWords.push(w);
+        kept += ` ${piece.split(/\s+/).slice(1).join(' ')}`;
+        continue;
+      }
+      kept += ` ${rest}`;
+    }
+    return kept ? ` ${kept} ` : ' ';
+  });
+  t = t.replace(/\b([a-z]+)[\s-]free\b/g, (all, w: string) => {
+    const p = ingredientFor(w, true);
+    if (p == null) return all;
+    out.without.push(p);
+    return ' ';
+  });
+
+  // Creators: a creator's name anywhere, with or without "from" ("kenji fried rice", "from maangchi").
+  for (const c of creators) {
+    for (const name of [c.words.join(' '), ...(CREATOR_ALIASES[c.id] || []).map((a) => words(a).join(' '))]) {
+      if (name.length < 3) continue;
+      const re = new RegExp(`\\b(?:(?:from|by)\\s+)?${name.replace(/ /g, '\\s+')}s?\\b`);
+      if (re.test(t)) {
+        out.sites.push(c.id);
+        t = t.replace(re, ' ');
+        break;
+      }
+    }
+  }
+
+  // Ingredients: "with tofu and eggs", "using leftover rice", "i have chicken, kale".
+  t = t.replace(/\b(?:with|using|have|got)\s+([a-z][a-z ,\-]*?)(?=\s*(?:\bunder\b|\bin\b|\bfor\b|$))/g, (all, list: string) => {
+    let kept = '';
+    for (const piece of list.split(/\s*(?:,|\band\b|\bor\b|&)\s*/)) {
+      const { p, rest } = takeIngredient(piece.replace(/^(some|leftover|fresh|a|an|the)\s+/, ''));
+      if (p != null) out.with.push(p);
+      kept += ` ${rest}`;
+    }
+    return kept ? ` ${kept} ` : ' ';
+  });
+
+  out.q = t.replace(/\bno(bake|knead|churn|cook|boil)\b/g, 'no $1').replace(/\s+/g, ' ').trim();
+  // Nothing left but filler means the words were all used up.
+  if (!words(out.q).some((w) => !STOP.has(w))) out.q = '';
+  return out;
+}
+
+// ---------------------------------------------------------------------------------------
 // Searching
 
 /** How well a recipe's words match the query words; 0 means it doesn't. */
-function textScore(r: Recipe, q: string[]): number {
+function textScore(r: Recipe, q: string[], loose = false): number {
   if (!q.length) return 1;
   let score = 0;
+  let missed = 0;
   for (const [n, t] of q.entries()) {
     const last = n === q.length - 1;
     const hit = (w: string) => w === t || (last && t.length > 1 && w.startsWith(t));
     if (r.title.some(hit)) score += r.title.includes(t) ? 8 : 6;
     else if (r.other.some(hit)) score += 3;
-    else return 0;
+    else if (!loose) return 0;
+    else missed++;
   }
+  // Loose: when nothing has every word, keep what has most of them, ranked by how many.
+  if (loose && (missed === q.length || missed > Math.floor(q.length / 2))) return 0;
   if (q.length > 1 && r.titleText.includes(` ${q.join(' ')}`)) score += 10;
-  return score;
+  return score - missed * 100;
 }
 
 /** Whether an ingredient you're using covers a recipe's ingredient: pork covers pork belly. */
@@ -219,13 +458,22 @@ function passesFilters(r: Recipe, skip?: Skip): boolean {
   return true;
 }
 
-function search(opts: { q?: string; with?: number[]; skip?: Skip } = {}): Hit[] {
-  const q = words(opts.q ?? state.q);
+/** Ingredient positions to leave out: "no pork" tags and a vegetarian or vegan search. */
+function excluded(): Set<number> {
+  return new Set([...state.without, ...(state.diet ? data.diet?.[state.diet] || [] : [])]);
+}
+
+function search(opts: { q?: string; with?: number[]; skip?: Skip; loose?: boolean } = {}): Hit[] {
+  const q = queryWords(opts.q ?? state.q).words;
   const chosen = opts.with ?? state.with;
+  const out = excluded();
+  const notWords = state.notWords.map((w) => words(w)[0]);
   const hits: Hit[] = [];
   for (const r of recipes) {
     if (!passesFilters(r, opts.skip)) continue;
-    const t = textScore(r, q);
+    if (out.size && [...r.pos].some((p) => out.has(p))) continue;
+    if (notWords.length && notWords.some((w) => r.title.includes(w))) continue;
+    const t = textScore(r, q, opts.loose);
     if (!t) continue;
     let used: number[] = [];
     let missing = 0;
@@ -254,7 +502,8 @@ function search(opts: { q?: string; with?: number[]; skip?: Skip } = {}): Hit[] 
  * channel doesn't fill the list.
  */
 function searchVideos(opts: { q?: string; skip?: Skip } = {}): VideoRow[] {
-  const q = words(opts.q ?? state.q);
+  const q = queryWords(opts.q ?? state.q).words;
+  const leaveOut = excluded();
   const sites = opts.skip === 'site' ? new Set<string>() : state.sites;
   // Videos come along when there are words or a creator; ingredients alone bring them
   // only when you've asked for videos.
@@ -262,6 +511,8 @@ function searchVideos(opts: { q?: string; skip?: Skip } = {}): VideoRow[] {
   const chanWords = data.videos.sources.map((c) => words(c.name));
   const matched = data.videos.rows.filter((v) => {
     if (sites.size && !sites.has(creatorOfChannel(v[0]))) return false;
+    if (leaveOut.size && v[4].some((p) => leaveOut.has(p))) return false;
+    if (state.notWords.length && words(v[1]).some((w) => state.notWords.some((n) => words(n)[0] === w))) return false;
     if (q.length) {
       const t = [...words(v[1]), ...chanWords[v[0]]];
       return q.every((w, n) => t.some((x) => x === w || (n === q.length - 1 && x.startsWith(w))));
@@ -276,7 +527,8 @@ function searchVideos(opts: { q?: string; skip?: Skip } = {}): VideoRow[] {
   return out;
 }
 
-const isBlank = () => !state.q && !state.with.length && !state.sites.size && !state.time && !state.cuisine;
+const isBlank = () =>
+  !state.q && !state.with.length && !state.without.length && !state.notWords.length && !state.diet && !state.sites.size && !state.time && !state.cuisine;
 const filterCount = () => Number(!!state.sites.size) + Number(!!state.time) + Number(!!state.cuisine) + Number(!!state.show);
 
 // ---------------------------------------------------------------------------------------
@@ -331,7 +583,8 @@ function row(h: Hit, position: number, q: string[], from = 'results'): string {
 }
 
 function render() {
-  const q = words(state.q);
+  const understood = queryWords(state.q);
+  const q = understood.words;
   qInput.value = state.q;
   renderTags();
   renderFilterButtons();
@@ -351,7 +604,10 @@ function render() {
     return;
   }
 
-  const hits = state.show === 'videos' ? [] : search();
+  let hits = state.show === 'videos' ? [] : search();
+  // Nothing has every word: show what has most of them, and say so.
+  const loose = !hits.length && q.length > 1 && state.show !== 'videos';
+  if (loose) hits = search({ loose: true });
   const videos = state.show === 'recipes' ? [] : searchVideos();
   const shown = hits.slice(0, state.shown);
   resultsEl.innerHTML = shown.map((h, n) => `<li>${row(h, n + 1, q)}</li>`).join('');
@@ -360,13 +616,19 @@ function render() {
 
   const count = `<strong>${hits.length.toLocaleString()}</strong>`;
   const vids = videos.length ? ` and ${plural(videos.length, 'video')} on YouTube` : '';
-  if (state.show === 'videos' && !videos.length) statusEl.textContent = 'No videos match all of that.';
+  if (loose && hits.length) statusEl.innerHTML = `Nothing has every word, so these ${plural(hits.length, 'recipe')} have most of them.`;
+  else if (state.show === 'videos' && !videos.length) statusEl.textContent = 'No videos match all of that.';
   else if (!hits.length && videos.length) statusEl.innerHTML = `<strong>${videos.length.toLocaleString()}</strong> ${videos.length === 1 ? 'video' : 'videos'} on YouTube.`;
   else if (!hits.length) statusEl.textContent = 'Nothing matches all of that.';
   else if (state.with.length > 1)
     statusEl.innerHTML = `${count} ${hits.length === 1 ? 'recipe uses' : 'recipes use'} at least one of them${vids}. The ones that use the most come first.`;
   else statusEl.innerHTML = `${count} ${hits.length === 1 ? 'recipe' : 'recipes'}${vids}.`;
 
+  // A typo we fixed: say what we searched, and offer the words as typed.
+  if (understood.fixes.length)
+    statusEl.innerHTML = `Showing results for “${esc(q.join(' '))}”. <button type="button" data-exact="1">Search for “${esc(
+      state.q,
+    )}” instead</button>. ${statusEl.innerHTML}`;
   if (!hits.length && !videos.length && state.show !== 'videos') renderEmpty();
   // Six videos under the recipes; a page at a time when there are only videos (a
   // YouTube-only creator like Kenji).
@@ -384,10 +646,14 @@ function renderTags() {
     `<li><button type="button" class="tag tag-${kind}" ${attr}="${esc(value)}" aria-label="Remove ${esc(label)}">${esc(label)}<span class="x" aria-hidden="true">×</span></button></li>`;
   $('with-chips').innerHTML = [
     ...[...state.sites].map((id) => tag('data-remove-creator', id, `from ${creatorById.get(id)?.name || id}`, 'creator')),
+    ...(state.diet ? [tag('data-remove-diet', state.diet, state.diet, 'diet')] : []),
     ...state.with.map((p) => tag('data-remove', p, ingName(p), 'ing')),
+    ...state.without.map((p) => tag('data-remove-not', p, `no ${ingName(p)}`, 'not')),
+    ...state.notWords.map((w) => tag('data-remove-word', w, `no ${w}`, 'not')),
   ].join('');
-  $('box').toggleAttribute('data-tags', !!(state.sites.size || state.with.length));
-  qInput.placeholder = state.sites.size || state.with.length ? 'and…' : 'A dish, ingredient or creator';
+  const any = state.sites.size || state.with.length || state.without.length || state.notWords.length || state.diet;
+  $('box').toggleAttribute('data-tags', !!any);
+  qInput.placeholder = any ? 'and…' : 'A dish, ingredient or creator';
 }
 
 function renderEmpty() {
@@ -399,6 +665,18 @@ function renderEmpty() {
   }
   if (state.q && state.with.length)
     fixes.push({ label: `any dish, not just “${state.q}”`, n: search({ q: '' }).length, apply: () => (state.q = '') });
+  if (state.without.length || state.notWords.length || state.diet)
+    fixes.push({
+      label: 'leaving nothing out',
+      n: (() => {
+        const [w, nw, d] = [state.without, state.notWords, state.diet];
+        [state.without, state.notWords, state.diet] = [[], [], ''];
+        const n = search().length;
+        [state.without, state.notWords, state.diet] = [w, nw, d];
+        return n;
+      })(),
+      apply: () => ([state.without, state.notWords, state.diet] = [[], [], '']),
+    });
   if (state.sites.size) fixes.push({ label: 'any creator', n: search({ skip: 'site' }).length, apply: () => state.sites.clear() });
   if (state.time) fixes.push({ label: 'any time', n: search({ skip: 'time' }).length, apply: () => (state.time = 0) });
   if (state.cuisine) fixes.push({ label: 'any cuisine', n: search({ skip: 'cuisine' }).length, apply: () => (state.cuisine = '') });
@@ -592,7 +870,7 @@ function renderFilterButtons() {
     $(`${id}-btn`).toggleAttribute('data-active', !!value);
   };
   set('f-site', site);
-  set('f-time', state.time ? `${state.time} minutes or less` : '');
+  set('f-time', state.time ? `${fmtTime(state.time)} or less` : '');
   set('f-cuisine', state.cuisine);
   set('f-show', state.show === 'recipes' ? 'recipes only' : state.show === 'videos' ? 'videos only' : '');
   $('f-show-value').textContent = state.show ? $('f-show-value').textContent : 'recipes and videos';
@@ -630,6 +908,7 @@ function buildStart() {
 // to add; then recipes to open; then a plain search for the words.
 
 type Option =
+  | { kind: 'not'; p: number }
   | { kind: 'creator'; c: Creator }
   | { kind: 'ing'; p: number }
   | { kind: 'recipe'; h: Hit; n: number }
@@ -692,6 +971,12 @@ const ingMatches = (text: string): number[] => {
 };
 
 function buildOptions(text: string): Option[] {
+  // "no pork", "without pea…": offer to leave an ingredient out.
+  const not = text.match(/^(?:no|without|not)\s+(.{2,})$/i);
+  if (not) {
+    const ps = ingMatches(not[1]).filter((p) => !state.without.includes(p)).slice(0, 4);
+    if (ps.length) return ps.map((p) => ({ kind: 'not' as const, p }));
+  }
   const out: Option[] = creatorMatches(text)
     .slice(0, 2)
     .map((c) => ({ kind: 'creator' as const, c }));
@@ -703,6 +988,8 @@ function buildOptions(text: string): Option[] {
 }
 
 function optionLabel(o: Option, text: string): string {
+  if (o.kind === 'not')
+    return `<span class="opt-text"><span class="opt-name">No ${esc(ingName(o.p))}</span><span class="opt-meta">Leave out recipes that use it</span></span>`;
   const qs = words(text).join(' ');
   if (o.kind === 'creator') {
     const has = [o.c.recipes ? plural(o.c.recipes, 'recipe') : '', o.c.videos ? plural(o.c.videos, 'video') : ''].filter(Boolean);
@@ -736,7 +1023,12 @@ function optionLabel(o: Option, text: string): string {
 function choose(n: number) {
   const o = suggest.options[n];
   if (!o) return;
-  if (o.kind === 'creator') {
+  if (o.kind === 'not') {
+    qInput.value = '';
+    if (!state.without.includes(o.p)) state.without.push(o.p);
+    afterTag();
+    qInput.focus();
+  } else if (o.kind === 'creator') {
     qInput.value = '';
     addCreator(o.c.id, 'suggestions');
     qInput.focus();
@@ -778,7 +1070,17 @@ function addCreator(id: string, from: string) {
 
 function submit() {
   suggest.close();
-  state.q = qInput.value.trim();
+  // Plain phrases become tags and filters ("no pork", "under 30 minutes"); the rest stays words.
+  const u = understand(qInput.value);
+  for (const p of u.with) if (!state.with.includes(p)) state.with.push(p);
+  for (const p of u.without) if (!state.without.includes(p)) state.without.push(p);
+  for (const w of u.notWords) if (!state.notWords.includes(w)) state.notWords.push(w);
+  for (const id of u.sites) state.sites.add(id);
+  if (u.time) state.time = u.time;
+  if (u.diet) state.diet = u.diet;
+  state.exact = false;
+  qInput.value = u.q;
+  state.q = u.q;
   state.shown = PAGE;
   state.picked = -1;
   render();
@@ -788,10 +1090,10 @@ function submit() {
 }
 
 function searched() {
-  if (!state.q && !state.with.length && !state.sites.size) return;
+  if (isBlank()) return;
   track('Searched Recipes', {
     experiment: EXPERIMENT,
-    search_type: state.q && state.with.length ? 'both' : state.q ? 'words' : state.with.length ? 'ingredients' : 'creator',
+    search_type: state.q && state.with.length ? 'both' : state.q ? 'words' : state.with.length ? 'ingredients' : state.sites.size ? 'creator' : 'filters',
     ingredient_count: state.with.length,
     creator_count: state.sites.size,
     filter_count: filterCount(),
@@ -816,6 +1118,10 @@ function writeUrl(push: boolean) {
   if (state.time) u.searchParams.set('time', String(state.time));
   if (state.cuisine) u.searchParams.set('cuisine', state.cuisine);
   if (state.show) u.searchParams.set('show', state.show);
+  if (state.without.length) u.searchParams.set('without', state.without.map((p) => data.ing[p][0]).join(','));
+  if (state.notWords.length) u.searchParams.set('not', state.notWords.join(','));
+  if (state.diet) u.searchParams.set('diet', state.diet);
+  if (state.exact) u.searchParams.set('exact', '1');
   if (u.href === location.href) return;
   history[push ? 'pushState' : 'replaceState'](null, '', u);
 }
@@ -828,8 +1134,16 @@ function readUrl() {
     .map((id) => ingById.get(id))
     .filter((x): x is number => x != null);
   state.sites = new Set((p.get('site') || '').split(',').filter((id) => creatorById.has(id)));
-  const t = Number(p.get('time'));
-  state.time = TIMES.includes(t) ? t : 0;
+  const t = Math.round(Number(p.get('time')));
+  state.time = t > 0 && t <= 600 ? t : 0;
+  state.without = (p.get('without') || '')
+    .split(',')
+    .map((id) => ingById.get(id))
+    .filter((x): x is number => x != null);
+  state.notWords = (p.get('not') || '').split(',').map((w) => w.trim().toLowerCase()).filter(Boolean);
+  const diet = p.get('diet');
+  state.diet = diet === 'vegetarian' || diet === 'vegan' ? diet : '';
+  state.exact = p.get('exact') === '1';
   const c = p.get('cuisine') || '';
   state.cuisine = data.cuisines.some(([name]) => name === c) ? c : '';
   const show = p.get('show');
@@ -869,9 +1183,17 @@ qInput.addEventListener('keydown', (e) => {
   } else if (e.key === 'Escape' && !suggest.panel.hidden) {
     e.preventDefault();
     suggest.close();
-  } else if (e.key === 'Backspace' && !qInput.value && qInput.selectionStart === 0 && (state.with.length || state.sites.size)) {
-    // Backspace in an empty box takes off the last tag.
-    if (state.with.length) state.with.pop();
+  } else if (
+    e.key === 'Backspace' &&
+    !qInput.value &&
+    qInput.selectionStart === 0 &&
+    (state.with.length || state.without.length || state.notWords.length || state.diet || state.sites.size)
+  ) {
+    // Backspace in an empty box takes off the last tag, right to left.
+    if (state.notWords.length) state.notWords.pop();
+    else if (state.without.length) state.without.pop();
+    else if (state.with.length) state.with.pop();
+    else if (state.diet) state.diet = '';
     else state.sites.delete([...state.sites].at(-1)!);
     state.shown = PAGE;
     render();
@@ -898,8 +1220,15 @@ app.addEventListener('click', (e) => {
   else if (el.dataset.try) {
     qInput.value = el.dataset.try;
     submit();
-  } else if (el.dataset.remove || el.dataset.removeCreator) {
+  } else if (el.dataset.exact) {
+    state.exact = true;
+    render();
+    writeUrl(true);
+  } else if (el.dataset.remove || el.dataset.removeCreator || el.dataset.removeNot || el.dataset.removeWord || el.dataset.removeDiet) {
     if (el.dataset.remove) state.with = state.with.filter((p) => p !== Number(el.dataset.remove));
+    else if (el.dataset.removeWord) state.notWords = state.notWords.filter((w) => w !== el.dataset.removeWord);
+    else if (el.dataset.removeNot) state.without = state.without.filter((p) => p !== Number(el.dataset.removeNot));
+    else if (el.dataset.removeDiet) state.diet = '';
     else state.sites.delete(el.dataset.removeCreator!);
     state.shown = PAGE;
     render();
@@ -928,6 +1257,10 @@ function clearAll() {
   state.time = 0;
   state.cuisine = '';
   state.show = '';
+  state.without = [];
+  state.notWords = [];
+  state.diet = '';
+  state.exact = false;
   state.picked = -1;
   qInput.value = '';
 }
