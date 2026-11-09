@@ -34,3 +34,6 @@ sudachirecipes.com
 
 # Recipe photos from Made With Lau, served by its image CDN (Sanity), on its own results, lazily and with no referrer. Added under the content-image rule, 2026-11-08.
 cdn.sanity.io
+
+# Recipe photos from Alton Brown, on its own results, lazily and with no referrer. Added under the content-image rule, 2026-11-08.
+altonbrown.com

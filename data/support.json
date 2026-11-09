@@ -238,5 +238,31 @@
         "isbn": "9781645679790"
       }
     ]
+  },
+  "ab": {
+    "links": [
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/@AltonBrown"
+      }
+    ],
+    "books": [
+      {
+        "title": "Good Eats: The Final Years",
+        "isbn": "9781419753527"
+      },
+      {
+        "title": "EveryDayCook",
+        "isbn": "9781101885710"
+      },
+      {
+        "title": "I’m Just Here for the Food: Version 2.0",
+        "isbn": "9781584795599"
+      },
+      {
+        "title": "Good Eats: The Early Years",
+        "isbn": "9781584797951"
+      }
+    ]
   }
 }

@@ -93,6 +93,15 @@ recipes:
     default_cuisine: Chinese
     allowed: true                      # robots.txt allows everything but /private/; no terms page, only privacy
     size: 197 recipes (of about 388 URLs)
+  # Added 2026-11-08, checked the same way.
+  - id: ab
+    name: Alton Brown
+    site: https://altonbrown.com       # www. redirects here
+    sitemap: /sitemap_index.xml        # robots.txt lists /sitemap.xml, which 301s here (Yoast); recipes are in recipes-sitemap.xml
+    include: '^https://altonbrown\.com/recipes/[^/]+/$'   # recipes only; the index also lists blog posts, books, videos and shop pages. Read through the index so a second recipes sitemap past 1,000 is still found
+    format: json-ld                    # WP Recipe Maker card on 5 of 5 sampled recipes, 2020 to now; no cuisine (it's in keywords), category is the course
+    allowed: true                      # robots.txt only blocks /wp-admin/. Its only terms page (/terms-conditions/; /terms/, /terms-of-use/ and /terms-and-conditions/ 301 to the home page) is a privacy and cookie policy that says nothing on copying, storing or automated access
+    size: 947 recipes
 
 # YouTube channels, through the official YouTube Data API only (uploads list;
 # titles, short descriptions and thumbnails, no transcripts). `site` ties a
@@ -166,6 +175,11 @@ videos:
     channel: https://www.youtube.com/@FrenchCookingAcademy
     via: youtube-data-api
     note: its site (thefrenchcookingacademy.com; frenchcookingacademy.com is a parked domain) has about 960 recipe pages but no Recipe data, and its terms bar copying its materials, so it isn't crawled
+  - id: ab-yt
+    name: Alton Brown
+    site: ab
+    channel: https://www.youtube.com/@AltonBrown   # UCfDNi1aEljAQ17mUrfUjkvg, the channel altonbrown.com links to (checked 2026-11-08)
+    via: youtube-data-api
 
 link_only:
   - name: Serious Eats
