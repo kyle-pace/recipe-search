@@ -1,19 +1,73 @@
 {
- "run": "2026-11-09T07:03:49.799Z",
+ "run": "2026-11-09T21:26:48.058Z",
  "options": {
   "limit": null,
   "delayMs": 4000
  },
  "sources": {
+  "woks": {
+   "id": "woks",
+   "name": "The Woks of Life",
+   "result": "ok",
+   "fetched": 4,
+   "added": 2,
+   "updated": 1,
+   "removed": 0,
+   "noRecipe": 1,
+   "httpErrors": {},
+   "sitemapPages": 1590,
+   "waiting": 0,
+   "count": 1370
+  },
+  "joc": {
+   "id": "joc",
+   "name": "Just One Cookbook",
+   "result": "paused",
+   "error": "Cloudflare bot protection blocks automated requests (HTTP 403 on its sitemap from GitHub Actions and from a home connection, with or without our crawler's name; robots.txt allows us; checked 2026-11-08). Needs the site to allow us"
+  },
+  "htk": {
+   "id": "htk",
+   "name": "Hot Thai Kitchen",
+   "result": "ok",
+   "fetched": 3,
+   "added": 0,
+   "updated": 2,
+   "removed": 0,
+   "noRecipe": 1,
+   "httpErrors": {},
+   "sitemapPages": 474,
+   "waiting": 0,
+   "count": 414
+  },
+  "sk": {
+   "id": "sk",
+   "name": "Smitten Kitchen",
+   "result": "ok",
+   "fetched": 3,
+   "added": 1,
+   "updated": 2,
+   "removed": 0,
+   "noRecipe": 0,
+   "httpErrors": {},
+   "sitemapPages": 979,
+   "waiting": 0,
+   "count": 445
+  },
+  "maangchi": {
+   "id": "maangchi",
+   "name": "Maangchi",
+   "result": "paused",
+   "error": "Cloudflare bot protection blocks automated requests (HTTP 403 on its sitemap from GitHub Actions and from a home connection, with or without our crawler's name; robots.txt allows us; checked 2026-11-08). Needs the site to allow us"
+  },
   "mala": {
    "id": "mala",
    "name": "The Mala Market",
    "result": "ok",
-   "fetched": 225,
-   "added": 198,
+   "fetched": 0,
+   "added": 0,
    "updated": 0,
    "removed": 0,
-   "noRecipe": 27,
+   "noRecipe": 0,
    "httpErrors": {},
    "sitemapPages": 225,
    "waiting": 0,
@@ -23,11 +77,11 @@
    "id": "rte",
    "name": "RecipeTin Eats",
    "result": "ok",
-   "fetched": 1748,
-   "added": 1538,
-   "updated": 0,
+   "fetched": 2,
+   "added": 0,
+   "updated": 1,
    "removed": 0,
-   "noRecipe": 210,
+   "noRecipe": 1,
    "httpErrors": {},
    "sitemapPages": 1748,
    "waiting": 0,
@@ -37,11 +91,11 @@
    "id": "rtj",
    "name": "RecipeTin Japan",
    "result": "ok",
-   "fetched": 441,
-   "added": 430,
+   "fetched": 0,
+   "added": 0,
    "updated": 0,
    "removed": 0,
-   "noRecipe": 11,
+   "noRecipe": 0,
    "httpErrors": {},
    "sitemapPages": 441,
    "waiting": 0,
@@ -50,26 +104,23 @@
   "sudachi": {
    "id": "sudachi",
    "name": "Sudachi",
-   "result": "blocked",
-   "fetched": 505,
-   "added": 395,
-   "updated": 0,
+   "result": "ok",
+   "fetched": 108,
+   "added": 96,
+   "updated": 2,
    "removed": 0,
-   "noRecipe": 106,
-   "httpErrors": {
-    "429": 4
-   },
+   "noRecipe": 10,
+   "httpErrors": {},
    "sitemapPages": 606,
-   "waiting": 101,
-   "error": "HTTP 429 three times in a row",
-   "count": 395
+   "waiting": 0,
+   "count": 491
   },
   "mwl": {
    "id": "mwl",
    "name": "Made With Lau",
    "result": "ok",
-   "fetched": 197,
-   "added": 197,
+   "fetched": 0,
+   "added": 0,
    "updated": 0,
    "removed": 0,
    "noRecipe": 0,
@@ -77,6 +128,62 @@
    "sitemapPages": 197,
    "waiting": 0,
    "count": 197
+  },
+  "ab": {
+   "id": "ab",
+   "name": "Alton Brown",
+   "result": "ok",
+   "fetched": 947,
+   "added": 946,
+   "updated": 0,
+   "removed": 0,
+   "noRecipe": 1,
+   "httpErrors": {},
+   "sitemapPages": 947,
+   "waiting": 0,
+   "count": 946
+  },
+  "kenji": {
+   "id": "kenji",
+   "name": "J. Kenji López-Alt",
+   "result": "ok",
+   "count": 876
+  },
+  "woks-yt": {
+   "id": "woks-yt",
+   "name": "The Woks of Life",
+   "result": "ok",
+   "count": 403
+  },
+  "htk-yt": {
+   "id": "htk-yt",
+   "name": "Hot Thai Kitchen",
+   "result": "ok",
+   "count": 831
+  },
+  "sk-yt": {
+   "id": "sk-yt",
+   "name": "Smitten Kitchen",
+   "result": "ok",
+   "count": 90
+  },
+  "joc-yt": {
+   "id": "joc-yt",
+   "name": "Just One Cookbook",
+   "result": "ok",
+   "count": 588
+  },
+  "maangchi-yt": {
+   "id": "maangchi-yt",
+   "name": "Maangchi",
+   "result": "ok",
+   "count": 611
+  },
+  "ccd": {
+   "id": "ccd",
+   "name": "Chinese Cooking Demystified",
+   "result": "ok",
+   "count": 362
   },
   "rte-yt": {
    "id": "rte-yt",
@@ -114,106 +221,12 @@
    "result": "ok",
    "count": 544
   },
-  "woks-yt": {
-   "id": "woks-yt",
-   "name": "The Woks of Life",
-   "result": "not run",
-   "count": 403
-  },
-  "htk-yt": {
-   "id": "htk-yt",
-   "name": "Hot Thai Kitchen",
-   "result": "not run",
-   "count": 831
-  },
-  "sk-yt": {
-   "id": "sk-yt",
-   "name": "Smitten Kitchen",
-   "result": "not run",
-   "count": 90
-  },
-  "joc-yt": {
-   "id": "joc-yt",
-   "name": "Just One Cookbook",
-   "result": "not run",
-   "count": 588
-  },
-  "maangchi-yt": {
-   "id": "maangchi-yt",
-   "name": "Maangchi",
-   "result": "not run",
-   "count": 611
-  },
-  "ccd": {
-   "id": "ccd",
-   "name": "Chinese Cooking Demystified",
-   "result": "not run",
-   "count": 362
-  },
-  "kenji": {
-   "id": "kenji",
-   "name": "J. Kenji López-Alt",
-   "result": "not run",
-   "count": 876
-  },
-  "woks": {
-   "id": "woks",
-   "name": "The Woks of Life",
-   "result": "not run",
-   "fetched": 1588,
-   "added": 1368,
-   "updated": 0,
-   "removed": 0,
-   "noRecipe": 220,
-   "httpErrors": {},
-   "sitemapPages": 1588,
-   "waiting": 0,
-   "count": 1368
-  },
-  "joc": {
-   "id": "joc",
-   "name": "Just One Cookbook",
-   "result": "not run",
-   "error": "refuses cloud servers (HTTP 403 on its post sitemap from GitHub Actions, 2026-11-02)"
-  },
-  "htk": {
-   "id": "htk",
-   "name": "Hot Thai Kitchen",
-   "result": "not run",
-   "fetched": 474,
-   "added": 414,
-   "updated": 0,
-   "removed": 0,
-   "noRecipe": 60,
-   "httpErrors": {},
-   "sitemapPages": 474,
-   "waiting": 0,
-   "count": 414
-  },
-  "sk": {
-   "id": "sk",
-   "name": "Smitten Kitchen",
-   "result": "not run",
-   "fetched": 979,
-   "added": 444,
-   "updated": 0,
-   "removed": 0,
-   "noRecipe": 534,
-   "httpErrors": {
-    "429": 1
-   },
-   "sitemapPages": 979,
-   "waiting": 0,
-   "count": 444
-  },
-  "maangchi": {
-   "id": "maangchi",
-   "name": "Maangchi",
-   "result": "not run",
-   "error": "refuses cloud servers (HTTP 403 on its sitemap from GitHub Actions, 2026-11-02)"
+  "ab-yt": {
+   "id": "ab-yt",
+   "name": "Alton Brown",
+   "result": "ok",
+   "count": 264
   }
  },
- "alerts": [
-  "sudachi: blocked (HTTP 429 three times in a row)"
- ]
+ "alerts": []
 }
