@@ -341,14 +341,20 @@ function renderVideos(q: string[]) {
   const rows = data.videos.rows;
   if (!rows.length || !q.length) return;
   const chans = data.videos.sources;
-  const hits = rows
-    .filter((v) => {
-      // With a Site filter on, only that site's own channel.
-      if (state.sites.size && !state.sites.has(chans[v[0]].site)) return false;
-      const t = words(v[1]);
-      return q.every((w, n) => t.some((x) => x === w || (n === q.length - 1 && x.startsWith(w))));
-    })
-    .slice(0, 6);
+  const matched = rows.filter((v) => {
+    // With a Site filter on, only that site's own channel.
+    if (state.sites.size && !state.sites.has(chans[v[0]].site)) return false;
+    const t = words(v[1]);
+    return q.every((w, n) => t.some((x) => x === w || (n === q.length - 1 && x.startsWith(w))));
+  });
+  // Take turns between channels (newest first within each), so one prolific channel
+  // doesn't fill all six spots.
+  const byChannel = new Map<number, VideoRow[]>();
+  for (const v of matched) byChannel.set(v[0], [...(byChannel.get(v[0]) || []), v]);
+  const queues = [...byChannel.values()].sort((a, b) => b.length - a.length);
+  const hits: VideoRow[] = [];
+  for (let round = 0; hits.length < 6 && queues.some((qq) => qq.length > round); round++)
+    for (const qq of queues) if (qq[round] && hits.length < 6) hits.push(qq[round]);
   if (!hits.length) return;
   $('videos').hidden = false;
   $('video-results').innerHTML = hits
