@@ -1,0 +1,30 @@
+# Keeps this project following github.com/kyle-pace/principles.
+# - sync: copies the latest principles into AGENTS.md (and shared skills into
+#   .agents/skills/) daily, or on demand from the Actions tab.
+# - checks: builds the project and fails if a page loads anything from a host
+#   that isn't allowed. Set output-dir to where the build writes the site.
+name: Principles
+
+on:
+  schedule:
+    - cron: '17 13 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  sync:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: write
+    uses: kyle-pace/principles/.github/workflows/sync.yml@main
+
+  checks:
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    permissions:
+      contents: read
+    uses: kyle-pace/principles/.github/workflows/check.yml@main
+    with:
+      output-dir: dist/client
+      # allow: example.com,cdn.example.com

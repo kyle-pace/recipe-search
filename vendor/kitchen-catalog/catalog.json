@@ -1,0 +1,6509 @@
+{
+ "about": "The shared list of grocery items for Pantry and Grocery Deals. Each item has a fixed id that never changes; apps store the id and show the name. aliases are other ways people and flyers write it.",
+ "version": 1,
+ "sections": [
+  {
+   "id": "produce",
+   "name": "Produce"
+  },
+  {
+   "id": "meat",
+   "name": "Meat"
+  },
+  {
+   "id": "seafood",
+   "name": "Seafood"
+  },
+  {
+   "id": "dairy-eggs",
+   "name": "Dairy & eggs"
+  },
+  {
+   "id": "bakery",
+   "name": "Bakery"
+  },
+  {
+   "id": "frozen",
+   "name": "Frozen"
+  },
+  {
+   "id": "pantry",
+   "name": "Pantry"
+  },
+  {
+   "id": "spices",
+   "name": "Spices"
+  },
+  {
+   "id": "international",
+   "name": "International"
+  },
+  {
+   "id": "snacks-drinks",
+   "name": "Snacks & drinks"
+  },
+  {
+   "id": "prepared",
+   "name": "Prepared foods"
+  },
+  {
+   "id": "household",
+   "name": "Household"
+  },
+  {
+   "id": "other",
+   "name": "Other"
+  }
+ ],
+ "items": {
+  "00-pizza-flour": {
+   "name": "00 Pizza Flour",
+   "section": "pantry",
+   "aliases": []
+  },
+  "abalone": {
+   "name": "Abalone",
+   "section": "seafood",
+   "aliases": [],
+   "deals": {
+    "staple": false
+   },
+   "popularity": "specialty",
+   "parent": "shellfish"
+  },
+  "acini-di-pepe": {
+   "name": "Acini di Pepe",
+   "section": "pantry",
+   "aliases": []
+  },
+  "aka-miso": {
+   "name": "Aka Miso",
+   "section": "international",
+   "aliases": [
+    "red miso"
+   ],
+   "parent": "miso"
+  },
+  "aka-umeboshi": {
+   "name": "Aka Umeboshi",
+   "section": "international",
+   "aliases": [
+    "pickled plum",
+    "pickled plums"
+   ]
+  },
+  "all-purpose-flour": {
+   "name": "All-Purpose Flour",
+   "section": "pantry",
+   "aliases": [
+    "ap flour",
+    "flour",
+    "plain flour"
+   ],
+   "popularity": "everyday"
+  },
+  "allspice": {
+   "name": "Allspice",
+   "section": "spices",
+   "aliases": []
+  },
+  "almond-flour": {
+   "name": "Almond Flour",
+   "section": "pantry",
+   "aliases": []
+  },
+  "almonds": {
+   "name": "Almonds",
+   "section": "pantry",
+   "aliases": [],
+   "parent": "nuts"
+  },
+  "amchur": {
+   "name": "Amchur",
+   "section": "spices",
+   "aliases": []
+  },
+  "anasazi-beans": {
+   "name": "Anasazi Beans",
+   "section": "pantry",
+   "aliases": []
+  },
+  "anchovies": {
+   "name": "Anchovies",
+   "section": "pantry",
+   "aliases": []
+  },
+  "apple-cider-vinegar": {
+   "name": "Apple Cider Vinegar",
+   "section": "pantry",
+   "aliases": [
+    "cider vinegar"
+   ]
+  },
+  "apples": {
+   "name": "Apples",
+   "section": "produce",
+   "aliases": [
+    "apple",
+    "cosmic crisp",
+    "fuji",
+    "gala",
+    "honeycrisp"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "popularity": "everyday"
+  },
+  "applesauce": {
+   "name": "Applesauce",
+   "section": "pantry",
+   "aliases": [
+    "apple sauce"
+   ]
+  },
+  "arborio-rice": {
+   "name": "Arborio Rice",
+   "section": "pantry",
+   "aliases": [],
+   "parent": "rice"
+  },
+  "arrowroot": {
+   "name": "Arrowroot",
+   "section": "pantry",
+   "aliases": []
+  },
+  "artichokes": {
+   "name": "Artichokes",
+   "section": "produce",
+   "aliases": [
+    "artichoke"
+   ]
+  },
+  "arugula": {
+   "name": "Arugula",
+   "section": "produce",
+   "aliases": [
+    "rocket",
+    "baby arugula"
+   ],
+   "parent": "salad-greens"
+  },
+  "asafetida": {
+   "name": "Asafetida",
+   "section": "spices",
+   "aliases": [
+    "asafoetida",
+    "hing"
+   ],
+   "popularity": "specialty"
+  },
+  "asian-greens": {
+   "name": "Asian Greens",
+   "section": "produce",
+   "aliases": [
+    "a choy",
+    "chrysanthemum",
+    "chrysanthemum greens",
+    "shungiku",
+    "tong ho",
+    "tung ho",
+    "watercress"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "also": [
+    "greens-asian"
+   ],
+   "parent": "leafy-greens"
+  },
+  "asparagus": {
+   "name": "Asparagus",
+   "section": "produce",
+   "aliases": []
+  },
+  "avocados": {
+   "name": "Avocados",
+   "section": "produce",
+   "aliases": [
+    "avocado"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "popularity": "everyday"
+  },
+  "baby-spinach": {
+   "name": "Baby Spinach",
+   "section": "produce",
+   "aliases": [],
+   "popularity": "everyday",
+   "parent": "spinach"
+  },
+  "bacon": {
+   "name": "Bacon",
+   "section": "meat",
+   "aliases": [],
+   "deals": {
+    "staple": true,
+    "benchmark": "bacon"
+   },
+   "popularity": "everyday"
+  },
+  "baked-beans": {
+   "name": "Baked beans",
+   "section": "pantry",
+   "aliases": [
+    "beanz",
+    "pork & beans",
+    "pork and beans"
+   ]
+  },
+  "baking-extracts-and-waters": {
+   "name": "Baking Extracts and Waters",
+   "section": "pantry",
+   "aliases": []
+  },
+  "baking-mix": {
+   "name": "Baking mix",
+   "section": "pantry",
+   "aliases": [
+    "brownie mix",
+    "cake mix",
+    "muffin mix",
+    "no bake cheesecake",
+    "no bake classic cheesecake",
+    "scone mix"
+   ]
+  },
+  "baking-powder": {
+   "name": "Baking Powder",
+   "section": "pantry",
+   "aliases": []
+  },
+  "baking-soda": {
+   "name": "Baking Soda",
+   "section": "pantry",
+   "aliases": [
+    "bicarb",
+    "bicarb soda",
+    "bicarbonate of soda"
+   ]
+  },
+  "balsamic-vinegar": {
+   "name": "Balsamic Vinegar",
+   "section": "pantry",
+   "aliases": []
+  },
+  "bamboo-shoots": {
+   "name": "Bamboo shoots",
+   "section": "produce",
+   "aliases": [
+    "bamboo shoot"
+   ],
+   "deals": {
+    "staple": false
+   }
+  },
+  "bananas": {
+   "name": "Bananas",
+   "section": "produce",
+   "aliases": [
+    "banana"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "bananas"
+   },
+   "popularity": "everyday"
+  },
+  "banchan": {
+   "name": "Banchan",
+   "section": "prepared",
+   "aliases": [
+    "braised dried pollock",
+    "garlic stem stir fry",
+    "green laver",
+    "seasoned laver",
+    "spicy squid salad",
+    "squid salad"
+   ],
+   "product": true
+  },
+  "bao": {
+   "name": "Bao",
+   "section": "frozen",
+   "aliases": [
+    "bao",
+    "baozi",
+    "bun",
+    "lava custard",
+    "mantou",
+    "paste bun",
+    "siopao",
+    "steamed bun",
+    "steamed buns"
+   ],
+   "product": true
+  },
+  "basmati-rice": {
+   "name": "Basmati Rice",
+   "section": "pantry",
+   "aliases": [
+    "basmati"
+   ],
+   "popularity": "everyday",
+   "parent": "rice-long-grain"
+  },
+  "bay-leaf": {
+   "name": "Bay Leaf",
+   "section": "spices",
+   "aliases": [
+    "bay leaves",
+    "dahon ng laurel"
+   ]
+  },
+  "bbq-sauce": {
+   "name": "BBQ sauce",
+   "section": "pantry",
+   "aliases": [
+    "barbecue sauce",
+    "bulgogi sauce"
+   ]
+  },
+  "bean-sauce": {
+   "name": "Bean Sauce",
+   "section": "international",
+   "aliases": []
+  },
+  "bean-sprouts": {
+   "name": "Bean sprouts",
+   "section": "produce",
+   "aliases": [
+    "bean sprout",
+    "kongnamul",
+    "moyashi",
+    "mung bean sprouts",
+    "soy bean sprouts",
+    "soybean sprouts",
+    "sukju",
+    "toge"
+   ]
+  },
+  "bean-thread-noodles": {
+   "name": "Bean thread noodles",
+   "section": "pantry",
+   "aliases": [
+    "bean thread",
+    "cellophane noodles",
+    "glass noodles",
+    "longkou vermicelli",
+    "mung bean noodles"
+   ],
+   "parent": "noodles"
+  },
+  "beef": {
+   "name": "Beef",
+   "section": "meat",
+   "aliases": []
+  },
+  "beef-base": {
+   "name": "Beef Base",
+   "section": "pantry",
+   "aliases": [
+    "beef broth",
+    "beef stock"
+   ]
+  },
+  "beef-brisket": {
+   "name": "Beef brisket",
+   "section": "meat",
+   "aliases": [
+    "brisket"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "parent": "beef"
+  },
+  "beef-chuck": {
+   "name": "Beef chuck",
+   "section": "meat",
+   "aliases": [
+    "chuck",
+    "chuck roast",
+    "chuck roll"
+   ],
+   "parent": "beef"
+  },
+  "beef-feet": {
+   "name": "Beef feet",
+   "section": "meat",
+   "aliases": [],
+   "deals": {
+    "staple": false
+   },
+   "popularity": "specialty",
+   "parent": "beef"
+  },
+  "beef-ground": {
+   "name": "Ground beef",
+   "section": "meat",
+   "aliases": [
+    "beef mince",
+    "ground chuck",
+    "hamburger meat",
+    "minced beef"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "ground-beef"
+   },
+   "popularity": "everyday",
+   "parent": "beef"
+  },
+  "beef-omasum": {
+   "name": "Beef omasum",
+   "section": "meat",
+   "aliases": [
+    "book tripe",
+    "omasum"
+   ],
+   "deals": {
+    "staple": false
+   },
+   "popularity": "specialty",
+   "parent": "beef"
+  },
+  "beef-ribs": {
+   "name": "Beef back ribs",
+   "section": "meat",
+   "aliases": [
+    "back rib",
+    "beef back rib"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "parent": "beef"
+  },
+  "beef-round": {
+   "name": "Beef round (roast or steak)",
+   "section": "meat",
+   "aliases": [
+    "beef round",
+    "bottom round",
+    "bottom round steaks",
+    "eye of round",
+    "london broil",
+    "round eye",
+    "round roast",
+    "round steak",
+    "top round"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "beef-round-roast"
+   },
+   "parent": "beef"
+  },
+  "beef-shank": {
+   "name": "Beef shank",
+   "section": "meat",
+   "aliases": [],
+   "deals": {
+    "staple": true
+   },
+   "parent": "beef"
+  },
+  "beef-short-ribs": {
+   "name": "Beef short ribs",
+   "section": "meat",
+   "aliases": [
+    "flanken",
+    "galbi",
+    "kalbi",
+    "short rib",
+    "thin rib"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "parent": "beef"
+  },
+  "beef-sirloin": {
+   "name": "Beef sirloin steak",
+   "section": "meat",
+   "aliases": [
+    "sirloin",
+    "top sirloin"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "beef-sirloin"
+   },
+   "parent": "beef-steak"
+  },
+  "beef-steak": {
+   "name": "Beef steak",
+   "section": "meat",
+   "aliases": [
+    "beef tenderloin",
+    "filet mignon",
+    "flank steak",
+    "flat iron",
+    "hanger steak",
+    "new york",
+    "new york strip",
+    "ny strip",
+    "porterhouse",
+    "rib eye",
+    "rib-eye",
+    "ribeye",
+    "scotch fillet",
+    "skirt steak",
+    "steak",
+    "strip steak",
+    "striploin",
+    "t-bone",
+    "tri tip"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "beef-steaks"
+   },
+   "popularity": "everyday",
+   "parent": "beef"
+  },
+  "beef-stew": {
+   "name": "Beef stew meat",
+   "section": "meat",
+   "aliases": [
+    "beef for stew",
+    "beef stew",
+    "carne para guisar",
+    "stew beef"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "beef-stew"
+   },
+   "parent": "beef"
+  },
+  "beef-tendon": {
+   "name": "Beef tendon",
+   "section": "meat",
+   "aliases": [
+    "beef tendons",
+    "tendon"
+   ],
+   "popularity": "specialty",
+   "parent": "beef"
+  },
+  "beef-tripe": {
+   "name": "Beef tripe",
+   "section": "meat",
+   "aliases": [
+    "honeycomb tripe",
+    "menudo tripe",
+    "mondongo"
+   ],
+   "popularity": "specialty",
+   "parent": "beef"
+  },
+  "beets": {
+   "name": "Beets",
+   "section": "produce",
+   "aliases": [
+    "beetroot"
+   ]
+  },
+  "bell-peppers": {
+   "name": "Bell peppers",
+   "section": "produce",
+   "aliases": [
+    "bell pepper",
+    "bell peppers",
+    "capsicum",
+    "green bell pepper",
+    "mini sweet peppers",
+    "orange bell pepper",
+    "red bell pepper",
+    "sweet peppers",
+    "yellow bell pepper"
+   ]
+  },
+  "beltfish": {
+   "name": "Beltfish",
+   "section": "seafood",
+   "aliases": [
+    "belt fish",
+    "cutlassfish",
+    "hairtail"
+   ],
+   "parent": "fish"
+  },
+  "bitter-melon": {
+   "name": "Bitter melon",
+   "section": "produce",
+   "aliases": [
+    "ampalaya",
+    "bitter gourd",
+    "karela"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "popularity": "specialty"
+  },
+  "black-beans": {
+   "name": "Black beans",
+   "section": "pantry",
+   "aliases": [
+    "dried black bean"
+   ]
+  },
+  "black-pepper": {
+   "name": "Black Pepper",
+   "section": "spices",
+   "aliases": [
+    "black peppercorns",
+    "freshly ground black pepper",
+    "ground black pepper"
+   ]
+  },
+  "black-sesame-seeds": {
+   "name": "Black Sesame Seeds",
+   "section": "pantry",
+   "aliases": []
+  },
+  "black-slab-sugar": {
+   "name": "Black Slab Sugar",
+   "section": "pantry",
+   "aliases": [],
+   "popularity": "specialty"
+  },
+  "black-vinegar": {
+   "name": "Black Vinegar",
+   "section": "pantry",
+   "aliases": [
+    "chinese black vinegar",
+    "chinkiang vinegar",
+    "mature vinegar",
+    "shanxi vinegar",
+    "zhenjiang vinegar"
+   ]
+  },
+  "blackberries": {
+   "name": "Blackberries",
+   "section": "produce",
+   "aliases": [
+    "blackberry"
+   ]
+  },
+  "blueberries": {
+   "name": "Blueberries",
+   "section": "produce",
+   "aliases": [
+    "blueberry"
+   ]
+  },
+  "bok-choy": {
+   "name": "Bok choy",
+   "section": "produce",
+   "aliases": [
+    "bok choi",
+    "pak choi",
+    "pak choy",
+    "pok choy"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "popularity": "everyday",
+   "parent": "asian-greens"
+  },
+  "bottled-tea": {
+   "name": "Bottled tea",
+   "section": "snacks-drinks",
+   "aliases": [
+    "afternoon tea",
+    "cold brew oolong",
+    "herbal tea drink",
+    "iced tea",
+    "jasmine honey tea",
+    "jia duo bao",
+    "snapple",
+    "tea drink",
+    "unsweetened tea",
+    "yerba mate"
+   ],
+   "parent": "drinks",
+   "product": true
+  },
+  "bottled-water": {
+   "name": "Bottled water",
+   "section": "snacks-drinks",
+   "aliases": [
+    "alkaline water",
+    "purified water",
+    "sparkling water",
+    "spring water",
+    "topo chico",
+    "water"
+   ],
+   "parent": "drinks",
+   "product": true
+  },
+  "bratwurst": {
+   "name": "Bratwurst",
+   "section": "meat",
+   "aliases": [
+    "brat",
+    "brats"
+   ],
+   "parent": "sausage"
+  },
+  "bread": {
+   "name": "Bread",
+   "section": "bakery",
+   "aliases": [
+    "bagel",
+    "bagels",
+    "brioche",
+    "egg bread",
+    "pan bread",
+    "pandesal",
+    "sliced bread",
+    "sweet bun",
+    "toast"
+   ]
+  },
+  "bread-flour": {
+   "name": "Bread Flour",
+   "section": "pantry",
+   "aliases": []
+  },
+  "breadcrumbs": {
+   "name": "Breadcrumbs",
+   "section": "pantry",
+   "aliases": [
+    "bread crumbs",
+    "breadcrumb"
+   ]
+  },
+  "breakfast-sausage": {
+   "name": "Breakfast sausage",
+   "section": "meat",
+   "aliases": [
+    "breakfast link",
+    "breakfast links",
+    "breakfast patties",
+    "breakfast sausage chub"
+   ],
+   "parent": "sausage"
+  },
+  "broccoli": {
+   "name": "Broccoli",
+   "section": "produce",
+   "aliases": [
+    "broccoli crown",
+    "broccoli crowns",
+    "brocolli",
+    "crown broccoli"
+   ]
+  },
+  "broccolini": {
+   "name": "Broccolini",
+   "section": "produce",
+   "aliases": []
+  },
+  "broth": {
+   "name": "Broth & stock",
+   "section": "pantry",
+   "aliases": [
+    "bone broth",
+    "broth",
+    "stock"
+   ]
+  },
+  "brown-rice": {
+   "name": "Brown rice",
+   "section": "pantry",
+   "aliases": [
+    "genmai",
+    "wholegrain brown rice"
+   ],
+   "parent": "rice"
+  },
+  "brown-sugar": {
+   "name": "Brown Sugar",
+   "section": "pantry",
+   "aliases": [
+    "dark brown sugar",
+    "light brown sugar"
+   ]
+  },
+  "brussels-sprouts": {
+   "name": "Brussels sprouts",
+   "section": "produce",
+   "aliases": [
+    "brussel sprouts",
+    "brussels sprout"
+   ]
+  },
+  "bulgur": {
+   "name": "Bulgur",
+   "section": "pantry",
+   "aliases": []
+  },
+  "buns": {
+   "name": "Buns & rolls",
+   "section": "bakery",
+   "aliases": [
+    "burger buns",
+    "dinner rolls",
+    "hamburger buns",
+    "hot dog rolls"
+   ],
+   "parent": "bread"
+  },
+  "burdock": {
+   "name": "Burdock root",
+   "section": "produce",
+   "aliases": [
+    "burdock",
+    "gobo",
+    "gobo root"
+   ],
+   "popularity": "specialty"
+  },
+  "butter": {
+   "name": "Butter",
+   "section": "dairy-eggs",
+   "aliases": [
+    "salted butter",
+    "unsalted butter"
+   ],
+   "deals": {
+    "staple": false,
+    "benchmark": "butter"
+   },
+   "popularity": "everyday"
+  },
+  "cabbage": {
+   "name": "Cabbage",
+   "section": "produce",
+   "aliases": []
+  },
+  "cakes": {
+   "name": "Cakes",
+   "section": "bakery",
+   "aliases": [
+    "brownie",
+    "brownies",
+    "cake",
+    "castella",
+    "cheesecake",
+    "hostess treats",
+    "mille crepe",
+    "snack cakes"
+   ],
+   "product": true
+  },
+  "candy": {
+   "name": "Candy",
+   "section": "snacks-drinks",
+   "aliases": [
+    "candied haws",
+    "candies",
+    "fruit chews",
+    "gum",
+    "hi chew",
+    "hi-chew",
+    "jelly stick",
+    "marshmallow pops",
+    "snack box",
+    "swedish fish"
+   ],
+   "product": true
+  },
+  "canned-chickpeas": {
+   "name": "Canned Chickpeas",
+   "section": "pantry",
+   "aliases": [
+    "chick peas",
+    "chickpeas",
+    "garbanzo beans"
+   ]
+  },
+  "canned-pumpkin": {
+   "name": "Canned pumpkin",
+   "section": "pantry",
+   "aliases": [
+    "pumpkin puree",
+    "pure pumpkin"
+   ]
+  },
+  "canned-tomatoes": {
+   "name": "Canned Tomatoes",
+   "section": "pantry",
+   "aliases": [
+    "canned whole tomatoes",
+    "crushed tomatoes",
+    "diced tomatoes",
+    "passata",
+    "peeled tomatoes",
+    "san marzano tomatoes",
+    "tinned tomatoes",
+    "tomatoes, canned",
+    "whole peeled tomatoes"
+   ],
+   "popularity": "everyday"
+  },
+  "canned-tuna": {
+   "name": "Canned Tuna",
+   "section": "pantry",
+   "aliases": [],
+   "popularity": "everyday",
+   "parent": "tinned-fish"
+  },
+  "cantaloupe": {
+   "name": "Cantaloupe",
+   "section": "produce",
+   "aliases": [
+    "cantaloupes",
+    "rockmelon",
+    "muskmelon"
+   ],
+   "parent": "melon"
+  },
+  "capers": {
+   "name": "Capers",
+   "section": "pantry",
+   "aliases": []
+  },
+  "cardamom": {
+   "name": "Cardamom",
+   "section": "spices",
+   "aliases": [
+    "cardamom pods",
+    "elaichi",
+    "green cardamom"
+   ]
+  },
+  "carp": {
+   "name": "Carp",
+   "section": "seafood",
+   "aliases": [
+    "bighead carp",
+    "carp bighead"
+   ],
+   "parent": "fish"
+  },
+  "carrots": {
+   "name": "Carrots",
+   "section": "produce",
+   "aliases": [
+    "carrot"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "popularity": "everyday"
+  },
+  "cashews": {
+   "name": "Cashews",
+   "section": "pantry",
+   "aliases": [],
+   "parent": "nuts"
+  },
+  "cassia-bark": {
+   "name": "Cassia Bark",
+   "section": "spices",
+   "aliases": [
+    "cassia",
+    "chinese cinnamon"
+   ]
+  },
+  "catfish": {
+   "name": "Catfish",
+   "section": "seafood",
+   "aliases": [],
+   "deals": {
+    "staple": true
+   },
+   "parent": "fish"
+  },
+  "cauliflower": {
+   "name": "Cauliflower",
+   "section": "produce",
+   "aliases": [
+    "white cauliflower"
+   ]
+  },
+  "cayenne": {
+   "name": "Cayenne",
+   "section": "spices",
+   "aliases": []
+  },
+  "celery": {
+   "name": "Celery",
+   "section": "produce",
+   "aliases": [
+    "celery bunch"
+   ]
+  },
+  "celery-hearts": {
+   "name": "Celery Hearts",
+   "section": "produce",
+   "aliases": [
+    "celery ribs",
+    "celery stalks"
+   ],
+   "popularity": "everyday",
+   "parent": "celery"
+  },
+  "celery-root": {
+   "name": "Celery root",
+   "section": "produce",
+   "aliases": [
+    "celeriac"
+   ]
+  },
+  "cereal": {
+   "name": "Cereal",
+   "section": "pantry",
+   "aliases": [
+    "breakfast cereal"
+   ],
+   "product": true
+  },
+  "char-siu-sauce": {
+   "name": "Char Siu Sauce",
+   "section": "international",
+   "aliases": []
+  },
+  "chard": {
+   "name": "Swiss chard",
+   "section": "produce",
+   "aliases": [
+    "chard",
+    "rainbow chard",
+    "silverbeet"
+   ],
+   "parent": "leafy-greens"
+  },
+  "chayote": {
+   "name": "Chayote",
+   "section": "produce",
+   "aliases": [
+    "choko",
+    "mirliton",
+    "sayote"
+   ]
+  },
+  "cheese": {
+   "name": "Cheese",
+   "section": "dairy-eggs",
+   "aliases": [
+    "american cheese",
+    "appenzeller",
+    "block cheese",
+    "blue cheese",
+    "brie",
+    "burrata",
+    "camembert",
+    "cheese singles",
+    "chevre",
+    "colby jack",
+    "cotija",
+    "goat cheese",
+    "gouda",
+    "gruyere",
+    "halloumi",
+    "havarti",
+    "jack cheese",
+    "manchego",
+    "mascarpone",
+    "monterey jack",
+    "mozzarella",
+    "paneer",
+    "pecorino",
+    "pecorino romano",
+    "pepper jack",
+    "provolone",
+    "queso fresco",
+    "ricotta",
+    "shredded cheese",
+    "string cheese",
+    "swiss cheese"
+   ],
+   "popularity": "everyday"
+  },
+  "cheese-cheddar": {
+   "name": "Cheddar cheese",
+   "section": "dairy-eggs",
+   "aliases": [
+    "cheddar"
+   ],
+   "parent": "cheese",
+   "deals": {
+    "staple": false,
+    "benchmark": "cheddar"
+   },
+   "popularity": "everyday"
+  },
+  "cheese-other": {
+   "name": "Cheese (specialty)",
+   "section": "dairy-eggs",
+   "aliases": [
+    "face rock"
+   ],
+   "deals": {
+    "staple": false
+   },
+   "parent": "cheese"
+  },
+  "cherries": {
+   "name": "Cherries",
+   "section": "produce",
+   "aliases": [
+    "cherry",
+    "rainier cherries",
+    "bing cherries"
+   ]
+  },
+  "chestnuts": {
+   "name": "Chestnuts",
+   "section": "pantry",
+   "aliases": [
+    "chestnut",
+    "peeled chestnut",
+    "roasted chestnut"
+   ]
+  },
+  "chicken": {
+   "name": "Chicken",
+   "section": "meat",
+   "aliases": [
+    "chicken for stir fry"
+   ]
+  },
+  "chicken-bouillon-powder": {
+   "name": "Chicken Bouillon Powder",
+   "section": "international",
+   "aliases": [
+    "chicken bouillon",
+    "chicken powder"
+   ]
+  },
+  "chicken-breast-boneless": {
+   "name": "Chicken breast, boneless",
+   "section": "meat",
+   "aliases": [
+    "boneless chicken breast",
+    "boneless skinless chicken breast",
+    "chicken breast",
+    "chicken breast boneless",
+    "chicken breasts",
+    "chicken tenderloin",
+    "chicken tenderloins"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "chicken-breast-boneless"
+   },
+   "popularity": "everyday",
+   "parent": "chicken"
+  },
+  "chicken-broth-concentrate": {
+   "name": "Chicken Broth Concentrate",
+   "section": "pantry",
+   "aliases": [
+    "chicken base",
+    "chicken broth",
+    "chicken stock",
+    "low-sodium chicken broth",
+    "low-sodium chicken stock"
+   ]
+  },
+  "chicken-drumsticks": {
+   "name": "Chicken drumsticks",
+   "section": "meat",
+   "aliases": [
+    "drumstick"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "chicken-legs"
+   },
+   "popularity": "everyday",
+   "parent": "chicken"
+  },
+  "chicken-feet": {
+   "name": "Chicken feet",
+   "section": "meat",
+   "aliases": [
+    "chicken paws",
+    "phoenix claws"
+   ],
+   "deals": {
+    "staple": false
+   },
+   "popularity": "specialty",
+   "parent": "chicken"
+  },
+  "chicken-gizzards": {
+   "name": "Chicken gizzards",
+   "section": "meat",
+   "aliases": [
+    "chicken gizzard",
+    "mollejas",
+    "mollejas de pollo"
+   ],
+   "parent": "chicken"
+  },
+  "chicken-leg-quarters": {
+   "name": "Chicken Leg Quarters",
+   "section": "meat",
+   "aliases": [
+    "chicken legs",
+    "leg quarter",
+    "whole chicken legs"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "chicken-legs"
+   },
+   "popularity": "everyday",
+   "parent": "chicken"
+  },
+  "chicken-livers": {
+   "name": "Chicken livers",
+   "section": "meat",
+   "aliases": [
+    "chicken liver"
+   ],
+   "parent": "chicken"
+  },
+  "chicken-nuggets": {
+   "name": "Chicken nuggets & patties",
+   "section": "frozen",
+   "aliases": [
+    "chicken nuggets",
+    "chicken patties",
+    "chicken patty",
+    "chicken strips",
+    "spicy nuggets"
+   ],
+   "parent": "chicken",
+   "product": true
+  },
+  "chicken-stewing": {
+   "name": "Stewing chicken",
+   "section": "meat",
+   "aliases": [
+    "stewing hen"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "parent": "chicken"
+  },
+  "chicken-thighs": {
+   "name": "Chicken thighs",
+   "section": "meat",
+   "aliases": [
+    "boneless chicken thigh",
+    "chicken thigh meat",
+    "thigh"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "popularity": "everyday",
+   "parent": "chicken"
+  },
+  "chicken-whole": {
+   "name": "Whole chicken",
+   "section": "meat",
+   "aliases": [
+    "fryer",
+    "roasting chicken",
+    "stewing chicken",
+    "whole chicken",
+    "whole fryer",
+    "whole roaster"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "chicken-whole"
+   },
+   "popularity": "everyday",
+   "parent": "chicken"
+  },
+  "chicken-wings": {
+   "name": "Chicken wings",
+   "section": "meat",
+   "aliases": [
+    "drumettes",
+    "party wings",
+    "wing",
+    "wingettes"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "popularity": "everyday",
+   "parent": "chicken"
+  },
+  "chili-bamboo-shoot-slices": {
+   "name": "Chili Bamboo Shoot Slices",
+   "section": "international",
+   "aliases": []
+  },
+  "chili-crisp": {
+   "name": "Chili Crisp",
+   "section": "international",
+   "aliases": [
+    "lao gan ma",
+    "laoganma",
+    "spicy chili crisp"
+   ]
+  },
+  "chili-flake": {
+   "name": "Chili Flake",
+   "section": "spices",
+   "aliases": []
+  },
+  "chili-oil": {
+   "name": "Chili Oil",
+   "section": "international",
+   "aliases": [
+    "hot chili oil",
+    "oil chili",
+    "red oil"
+   ]
+  },
+  "chili-powder": {
+   "name": "Chili powder",
+   "section": "spices",
+   "aliases": [
+    "chile powder",
+    "chilli powder"
+   ]
+  },
+  "chili-sauce": {
+   "name": "Chili sauce",
+   "section": "international",
+   "aliases": [
+    "chili garlic sauce",
+    "hot sauce",
+    "pho chili sauce",
+    "salsa picante",
+    "sweet chili sauce",
+    "tabasco",
+    "tapatio",
+    "valentina",
+    "valentina hot sauce"
+   ]
+  },
+  "chinese-broccoli": {
+   "name": "Chinese Broccoli",
+   "section": "produce",
+   "aliases": [
+    "chinese broccoli",
+    "chinese kale",
+    "gai lan",
+    "gailan",
+    "kai lan",
+    "kailan"
+   ],
+   "parent": "asian-greens"
+  },
+  "chinese-herbs": {
+   "name": "Chinese herbs & soup packs",
+   "section": "international",
+   "aliases": [
+    "american ginseng",
+    "ginseng",
+    "ginseng root",
+    "herbal soup pack",
+    "soup pack"
+   ]
+  },
+  "chinese-hot-mustard": {
+   "name": "Chinese Hot Mustard",
+   "section": "pantry",
+   "aliases": []
+  },
+  "chips": {
+   "name": "Chips",
+   "section": "snacks-drinks",
+   "aliases": [
+    "cheese puffs",
+    "corn snack",
+    "crisps",
+    "harvest snaps",
+    "lays",
+    "lobster flavor chip",
+    "potato twist",
+    "puffs",
+    "rice crust chips",
+    "shrimp chips",
+    "snacks party size",
+    "snaps"
+   ],
+   "product": true
+  },
+  "chocolate": {
+   "name": "Chocolate",
+   "section": "snacks-drinks",
+   "aliases": [
+    "choco",
+    "chocolate bar",
+    "chocolate bars",
+    "fudge bar",
+    "kit kat",
+    "kitkat",
+    "mini bar",
+    "truffle bar"
+   ]
+  },
+  "chocolate-chips": {
+   "name": "Chocolate chips",
+   "section": "pantry",
+   "aliases": [
+    "baking chips",
+    "chocolate chip"
+   ]
+  },
+  "cholula-hot-sauce": {
+   "name": "Cholula Hot Sauce",
+   "section": "spices",
+   "aliases": [],
+   "parent": "chili-sauce"
+  },
+  "chu-hou-paste": {
+   "name": "Chu Hou Paste",
+   "section": "international",
+   "aliases": []
+  },
+  "cinnamon-sticks": {
+   "name": "Cinnamon Sticks",
+   "section": "spices",
+   "aliases": [
+    "cinnamon stick"
+   ]
+  },
+  "clams": {
+   "name": "Clams",
+   "section": "seafood",
+   "aliases": [
+    "almejas",
+    "clam",
+    "halaan"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "parent": "shellfish"
+  },
+  "cloves": {
+   "name": "Cloves",
+   "section": "spices",
+   "aliases": [
+    "ground cloves",
+    "whole cloves"
+   ]
+  },
+  "cocoa-powder": {
+   "name": "Cocoa Powder",
+   "section": "pantry",
+   "aliases": [
+    "cacao powder",
+    "unsweetened cocoa"
+   ]
+  },
+  "coconut": {
+   "name": "Young coconut",
+   "section": "produce",
+   "aliases": [
+    "coconut",
+    "young coco",
+    "young coconut"
+   ],
+   "deals": {
+    "staple": false
+   }
+  },
+  "coconut-milk": {
+   "name": "Coconut Milk",
+   "section": "pantry",
+   "aliases": [
+    "coco milk",
+    "coconut cream",
+    "unsweetened coconut milk"
+   ]
+  },
+  "coconut-oil": {
+   "name": "Coconut Oil",
+   "section": "pantry",
+   "aliases": [],
+   "parent": "cooking-oil"
+  },
+  "cod": {
+   "name": "Cod",
+   "section": "seafood",
+   "aliases": [
+    "bacalao",
+    "cod"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "popularity": "everyday",
+   "parent": "fish"
+  },
+  "coffee": {
+   "name": "Coffee",
+   "section": "snacks-drinks",
+   "aliases": [
+    "cafe bustelo",
+    "ground coffee",
+    "whole bean coffee"
+   ],
+   "deals": {
+    "staple": false,
+    "benchmark": "coffee-ground"
+   },
+   "popularity": "everyday",
+   "parent": "drinks"
+  },
+  "coffee-drinks": {
+   "name": "Coffee drinks",
+   "section": "snacks-drinks",
+   "aliases": [
+    "canned coffee",
+    "coffee series",
+    "cold brew",
+    "cold brew coffee",
+    "cold brew concentrate",
+    "nitro cold brew"
+   ],
+   "parent": "coffee",
+   "product": true
+  },
+  "collard-greens": {
+   "name": "Collard greens",
+   "section": "produce",
+   "aliases": [
+    "collards",
+    "collard green"
+   ],
+   "parent": "leafy-greens"
+  },
+  "condensed-milk": {
+   "name": "Condensed milk",
+   "section": "pantry",
+   "aliases": [
+    "sweetened condensed milk"
+   ]
+  },
+  "cooked-beans": {
+   "name": "Cooked Beans",
+   "section": "pantry",
+   "aliases": [
+    "canned beans",
+    "ready to eat beans"
+   ]
+  },
+  "cookies": {
+   "name": "Cookies",
+   "section": "snacks-drinks",
+   "aliases": [
+    "choco pie",
+    "cookie",
+    "digestive biscuits",
+    "heim",
+    "oreo",
+    "phoenix egg roll",
+    "pocky",
+    "shortbread",
+    "wafer",
+    "wafers"
+   ],
+   "product": true
+  },
+  "cooking-oil": {
+   "name": "Cooking oil",
+   "section": "pantry",
+   "aliases": [
+    "canola oil",
+    "soybean oil",
+    "vegetable oil"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "popularity": "everyday"
+  },
+  "cooking-spray": {
+   "name": "Cooking Spray",
+   "section": "pantry",
+   "aliases": []
+  },
+  "coriander-seed": {
+   "name": "Coriander Seed",
+   "section": "spices",
+   "aliases": [
+    "coriander powder",
+    "coriander seeds",
+    "dhania powder",
+    "ground coriander"
+   ]
+  },
+  "corn": {
+   "name": "Corn",
+   "section": "produce",
+   "aliases": [
+    "corn on the cob",
+    "elote",
+    "elotes",
+    "local corn",
+    "sweet corn",
+    "sweetcorn",
+    "waxy corn"
+   ]
+  },
+  "corn-tortillas": {
+   "name": "Corn tortillas",
+   "section": "bakery",
+   "aliases": [
+    "corn tortilla"
+   ],
+   "parent": "tortillas"
+  },
+  "corned-beef": {
+   "name": "Corned beef",
+   "section": "pantry",
+   "aliases": []
+  },
+  "cornstarch": {
+   "name": "Cornstarch",
+   "section": "pantry",
+   "aliases": [
+    "corn starch",
+    "cornflour"
+   ]
+  },
+  "cottage-cheese": {
+   "name": "Cottage cheese",
+   "section": "dairy-eggs",
+   "aliases": [],
+   "parent": "cheese"
+  },
+  "couscous": {
+   "name": "Couscous",
+   "section": "pantry",
+   "aliases": []
+  },
+  "crab": {
+   "name": "Crab",
+   "section": "seafood",
+   "aliases": [
+    "alimango",
+    "cangrejo",
+    "dungeness",
+    "dungeness crab",
+    "mud crab"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "parent": "shellfish"
+  },
+  "crackers": {
+   "name": "Crackers",
+   "section": "snacks-drinks",
+   "aliases": [
+    "cheez it",
+    "cracker",
+    "pita chips",
+    "saltines",
+    "skyflakes",
+    "snack variety pack"
+   ],
+   "product": true
+  },
+  "crawfish": {
+   "name": "Crawfish",
+   "section": "seafood",
+   "aliases": [
+    "crayfish",
+    "crawdads"
+   ],
+   "popularity": "specialty",
+   "parent": "shellfish"
+  },
+  "cream-cheese": {
+   "name": "Cream cheese",
+   "section": "dairy-eggs",
+   "aliases": [],
+   "parent": "cheese"
+  },
+  "cream-of-tartar": {
+   "name": "Cream of Tartar",
+   "section": "pantry",
+   "aliases": []
+  },
+  "creamer": {
+   "name": "Coffee creamer",
+   "section": "dairy-eggs",
+   "aliases": [
+    "coffee creamer",
+    "creamer",
+    "liquid creamer"
+   ],
+   "product": true
+  },
+  "creme-fra-che": {
+   "name": "Crème Fraîche",
+   "section": "dairy-eggs",
+   "aliases": []
+  },
+  "crisp-preserved-mustard-stem": {
+   "name": "Crisp Preserved Mustard Stem",
+   "section": "international",
+   "aliases": [],
+   "parent": "preserved-vegetables"
+  },
+  "croaker": {
+   "name": "Croaker",
+   "section": "seafood",
+   "aliases": [
+    "yellow croaker"
+   ],
+   "parent": "fish"
+  },
+  "crushed-red-pepper-flakes": {
+   "name": "Crushed Red Pepper Flakes",
+   "section": "spices",
+   "aliases": [
+    "chili flakes",
+    "crushed chili",
+    "red pepper flakes"
+   ]
+  },
+  "cucumbers": {
+   "name": "Cucumbers",
+   "section": "produce",
+   "aliases": [
+    "cucumber"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "popularity": "everyday"
+  },
+  "cumin": {
+   "name": "Cumin",
+   "section": "spices",
+   "aliases": [
+    "cumin seed",
+    "cumin seeds",
+    "ground cumin",
+    "jeera"
+   ]
+  },
+  "curry-leaves": {
+   "name": "Curry leaves",
+   "section": "produce",
+   "aliases": [
+    "curry leaf",
+    "kadi patta"
+   ],
+   "popularity": "specialty"
+  },
+  "curry-powder": {
+   "name": "Curry Powder",
+   "section": "spices",
+   "aliases": [
+    "madras curry powder"
+   ]
+  },
+  "curry-roux": {
+   "name": "Curry roux",
+   "section": "pantry",
+   "aliases": [
+    "golden curry",
+    "java curry",
+    "vermont curry"
+   ],
+   "deals": {
+    "staple": false
+   }
+  },
+  "cut-dashi-kombu": {
+   "name": "Cut Dashi Kombu",
+   "section": "international",
+   "aliases": [
+    "dried kelp",
+    "kombu"
+   ]
+  },
+  "cut-wakame": {
+   "name": "Cut Wakame",
+   "section": "international",
+   "aliases": [
+    "dried wakame",
+    "wakame"
+   ]
+  },
+  "cuttlefish": {
+   "name": "Cuttlefish",
+   "section": "seafood",
+   "aliases": [
+    "cuttle fish"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "popularity": "specialty",
+   "parent": "seafood"
+  },
+  "daikon": {
+   "name": "Daikon",
+   "section": "produce",
+   "aliases": [
+    "chinese radish",
+    "daikon radish",
+    "korean radish",
+    "lo bok",
+    "lobak",
+    "mooli",
+    "white radish"
+   ],
+   "deals": {
+    "staple": true
+   }
+  },
+  "dark-soy-sauce": {
+   "name": "Dark Soy Sauce",
+   "section": "international",
+   "aliases": [
+    "dark soy",
+    "kecap manis",
+    "sweet soy sauce"
+   ],
+   "parent": "soy-sauce"
+  },
+  "dashi-packs": {
+   "name": "Dashi Packs",
+   "section": "international",
+   "aliases": [
+    "dashi",
+    "dashi packet",
+    "katsuo fushi no dashi"
+   ]
+  },
+  "dashiiri-awase-miso": {
+   "name": "Dashiiri Awase Miso",
+   "section": "international",
+   "aliases": [
+    "awase miso"
+   ],
+   "parent": "miso"
+  },
+  "dates": {
+   "name": "Dates",
+   "section": "produce",
+   "aliases": [
+    "medjool",
+    "medjool dates",
+    "deglet noor"
+   ],
+   "parent": "dried-fruit"
+  },
+  "deli-salads": {
+   "name": "Deli salads",
+   "section": "prepared",
+   "aliases": [
+    "apple cranberry salad",
+    "pasta salad",
+    "potato salad",
+    "waldorf salad",
+    "wild rice salad"
+   ],
+   "product": true
+  },
+  "delicata-squash": {
+   "name": "Delicata squash",
+   "section": "produce",
+   "aliases": [
+    "delicata"
+   ],
+   "parent": "squash-winter"
+  },
+  "dijon-mustard": {
+   "name": "Dijon Mustard",
+   "section": "pantry",
+   "aliases": [
+    "dijon"
+   ]
+  },
+  "dim-sum": {
+   "name": "Dim sum",
+   "section": "frozen",
+   "aliases": [
+    "bean curd roll",
+    "har gow",
+    "radish cake",
+    "ring roll",
+    "shumai",
+    "siu mai",
+    "taro cake",
+    "turnip cake"
+   ],
+   "product": true
+  },
+  "doenjang": {
+   "name": "Doenjang",
+   "section": "international",
+   "aliases": [
+    "soy bean paste",
+    "soybean paste"
+   ]
+  },
+  "donuts": {
+   "name": "Donuts",
+   "section": "bakery",
+   "aliases": [
+    "donettes",
+    "donut",
+    "doughnut",
+    "doughnuts"
+   ],
+   "product": true
+  },
+  "doubanjiang": {
+   "name": "Doubanjiang",
+   "section": "international",
+   "aliases": [
+    "broad bean chili paste",
+    "chili bean paste",
+    "pixian doubanjiang",
+    "spicy bean paste",
+    "toban djan"
+   ]
+  },
+  "dragon-fruit": {
+   "name": "Dragon fruit",
+   "section": "produce",
+   "aliases": [
+    "dragonfruit",
+    "pitahaya",
+    "pitaya"
+   ]
+  },
+  "dried-bean-curd-sticks": {
+   "name": "Dried Bean Curd Sticks",
+   "section": "international",
+   "aliases": [
+    "bean curd skin",
+    "dried tofu skin",
+    "foo jook",
+    "fu zhu",
+    "yuba"
+   ]
+  },
+  "dried-chickpeas": {
+   "name": "Dried Chickpeas",
+   "section": "pantry",
+   "aliases": []
+  },
+  "dried-cranberries": {
+   "name": "Dried Cranberries",
+   "section": "pantry",
+   "aliases": [],
+   "parent": "dried-fruit"
+  },
+  "dried-dark-chiles": {
+   "name": "Dried Dark Chiles",
+   "section": "spices",
+   "aliases": [
+    "ancho chiles",
+    "chile ancho",
+    "chile guajillo",
+    "chile pasilla",
+    "guajillo"
+   ]
+  },
+  "dried-fruit": {
+   "name": "Dried fruit",
+   "section": "pantry",
+   "aliases": [
+    "dried apricots",
+    "dried fruits",
+    "dried longan",
+    "dried mango"
+   ]
+  },
+  "dried-lily-flowers": {
+   "name": "Dried Lily Flowers",
+   "section": "international",
+   "aliases": [],
+   "popularity": "specialty"
+  },
+  "dried-morel-mushrooms": {
+   "name": "Dried Morel Mushrooms",
+   "section": "international",
+   "aliases": [],
+   "popularity": "specialty",
+   "parent": "dried-mushrooms"
+  },
+  "dried-mushrooms": {
+   "name": "Dried mushrooms",
+   "section": "international",
+   "aliases": [
+    "dried brown mushroom",
+    "dried mushroom"
+   ]
+  },
+  "dried-oregano": {
+   "name": "Dried Oregano",
+   "section": "spices",
+   "aliases": [
+    "oregano"
+   ]
+  },
+  "dried-pasta": {
+   "name": "Dried Pasta",
+   "section": "pantry",
+   "aliases": [
+    "angel hair",
+    "bow tie pasta",
+    "bucatini",
+    "elbow macaroni",
+    "farfalle",
+    "fettuccine",
+    "fusilli",
+    "lasagna noodles",
+    "linguine",
+    "macaroni",
+    "orecchiette",
+    "pasta",
+    "penne",
+    "rigatoni",
+    "rotini",
+    "spaghetti",
+    "tagliatelle",
+    "ziti"
+   ],
+   "popularity": "everyday"
+  },
+  "dried-red-dates": {
+   "name": "Dried Red Dates",
+   "section": "international",
+   "aliases": [
+    "jujube",
+    "red jujube"
+   ]
+  },
+  "dried-shiitake": {
+   "name": "Dried Shiitake",
+   "section": "international",
+   "aliases": [
+    "chinese black mushrooms",
+    "dried black mushrooms",
+    "dried shiitake mushrooms",
+    "shiitake mushrooms, dried"
+   ],
+   "parent": "dried-mushrooms"
+  },
+  "dried-shrimp": {
+   "name": "Dried Shrimp",
+   "section": "international",
+   "aliases": []
+  },
+  "dried-soybeans": {
+   "name": "Dried Soybeans",
+   "section": "pantry",
+   "aliases": []
+  },
+  "dried-thyme": {
+   "name": "Dried Thyme",
+   "section": "spices",
+   "aliases": [
+    "thyme"
+   ]
+  },
+  "dried-whole-chilies": {
+   "name": "Dried Whole Chilies",
+   "section": "spices",
+   "aliases": [
+    "arbol chiles",
+    "chile de arbol",
+    "dried chili peppers",
+    "dried chilies",
+    "dried red chilies",
+    "facing heaven chilies"
+   ]
+  },
+  "drink-mixes": {
+   "name": "Drink mixes",
+   "section": "pantry",
+   "aliases": [
+    "almond powder",
+    "black sesame powder",
+    "cereal drink",
+    "drink mix",
+    "honey crystals",
+    "honey powder",
+    "job tears powder",
+    "milk tea powder",
+    "no sugar powder",
+    "sesame powder"
+   ],
+   "product": true
+  },
+  "drinks": {
+   "name": "Other drinks",
+   "section": "snacks-drinks",
+   "aliases": [
+    "beverage",
+    "beverages",
+    "bird nest drink",
+    "swallow nest drink"
+   ],
+   "product": true
+  },
+  "dry-red-wine": {
+   "name": "Dry Red Wine",
+   "section": "pantry",
+   "aliases": [
+    "red wine"
+   ]
+  },
+  "dry-white-wine": {
+   "name": "Dry White Wine",
+   "section": "pantry",
+   "aliases": [
+    "white wine"
+   ]
+  },
+  "duck": {
+   "name": "Duck",
+   "section": "meat",
+   "aliases": [
+    "duck head on feet on",
+    "whole duck"
+   ]
+  },
+  "dumplings": {
+   "name": "Dumplings",
+   "section": "frozen",
+   "aliases": [
+    "dumpling",
+    "jiaozi",
+    "mandu",
+    "oyaki",
+    "soup dumplings",
+    "wonton",
+    "wontons",
+    "xiao long bao",
+    "xiaolongbao"
+   ]
+  },
+  "durian": {
+   "name": "Durian",
+   "section": "produce",
+   "aliases": [
+    "durian pulp",
+    "musang king",
+    "whole durian"
+   ]
+  },
+  "edamame": {
+   "name": "Edamame",
+   "section": "frozen",
+   "aliases": [
+    "shelled edamame"
+   ]
+  },
+  "egg-pappardelle": {
+   "name": "Egg Pappardelle",
+   "section": "pantry",
+   "aliases": []
+  },
+  "eggplant": {
+   "name": "Eggplant",
+   "section": "produce",
+   "aliases": [
+    "aubergine",
+    "brinjal",
+    "chinese eggplant",
+    "eggplant chinese",
+    "japanese eggplant"
+   ]
+  },
+  "eggs": {
+   "name": "Eggs",
+   "section": "dairy-eggs",
+   "aliases": [
+    "egg",
+    "egg whites",
+    "egg yolks",
+    "huevos",
+    "large egg",
+    "large eggs",
+    "liquid egg whites"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "eggs"
+   },
+   "popularity": "everyday"
+  },
+  "enchilada-sauce": {
+   "name": "Enchilada sauce",
+   "section": "pantry",
+   "aliases": []
+  },
+  "energy-drinks": {
+   "name": "Energy drinks",
+   "section": "snacks-drinks",
+   "aliases": [
+    "energy",
+    "energy drink",
+    "red bull"
+   ],
+   "parent": "drinks",
+   "product": true
+  },
+  "english-muffins": {
+   "name": "English muffins",
+   "section": "bakery",
+   "aliases": [
+    "english muffin"
+   ],
+   "parent": "bread"
+  },
+  "enjuku-koji-miso": {
+   "name": "Enjuku Koji Miso",
+   "section": "international",
+   "aliases": [],
+   "parent": "miso"
+  },
+  "enoki": {
+   "name": "Enoki",
+   "section": "produce",
+   "aliases": [
+    "enoki mushrooms",
+    "enokitake"
+   ],
+   "parent": "mushrooms"
+  },
+  "farro": {
+   "name": "Farro",
+   "section": "pantry",
+   "aliases": []
+  },
+  "fennel": {
+   "name": "Fennel",
+   "section": "produce",
+   "aliases": [
+    "fennel bulb"
+   ]
+  },
+  "fennel-seed": {
+   "name": "Fennel Seed",
+   "section": "spices",
+   "aliases": [
+    "saunf"
+   ]
+  },
+  "feta": {
+   "name": "Feta",
+   "section": "dairy-eggs",
+   "aliases": [
+    "feta cheese"
+   ],
+   "parent": "cheese"
+  },
+  "fig-balsamic-vinegar": {
+   "name": "Fig Balsamic Vinegar",
+   "section": "pantry",
+   "aliases": []
+  },
+  "fine-sea-salt": {
+   "name": "Fine Sea Salt",
+   "section": "pantry",
+   "aliases": [
+    "fine salt",
+    "sea salt",
+    "table salt"
+   ]
+  },
+  "fish": {
+   "name": "Fish",
+   "section": "seafood",
+   "aliases": [
+    "whole fish",
+    "fresh fish"
+   ],
+   "parent": "seafood"
+  },
+  "fish-cakes": {
+   "name": "Fish cakes & fish balls",
+   "section": "seafood",
+   "aliases": [
+    "cha ca",
+    "eomuk",
+    "fish ball",
+    "fish balls",
+    "fish cake",
+    "fish paste",
+    "fish tofu",
+    "fishcake",
+    "kamaboko",
+    "kikiam",
+    "narutomaki",
+    "oden",
+    "oden set",
+    "odeng"
+   ],
+   "parent": "seafood"
+  },
+  "fish-sauce": {
+   "name": "Fish Sauce",
+   "section": "international",
+   "aliases": [
+    "nam pla",
+    "nuoc mam",
+    "patis"
+   ]
+  },
+  "five-spice-powder": {
+   "name": "Five-Spice Powder",
+   "section": "spices",
+   "aliases": [
+    "5 spice",
+    "5 spice powder",
+    "chinese five-spice",
+    "five spice"
+   ]
+  },
+  "flaky-finishing-salt": {
+   "name": "Flaky Finishing Salt",
+   "section": "pantry",
+   "aliases": []
+  },
+  "flavored-milk": {
+   "name": "Milk drinks",
+   "section": "dairy-eggs",
+   "aliases": [
+    "banana milk",
+    "chocolate milk",
+    "milk drink",
+    "strawberry milk"
+   ],
+   "product": true
+  },
+  "flounder": {
+   "name": "Flounder",
+   "section": "seafood",
+   "aliases": [],
+   "parent": "fish"
+  },
+  "flour-tortillas": {
+   "name": "Flour tortillas",
+   "section": "bakery",
+   "aliases": [
+    "flour tortilla"
+   ],
+   "parent": "tortillas"
+  },
+  "foie-gras": {
+   "name": "Foie Gras",
+   "section": "pantry",
+   "aliases": [],
+   "popularity": "specialty"
+  },
+  "four-fruits-preserves": {
+   "name": "Four Fruits Preserves",
+   "section": "pantry",
+   "aliases": [],
+   "parent": "jam"
+  },
+  "fresh-herbs": {
+   "name": "Fresh Herbs",
+   "section": "produce",
+   "aliases": [
+    "basil",
+    "chinese parsley",
+    "chives",
+    "cilantro",
+    "coriander leaves",
+    "dill",
+    "flat-leaf parsley",
+    "fresh coriander",
+    "italian parsley",
+    "mint",
+    "parsley",
+    "rau ram",
+    "vietnamese coriander"
+   ]
+  },
+  "fresh-noodles": {
+   "name": "Fresh noodles",
+   "section": "pantry",
+   "aliases": [
+    "chow mein",
+    "chow mein noodle",
+    "egg noodles",
+    "fresh noodle",
+    "lo mein",
+    "shanghai noodle",
+    "yellow noodle"
+   ],
+   "parent": "noodles"
+  },
+  "fried-tofu": {
+   "name": "Fried tofu (aburaage)",
+   "section": "produce",
+   "aliases": [
+    "aburaage",
+    "fried tofu",
+    "inari",
+    "tofu puffs"
+   ],
+   "deals": {
+    "staple": false
+   },
+   "parent": "tofu"
+  },
+  "frozen-appetizers": {
+   "name": "Frozen appetizers",
+   "section": "frozen",
+   "aliases": [
+    "cheese balls",
+    "mini tacos",
+    "mozzarella sticks",
+    "taquitos"
+   ],
+   "product": true
+  },
+  "frozen-burritos": {
+   "name": "Frozen burritos",
+   "section": "frozen",
+   "aliases": [
+    "burrito",
+    "burritos"
+   ],
+   "product": true
+  },
+  "frozen-fruit": {
+   "name": "Frozen fruit",
+   "section": "frozen",
+   "aliases": [
+    "frozen fruits"
+   ]
+  },
+  "frozen-meals": {
+   "name": "Frozen meals",
+   "section": "frozen",
+   "aliases": [
+    "bbq chicken",
+    "breakfast bowl",
+    "family size meals",
+    "frozen meal",
+    "hot pockets",
+    "jjajang",
+    "jjamppong",
+    "kimbap",
+    "korean stew",
+    "pot pie",
+    "shepherd's pie",
+    "wonton soup"
+   ],
+   "product": true
+  },
+  "frozen-pizza": {
+   "name": "Frozen pizza",
+   "section": "frozen",
+   "aliases": [
+    "pizza",
+    "stuffed crust pizza",
+    "thin crust pizza"
+   ],
+   "product": true
+  },
+  "frozen-vegetables": {
+   "name": "Frozen vegetables",
+   "section": "frozen",
+   "aliases": [
+    "frozen vegetable",
+    "frozen veggies"
+   ]
+  },
+  "frozen-waffles": {
+   "name": "Frozen waffles & pancakes",
+   "section": "frozen",
+   "aliases": [
+    "eggo",
+    "frozen pancakes",
+    "frozen waffles",
+    "pancakes",
+    "waffles"
+   ],
+   "product": true
+  },
+  "fruit-snacks": {
+   "name": "Fruit snacks",
+   "section": "snacks-drinks",
+   "aliases": [
+    "fruit bars",
+    "fruit jerkies",
+    "fruit jerky",
+    "fruit leather",
+    "fruit snack",
+    "fruit whips"
+   ],
+   "product": true
+  },
+  "frying-peppers": {
+   "name": "Frying Peppers",
+   "section": "produce",
+   "aliases": []
+  },
+  "fukujinzuke": {
+   "name": "Fukujinzuke",
+   "section": "international",
+   "aliases": []
+  },
+  "furikake-assortment": {
+   "name": "Furikake Assortment",
+   "section": "international",
+   "aliases": [
+    "furikake"
+   ]
+  },
+  "fuzzy-melon": {
+   "name": "Fuzzy melon (muqua)",
+   "section": "produce",
+   "aliases": [
+    "fuzzy melon",
+    "hairy gourd",
+    "hairy melon",
+    "muqua"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "popularity": "specialty"
+  },
+  "galangal": {
+   "name": "Galangal",
+   "section": "produce",
+   "aliases": [
+    "galanga",
+    "blue ginger",
+    "lengkuas"
+   ],
+   "popularity": "specialty"
+  },
+  "galunggong": {
+   "name": "Galunggong (mackerel scad)",
+   "section": "seafood",
+   "aliases": [
+    "galunggong"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "popularity": "specialty",
+   "parent": "fish"
+  },
+  "garam-masala": {
+   "name": "Garam Masala",
+   "section": "spices",
+   "aliases": []
+  },
+  "garlic": {
+   "name": "Garlic",
+   "section": "produce",
+   "aliases": [
+    "ajo",
+    "bawang",
+    "cloves garlic",
+    "garlic cloves"
+   ],
+   "popularity": "everyday"
+  },
+  "garlic-powder": {
+   "name": "Garlic Powder",
+   "section": "spices",
+   "aliases": [
+    "granulated garlic"
+   ]
+  },
+  "garlic-scapes": {
+   "name": "Garlic scapes",
+   "section": "produce",
+   "aliases": [
+    "garlic scape",
+    "garlic shoots",
+    "garlic stem",
+    "garlic stems"
+   ]
+  },
+  "gelatin": {
+   "name": "Gelatin",
+   "section": "pantry",
+   "aliases": [
+    "powdered gelatin"
+   ]
+  },
+  "geoduck": {
+   "name": "Geoduck",
+   "section": "seafood",
+   "aliases": [
+    "gooey duck",
+    "mirugai"
+   ],
+   "deals": {
+    "staple": false
+   },
+   "popularity": "specialty",
+   "parent": "shellfish"
+  },
+  "ghee": {
+   "name": "Ghee",
+   "section": "pantry",
+   "aliases": []
+  },
+  "ginger": {
+   "name": "Ginger",
+   "section": "produce",
+   "aliases": [
+    "adrak",
+    "fresh ginger",
+    "ginger root",
+    "gingerroot",
+    "luya"
+   ],
+   "popularity": "everyday"
+  },
+  "glutinous-rice": {
+   "name": "Glutinous Rice",
+   "section": "pantry",
+   "aliases": [
+    "malagkit",
+    "mochi rice",
+    "mochigome",
+    "sticky rice",
+    "sweet rice"
+   ],
+   "parent": "rice"
+  },
+  "glutinous-rice-flour": {
+   "name": "Glutinous Rice Flour",
+   "section": "pantry",
+   "aliases": []
+  },
+  "goat": {
+   "name": "Goat meat",
+   "section": "meat",
+   "aliases": [
+    "goat meat",
+    "goat shoulder"
+   ],
+   "deals": {
+    "staple": false
+   },
+   "popularity": "specialty"
+  },
+  "gochugaru": {
+   "name": "Gochugaru",
+   "section": "spices",
+   "aliases": [
+    "korean chili flakes",
+    "korean chili powder",
+    "korean red pepper flakes",
+    "korean red pepper powder"
+   ]
+  },
+  "gochujang": {
+   "name": "Gochujang",
+   "section": "international",
+   "aliases": [
+    "korean chili paste",
+    "korean red pepper paste"
+   ]
+  },
+  "goji": {
+   "name": "Goji berries",
+   "section": "international",
+   "aliases": [
+    "fructus lycii",
+    "goji",
+    "goji berry",
+    "wolfberry"
+   ]
+  },
+  "golden-flaxseed-meal": {
+   "name": "Golden Flaxseed Meal",
+   "section": "pantry",
+   "aliases": []
+  },
+  "golden-raisins": {
+   "name": "Golden Raisins",
+   "section": "pantry",
+   "aliases": [],
+   "parent": "dried-fruit"
+  },
+  "granola": {
+   "name": "Granola",
+   "section": "pantry",
+   "aliases": [],
+   "parent": "cereal",
+   "product": true
+  },
+  "grapefruit": {
+   "name": "Grapefruit",
+   "section": "produce",
+   "aliases": [
+    "grapefruits",
+    "ruby red grapefruit"
+   ]
+  },
+  "grapes": {
+   "name": "Grapes",
+   "section": "produce",
+   "aliases": [
+    "grape",
+    "green grapes",
+    "red grapes",
+    "seedless grapes",
+    "table grapes"
+   ]
+  },
+  "gravy": {
+   "name": "Gravy",
+   "section": "pantry",
+   "aliases": []
+  },
+  "green-beans": {
+   "name": "Green Beans",
+   "section": "produce",
+   "aliases": [
+    "french beans",
+    "haricots verts",
+    "snap beans",
+    "string beans"
+   ]
+  },
+  "green-cabbage": {
+   "name": "Green Cabbage",
+   "section": "produce",
+   "aliases": [
+    "cabbage green",
+    "coleslaw mix",
+    "shredded cabbage"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "also": [
+    "cabbage-green"
+   ],
+   "popularity": "everyday",
+   "parent": "cabbage"
+  },
+  "green-curry-paste": {
+   "name": "Green Curry Paste",
+   "section": "international",
+   "aliases": []
+  },
+  "green-jalapeno-hot-sauce": {
+   "name": "Green Jalapeno Hot Sauce",
+   "section": "spices",
+   "aliases": [],
+   "parent": "chili-sauce"
+  },
+  "green-onion": {
+   "name": "Green Onion",
+   "section": "produce",
+   "aliases": [
+    "green onions",
+    "negi",
+    "salad onions",
+    "scallion",
+    "scallions",
+    "spring onion",
+    "spring onions"
+   ],
+   "popularity": "everyday"
+  },
+  "ground-cinnamon": {
+   "name": "Ground Cinnamon",
+   "section": "spices",
+   "aliases": [
+    "cinnamon"
+   ]
+  },
+  "ground-ginger": {
+   "name": "Ground Ginger",
+   "section": "spices",
+   "aliases": [
+    "dried ginger",
+    "ginger powder"
+   ]
+  },
+  "ground-pork": {
+   "name": "Ground Pork",
+   "section": "meat",
+   "aliases": [
+    "minced pork",
+    "pork mince"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "pork-other"
+   },
+   "also": [
+    "pork-ground"
+   ],
+   "popularity": "everyday",
+   "parent": "pork"
+  },
+  "grouper": {
+   "name": "Grouper",
+   "section": "seafood",
+   "aliases": [
+    "lapu lapu",
+    "lapu-lapu"
+   ],
+   "parent": "fish"
+  },
+  "guacamole": {
+   "name": "Guacamole",
+   "section": "prepared",
+   "aliases": []
+  },
+  "guava": {
+   "name": "Guava",
+   "section": "produce",
+   "aliases": [
+    "guavas",
+    "guayaba"
+   ]
+  },
+  "haiga-rice": {
+   "name": "Haiga Rice",
+   "section": "pantry",
+   "aliases": [],
+   "parent": "rice"
+  },
+  "half-and-half": {
+   "name": "Half and half",
+   "section": "dairy-eggs",
+   "aliases": [
+    "half & half",
+    "half n half"
+   ]
+  },
+  "halibut": {
+   "name": "Halibut",
+   "section": "seafood",
+   "aliases": [],
+   "parent": "fish"
+  },
+  "ham": {
+   "name": "Ham",
+   "section": "meat",
+   "aliases": [
+    "gammon",
+    "prosciutto"
+   ],
+   "deals": {
+    "staple": false,
+    "benchmark": "ham"
+   }
+  },
+  "hami-melon": {
+   "name": "Hami Melon",
+   "section": "produce",
+   "aliases": [],
+   "parent": "melon"
+  },
+  "harissa": {
+   "name": "Harissa",
+   "section": "spices",
+   "aliases": []
+  },
+  "hash-browns": {
+   "name": "Hash browns",
+   "section": "frozen",
+   "aliases": [
+    "hash brown",
+    "tater tots"
+   ]
+  },
+  "heavy-whipping-cream": {
+   "name": "Heavy Whipping Cream",
+   "section": "dairy-eggs",
+   "aliases": [
+    "double cream",
+    "heavy cream",
+    "thickened cream",
+    "whipping cream"
+   ]
+  },
+  "heirloom-tomatoes": {
+   "name": "Heirloom Tomatoes",
+   "section": "produce",
+   "aliases": [],
+   "parent": "tomatoes"
+  },
+  "herbes-de-provence": {
+   "name": "Herbes de Provence",
+   "section": "spices",
+   "aliases": []
+  },
+  "hijiki": {
+   "name": "Hijiki",
+   "section": "international",
+   "aliases": []
+  },
+  "hoisin-sauce": {
+   "name": "Hoisin Sauce",
+   "section": "international",
+   "aliases": [
+    "hoisin"
+   ]
+  },
+  "hondashi": {
+   "name": "Hondashi",
+   "section": "international",
+   "aliases": [
+    "dashi powder",
+    "instant dashi"
+   ]
+  },
+  "honey": {
+   "name": "Honey",
+   "section": "pantry",
+   "aliases": []
+  },
+  "honeydew": {
+   "name": "Honeydew",
+   "section": "produce",
+   "aliases": [
+    "honeydew melon",
+    "honey dew"
+   ],
+   "parent": "melon"
+  },
+  "hot-dogs": {
+   "name": "Hot dogs",
+   "section": "meat",
+   "aliases": [
+    "frankfurter",
+    "franks",
+    "hot dog",
+    "hotdog",
+    "hotdogs",
+    "wieners"
+   ],
+   "parent": "sausage"
+  },
+  "hot-honey": {
+   "name": "Hot Honey",
+   "section": "pantry",
+   "aliases": []
+  },
+  "hot-pot-base": {
+   "name": "Hot pot base",
+   "section": "international",
+   "aliases": [
+    "hot pot base",
+    "hot pot soup base",
+    "hotpot base"
+   ]
+  },
+  "hummus": {
+   "name": "Hummus",
+   "section": "prepared",
+   "aliases": [
+    "hommus"
+   ]
+  },
+  "ice-cream": {
+   "name": "Ice cream",
+   "section": "frozen",
+   "aliases": [
+    "gelato",
+    "i cream",
+    "ice bar",
+    "ice cream",
+    "ice cream bar",
+    "ice pop",
+    "mochi ice cream",
+    "novelties",
+    "sorbet",
+    "sorbetto"
+   ],
+   "product": true
+  },
+  "ichioshi-kombu": {
+   "name": "Ichioshi Kombu",
+   "section": "international",
+   "aliases": []
+  },
+  "instant-coffee": {
+   "name": "Instant coffee",
+   "section": "snacks-drinks",
+   "aliases": [
+    "3 in 1",
+    "3in1",
+    "coffee mix",
+    "instant coffee mix",
+    "nescafe"
+   ],
+   "parent": "coffee"
+  },
+  "instant-noodles": {
+   "name": "Instant noodles",
+   "section": "pantry",
+   "aliases": [
+    "boat noodle",
+    "chapagetti",
+    "cup noodle",
+    "cup noodles",
+    "cup ramyun",
+    "fried noodle",
+    "indomie",
+    "instant noodle",
+    "mi goreng",
+    "noodle bowl",
+    "noodle soup",
+    "pancit canton",
+    "ramen bowl",
+    "ramyun",
+    "snapdragon ramen"
+   ],
+   "parent": "noodles",
+   "product": true
+  },
+  "italian-sausage": {
+   "name": "Italian sausage",
+   "section": "meat",
+   "aliases": [
+    "hot italian sausage",
+    "mild italian sausage"
+   ],
+   "parent": "sausage"
+  },
+  "italian-seasoning": {
+   "name": "Italian Seasoning",
+   "section": "spices",
+   "aliases": []
+  },
+  "jackfish": {
+   "name": "Jackfish",
+   "section": "seafood",
+   "aliases": [
+    "jack fish",
+    "talakitok",
+    "trevally"
+   ],
+   "parent": "fish"
+  },
+  "jackfruit": {
+   "name": "Jackfruit",
+   "section": "produce",
+   "aliases": [
+    "jackfruit meat"
+   ]
+  },
+  "jalapenos": {
+   "name": "Jalapeño peppers",
+   "section": "produce",
+   "aliases": [
+    "jalapeno",
+    "jalapenos",
+    "jalapeño",
+    "jalapeños",
+    "jalapeno peppers"
+   ]
+  },
+  "jam": {
+   "name": "Jam",
+   "section": "pantry",
+   "aliases": [
+    "fruit spread",
+    "jelly",
+    "marmalade",
+    "preserves",
+    "ube halaya",
+    "ube jam"
+   ]
+  },
+  "jasmine-rice": {
+   "name": "Jasmine Rice",
+   "section": "pantry",
+   "aliases": [
+    "hom mali",
+    "rice, jasmine",
+    "thai jasmine rice"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "rice-white"
+   },
+   "also": [
+    "rice-jasmine"
+   ],
+   "popularity": "everyday",
+   "parent": "rice-long-grain"
+  },
+  "jerky": {
+   "name": "Jerky",
+   "section": "snacks-drinks",
+   "aliases": [
+    "beef jerky"
+   ],
+   "product": true
+  },
+  "jicama": {
+   "name": "Jicama",
+   "section": "produce",
+   "aliases": [
+    "yam bean",
+    "singkamas"
+   ]
+  },
+  "juice": {
+   "name": "Juice",
+   "section": "snacks-drinks",
+   "aliases": [
+    "aloe drink",
+    "aloe drinks",
+    "apple juice",
+    "banana water",
+    "fruit juice",
+    "juice blend",
+    "juices",
+    "orange juice"
+   ],
+   "parent": "drinks"
+  },
+  "kabocha-squash": {
+   "name": "Kabocha squash",
+   "section": "produce",
+   "aliases": [
+    "kabocha"
+   ],
+   "parent": "squash-winter"
+  },
+  "kale": {
+   "name": "Kale",
+   "section": "produce",
+   "aliases": [
+    "curly kale",
+    "green kale"
+   ],
+   "parent": "leafy-greens"
+  },
+  "kashmiri-chili-powder": {
+   "name": "Kashmiri Chili Powder",
+   "section": "spices",
+   "aliases": [
+    "deggi mirch"
+   ]
+  },
+  "kasuri-methi": {
+   "name": "Kasuri Methi",
+   "section": "spices",
+   "aliases": [
+    "kasoori methi"
+   ]
+  },
+  "katsuobushi": {
+   "name": "Katsuobushi",
+   "section": "international",
+   "aliases": [
+    "bonito flakes",
+    "dried bonito flakes"
+   ]
+  },
+  "ketchup": {
+   "name": "Ketchup",
+   "section": "pantry",
+   "aliases": [
+    "catsup"
+   ]
+  },
+  "kimchi": {
+   "name": "Kimchi",
+   "section": "dairy-eggs",
+   "aliases": [
+    "kimchi sliced napa cabbage",
+    "napa cabbage kimchi"
+   ]
+  },
+  "king-oyster-mushrooms": {
+   "name": "King Oyster Mushrooms",
+   "section": "produce",
+   "aliases": [
+    "eryngii",
+    "king oyster mushroom",
+    "king trumpet",
+    "king trumpet mushrooms"
+   ],
+   "parent": "mushrooms"
+  },
+  "kiwi": {
+   "name": "Kiwi",
+   "section": "produce",
+   "aliases": [
+    "gold kiwi",
+    "kiwi berries",
+    "kiwi berry",
+    "kiwi fruit",
+    "kiwifruit"
+   ]
+  },
+  "kizami-pickled-ginger": {
+   "name": "Kizami Pickled Ginger",
+   "section": "international",
+   "aliases": [
+    "beni shoga",
+    "red pickled ginger"
+   ]
+  },
+  "kohlrabi": {
+   "name": "Kohlrabi",
+   "section": "produce",
+   "aliases": []
+  },
+  "kombucha": {
+   "name": "Kombucha",
+   "section": "snacks-drinks",
+   "aliases": [
+    "kombuchas"
+   ],
+   "parent": "drinks",
+   "product": true
+  },
+  "korean-rice-syrup": {
+   "name": "Korean Rice Syrup",
+   "section": "pantry",
+   "aliases": [
+    "jocheong"
+   ]
+  },
+  "kosher-salt": {
+   "name": "Kosher Salt",
+   "section": "pantry",
+   "aliases": [
+    "coarse salt",
+    "diamond crystal kosher salt"
+   ]
+  },
+  "lacinato-kale": {
+   "name": "Lacinato Kale",
+   "section": "produce",
+   "aliases": [
+    "black kale",
+    "cavolo nero",
+    "dinosaur kale",
+    "tuscan kale"
+   ],
+   "parent": "kale"
+  },
+  "lamb": {
+   "name": "Lamb",
+   "section": "meat",
+   "aliases": [
+    "lamb chops",
+    "lamb shoulder",
+    "leg of lamb"
+   ]
+  },
+  "leaf-celery": {
+   "name": "Leaf Celery",
+   "section": "produce",
+   "aliases": [
+    "chinese celery",
+    "kinchay"
+   ]
+  },
+  "leafy-greens": {
+   "name": "Leafy greens",
+   "section": "produce",
+   "aliases": [
+    "leafy green"
+   ]
+  },
+  "leeks": {
+   "name": "Leeks",
+   "section": "produce",
+   "aliases": [
+    "leek"
+   ]
+  },
+  "lemongrass": {
+   "name": "Lemongrass",
+   "section": "produce",
+   "aliases": [
+    "lemon grass",
+    "sereh"
+   ],
+   "deals": {
+    "staple": false
+   }
+  },
+  "lemons": {
+   "name": "Lemons",
+   "section": "produce",
+   "aliases": [
+    "lemon"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "lemons"
+   },
+   "popularity": "everyday",
+   "parent": "lemons-and-limes"
+  },
+  "lemons-and-limes": {
+   "name": "Lemons and Limes",
+   "section": "produce",
+   "aliases": [
+    "calamansi",
+    "kalamansi",
+    "lemon",
+    "lemon juice",
+    "lemon zest",
+    "lemons",
+    "lime",
+    "lime juice",
+    "lime zest",
+    "limes"
+   ],
+   "popularity": "everyday"
+  },
+  "lentils": {
+   "name": "Lentils",
+   "section": "pantry",
+   "aliases": [
+    "masoor dal",
+    "red lentils"
+   ]
+  },
+  "lettuce": {
+   "name": "Lettuce",
+   "section": "produce",
+   "aliases": [
+    "bibb lettuce",
+    "boston lettuce",
+    "butter lettuce",
+    "green leaf lettuce",
+    "leaf lettuce",
+    "little gem",
+    "red leaf lettuce"
+   ],
+   "popularity": "everyday",
+   "parent": "salad-greens"
+  },
+  "lettuce-iceberg": {
+   "name": "Iceberg lettuce",
+   "section": "produce",
+   "aliases": [
+    "iceberg"
+   ],
+   "parent": "lettuce",
+   "deals": {
+    "staple": true,
+    "benchmark": "lettuce-iceberg"
+   },
+   "popularity": "everyday"
+  },
+  "lettuce-romaine": {
+   "name": "Romaine lettuce",
+   "section": "produce",
+   "aliases": [
+    "cos lettuce",
+    "romaine",
+    "romaine hearts"
+   ],
+   "parent": "lettuce",
+   "deals": {
+    "staple": true,
+    "benchmark": "lettuce-romaine"
+   },
+   "popularity": "everyday"
+  },
+  "limes": {
+   "name": "Limes",
+   "section": "produce",
+   "aliases": [
+    "key limes",
+    "lime",
+    "limon persa",
+    "persian limes"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "popularity": "everyday",
+   "parent": "lemons-and-limes"
+  },
+  "lingcod": {
+   "name": "Lingcod",
+   "section": "seafood",
+   "aliases": [
+    "ling cod"
+   ],
+   "popularity": "specialty",
+   "parent": "fish"
+  },
+  "liquid-seasoning": {
+   "name": "Liquid seasoning",
+   "section": "international",
+   "aliases": [
+    "liquid seasoning",
+    "maggi",
+    "maggi seasoning"
+   ]
+  },
+  "liquid-smoke": {
+   "name": "Liquid Smoke",
+   "section": "pantry",
+   "aliases": []
+  },
+  "lobster": {
+   "name": "Lobster",
+   "section": "seafood",
+   "aliases": [
+    "live lobster"
+   ],
+   "parent": "shellfish"
+  },
+  "long-beans": {
+   "name": "Long beans",
+   "section": "produce",
+   "aliases": [
+    "chinese long bean",
+    "long bean",
+    "sitaw",
+    "snake beans",
+    "white long bean",
+    "yard long bean",
+    "yardlong beans"
+   ],
+   "parent": "green-beans"
+  },
+  "longan": {
+   "name": "Longan",
+   "section": "produce",
+   "aliases": [
+    "longans"
+   ]
+  },
+  "lotus-root": {
+   "name": "Lotus root",
+   "section": "produce",
+   "aliases": [
+    "lotus roots",
+    "renkon"
+   ]
+  },
+  "lotus-seeds": {
+   "name": "Lotus seeds",
+   "section": "international",
+   "aliases": [
+    "lotus seed",
+    "white lotus seeds"
+   ]
+  },
+  "low-sodium-soy-sauce": {
+   "name": "Low-Sodium Soy Sauce",
+   "section": "international",
+   "aliases": [
+    "lite soy sauce",
+    "reduced-sodium soy sauce"
+   ],
+   "parent": "soy-sauce"
+  },
+  "lunch-meat": {
+   "name": "Lunch meat",
+   "section": "meat",
+   "aliases": [
+    "bologna",
+    "cold cuts",
+    "deli meat",
+    "lunchmeat",
+    "pastrami",
+    "roast beef",
+    "sliced turkey"
+   ]
+  },
+  "luncheon-meat": {
+   "name": "Luncheon meat",
+   "section": "pantry",
+   "aliases": [
+    "luncheon loaf",
+    "spam"
+   ]
+  },
+  "lychee": {
+   "name": "Lychee",
+   "section": "produce",
+   "aliases": [
+    "lychees",
+    "litchi",
+    "lichee"
+   ]
+  },
+  "mac-and-cheese": {
+   "name": "Mac & cheese",
+   "section": "pantry",
+   "aliases": [
+    "mac and cheese",
+    "mac cheese",
+    "macaroni and cheese"
+   ],
+   "product": true
+  },
+  "mackerel": {
+   "name": "Mackerel",
+   "section": "seafood",
+   "aliases": [
+    "saba"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "parent": "fish"
+  },
+  "mahi-mahi": {
+   "name": "Mahi mahi",
+   "section": "seafood",
+   "aliases": [
+    "mahi",
+    "mahimahi"
+   ],
+   "parent": "fish"
+  },
+  "makrut-lime-leaves": {
+   "name": "Makrut lime leaves",
+   "section": "produce",
+   "aliases": [
+    "kaffir lime leaves",
+    "kaffir lime leaf",
+    "lime leaves",
+    "makrut lime leaf"
+   ],
+   "popularity": "specialty"
+  },
+  "maltose": {
+   "name": "Maltose",
+   "section": "pantry",
+   "aliases": [
+    "malt sugar"
+   ],
+   "popularity": "specialty"
+  },
+  "mama-lils-pickled-peppers": {
+   "name": "Mama Lil's Pickled Peppers",
+   "section": "international",
+   "aliases": []
+  },
+  "mandarins": {
+   "name": "Mandarins or tangerines",
+   "section": "produce",
+   "aliases": [
+    "clementine",
+    "honey tangerine",
+    "mandarin",
+    "satsuma",
+    "tangerine",
+    "tangerines"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "popularity": "everyday",
+   "parent": "oranges"
+  },
+  "mango": {
+   "name": "Mango",
+   "section": "produce",
+   "aliases": [
+    "ataulfo",
+    "ataulfo mango",
+    "mangoes"
+   ]
+  },
+  "mangosteen": {
+   "name": "Mangosteen",
+   "section": "produce",
+   "aliases": [
+    "mangosteens"
+   ],
+   "popularity": "specialty"
+  },
+  "maple-syrup": {
+   "name": "Maple Syrup",
+   "section": "pantry",
+   "aliases": []
+  },
+  "masa-harina": {
+   "name": "Masa Harina",
+   "section": "pantry",
+   "aliases": [
+    "masa"
+   ]
+  },
+  "mayonnaise": {
+   "name": "Mayonnaise",
+   "section": "pantry",
+   "aliases": [
+    "japanese mayonnaise",
+    "kewpie mayonnaise",
+    "mayo"
+   ]
+  },
+  "meatballs": {
+   "name": "Meatballs",
+   "section": "frozen",
+   "aliases": [
+    "beef ball",
+    "beef meat ball",
+    "meat ball",
+    "meatball"
+   ]
+  },
+  "meatloaf": {
+   "name": "Meatloaf",
+   "section": "meat",
+   "aliases": [
+    "meat loaf"
+   ],
+   "product": true
+  },
+  "melon": {
+   "name": "Melon",
+   "section": "produce",
+   "aliases": []
+  },
+  "milk": {
+   "name": "Milk",
+   "section": "dairy-eggs",
+   "aliases": [
+    "leche entera",
+    "whole milk"
+   ],
+   "deals": {
+    "staple": false,
+    "benchmark": "milk-whole"
+   },
+   "popularity": "everyday"
+  },
+  "milkfish": {
+   "name": "Milkfish",
+   "section": "seafood",
+   "aliases": [
+    "bangus",
+    "milk fish"
+   ],
+   "parent": "fish"
+  },
+  "millet": {
+   "name": "Millet",
+   "section": "pantry",
+   "aliases": []
+  },
+  "mirin": {
+   "name": "Mirin",
+   "section": "international",
+   "aliases": [
+    "aji-mirin",
+    "hon mirin"
+   ]
+  },
+  "miso": {
+   "name": "Miso",
+   "section": "international",
+   "aliases": [
+    "additive-free miso",
+    "miso paste"
+   ]
+  },
+  "miso-barbecue-sauce": {
+   "name": "Miso Barbecue Sauce",
+   "section": "international",
+   "aliases": []
+  },
+  "mixed-dried-beans": {
+   "name": "Mixed Dried Beans",
+   "section": "pantry",
+   "aliases": []
+  },
+  "mizuna": {
+   "name": "Mizuna",
+   "section": "produce",
+   "aliases": [],
+   "parent": "asian-greens"
+  },
+  "mochi": {
+   "name": "Mochi",
+   "section": "snacks-drinks",
+   "aliases": [
+    "daifuku"
+   ],
+   "product": true
+  },
+  "mochiko": {
+   "name": "Mochiko",
+   "section": "pantry",
+   "aliases": []
+  },
+  "msg": {
+   "name": "MSG",
+   "section": "spices",
+   "aliases": [
+    "monosodium glutamate",
+    "aji no moto"
+   ]
+  },
+  "muffins": {
+   "name": "Muffins",
+   "section": "bakery",
+   "aliases": [
+    "muffin"
+   ],
+   "product": true
+  },
+  "mushroom-bouillon-powder": {
+   "name": "Mushroom Bouillon Powder",
+   "section": "international",
+   "aliases": []
+  },
+  "mushrooms": {
+   "name": "Mushrooms",
+   "section": "produce",
+   "aliases": [
+    "baby bella",
+    "baby bellas",
+    "beech mushrooms",
+    "brown beech",
+    "button mushrooms",
+    "cremini mushrooms",
+    "crimini mushrooms",
+    "fresh shiitake",
+    "hen of the woods",
+    "maitake",
+    "mushroom",
+    "oyster mushrooms",
+    "portabella",
+    "portobello",
+    "shiitake",
+    "shiitake mushrooms",
+    "shimeji",
+    "white beech",
+    "white mushrooms"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "popularity": "everyday"
+  },
+  "mussels": {
+   "name": "Mussels",
+   "section": "seafood",
+   "aliases": [
+    "half shell mussel",
+    "mussel",
+    "tahong"
+   ],
+   "parent": "shellfish"
+  },
+  "mustard-greens": {
+   "name": "Mustard greens",
+   "section": "produce",
+   "aliases": [
+    "mustard green",
+    "gai choy",
+    "gai choi",
+    "kai choy"
+   ],
+   "parent": "leafy-greens"
+  },
+  "mustard-seeds": {
+   "name": "Mustard Seeds",
+   "section": "spices",
+   "aliases": []
+  },
+  "musubi-kombu": {
+   "name": "Musubi Kombu",
+   "section": "international",
+   "aliases": []
+  },
+  "nagaimo": {
+   "name": "Nagaimo",
+   "section": "produce",
+   "aliases": [
+    "chinese yam",
+    "mountain yam",
+    "naga imo",
+    "yamaimo"
+   ]
+  },
+  "napa-cabbage": {
+   "name": "Napa Cabbage",
+   "section": "produce",
+   "aliases": [
+    "baby cabbage",
+    "chinese cabbage",
+    "chinese leaf",
+    "napa",
+    "napa cabbage",
+    "nappa",
+    "nappa cabbage",
+    "wombok",
+    "wong bok"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "also": [
+    "cabbage-napa"
+   ],
+   "popularity": "everyday",
+   "parent": "cabbage"
+  },
+  "nectarines": {
+   "name": "Nectarines",
+   "section": "produce",
+   "aliases": [
+    "nectarine"
+   ]
+  },
+  "neutral-oil": {
+   "name": "Neutral Oil",
+   "section": "pantry",
+   "aliases": [
+    "avocado oil",
+    "grapeseed oil",
+    "neutral cooking oil",
+    "rice bran oil"
+   ],
+   "popularity": "everyday",
+   "parent": "cooking-oil"
+  },
+  "nishiki-short-grain-rice": {
+   "name": "Nishiki Short Grain Rice",
+   "section": "pantry",
+   "aliases": [
+    "nishiki",
+    "nishiki premium rice"
+   ],
+   "popularity": "everyday",
+   "parent": "short-grain-rice"
+  },
+  "non-alcoholic-beer": {
+   "name": "Non-alcoholic beer",
+   "section": "snacks-drinks",
+   "aliases": [
+    "na beer",
+    "non alcoholic beer",
+    "non-alcoholic"
+   ],
+   "parent": "drinks",
+   "product": true
+  },
+  "non-alcoholic-wine": {
+   "name": "Non-alcoholic wine",
+   "section": "snacks-drinks",
+   "aliases": [
+    "non-alcoholic wine"
+   ],
+   "parent": "drinks",
+   "product": true
+  },
+  "non-dairy-yogurt": {
+   "name": "Non-dairy yogurt",
+   "section": "dairy-eggs",
+   "aliases": [
+    "coconut blends",
+    "coconut yogurt",
+    "plant-based yogurt"
+   ],
+   "parent": "yogurt"
+  },
+  "nonfat-dry-milk-powder": {
+   "name": "Nonfat Dry Milk Powder",
+   "section": "pantry",
+   "aliases": []
+  },
+  "noodle-soup-base": {
+   "name": "Noodle soup base (tsuyu)",
+   "section": "pantry",
+   "aliases": [
+    "hontsuyu",
+    "mentsuyu",
+    "tsuyu"
+   ],
+   "deals": {
+    "staple": false
+   }
+  },
+  "noodles": {
+   "name": "Noodles",
+   "section": "pantry",
+   "aliases": [
+    "box noodle",
+    "dried noodle",
+    "noodle"
+   ]
+  },
+  "nori": {
+   "name": "Nori",
+   "section": "international",
+   "aliases": [
+    "laver",
+    "roasted laver",
+    "roasted seaweed",
+    "seaweed sheets"
+   ]
+  },
+  "nutmeg": {
+   "name": "Nutmeg",
+   "section": "spices",
+   "aliases": [
+    "ground nutmeg"
+   ]
+  },
+  "nuts": {
+   "name": "Nuts",
+   "section": "pantry",
+   "aliases": [
+    "macadamia",
+    "mixed nuts",
+    "wasabi nuts"
+   ]
+  },
+  "oat-milk": {
+   "name": "Oat milk",
+   "section": "dairy-eggs",
+   "aliases": [
+    "oatly",
+    "oatmilk"
+   ],
+   "parent": "plant-milk"
+  },
+  "oats": {
+   "name": "Oats",
+   "section": "pantry",
+   "aliases": [
+    "instant oatmeal",
+    "oatmeal",
+    "rolled oat",
+    "rolled oats"
+   ],
+   "popularity": "everyday"
+  },
+  "octopus": {
+   "name": "Octopus",
+   "section": "seafood",
+   "aliases": [
+    "small octopus",
+    "tako"
+   ],
+   "parent": "seafood"
+  },
+  "okra": {
+   "name": "Okra",
+   "section": "produce",
+   "aliases": []
+  },
+  "olive-oil": {
+   "name": "Olive Oil",
+   "section": "pantry",
+   "aliases": [
+    "evoo",
+    "extra virgin olive oil",
+    "extra-virgin olive oil"
+   ],
+   "popularity": "everyday",
+   "parent": "cooking-oil"
+  },
+  "olives": {
+   "name": "Olives",
+   "section": "pantry",
+   "aliases": []
+  },
+  "onion": {
+   "name": "Onion",
+   "section": "produce",
+   "aliases": [
+    "onions",
+    "white onion"
+   ],
+   "popularity": "everyday"
+  },
+  "onion-powder": {
+   "name": "Onion Powder",
+   "section": "spices",
+   "aliases": [
+    "granulated onion"
+   ]
+  },
+  "onions-yellow": {
+   "name": "Yellow onions",
+   "section": "produce",
+   "aliases": [
+    "brown onion",
+    "onion",
+    "yellow onion",
+    "yellow onions"
+   ],
+   "parent": "onion",
+   "deals": {
+    "staple": true
+   },
+   "popularity": "everyday"
+  },
+  "oranges": {
+   "name": "Oranges",
+   "section": "produce",
+   "aliases": [
+    "blood orange",
+    "blood oranges",
+    "california orange",
+    "cara cara",
+    "caracara orange",
+    "orange"
+   ]
+  },
+  "oranges-navel": {
+   "name": "Navel oranges",
+   "section": "produce",
+   "aliases": [
+    "navel orange"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "oranges-navel"
+   },
+   "popularity": "everyday",
+   "parent": "oranges"
+  },
+  "orzo": {
+   "name": "Orzo",
+   "section": "pantry",
+   "aliases": []
+  },
+  "oxtail": {
+   "name": "Oxtail",
+   "section": "meat",
+   "aliases": [
+    "ox tail",
+    "rabo de res"
+   ],
+   "parent": "beef"
+  },
+  "oyster-sauce": {
+   "name": "Oyster Sauce",
+   "section": "international",
+   "aliases": [],
+   "deals": {
+    "staple": false
+   }
+  },
+  "oysters": {
+   "name": "Oysters",
+   "section": "seafood",
+   "aliases": [
+    "oyster"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "parent": "shellfish"
+  },
+  "panang-curry-paste": {
+   "name": "Panang Curry Paste",
+   "section": "international",
+   "aliases": []
+  },
+  "pancake-mix": {
+   "name": "Pancake mix",
+   "section": "pantry",
+   "aliases": [
+    "pancake and waffle mix",
+    "pancake flour",
+    "pancake waffle mix"
+   ],
+   "parent": "baking-mix"
+  },
+  "pancake-syrup": {
+   "name": "Pancake syrup",
+   "section": "pantry",
+   "aliases": [
+    "syrup"
+   ]
+  },
+  "pandan-leaves": {
+   "name": "Pandan leaves",
+   "section": "produce",
+   "aliases": [
+    "bai toey",
+    "pandan",
+    "screwpine leaves"
+   ],
+   "popularity": "specialty"
+  },
+  "panko": {
+   "name": "Panko",
+   "section": "pantry",
+   "aliases": [
+    "japanese breadcrumbs",
+    "panko breadcrumbs"
+   ]
+  },
+  "papaya": {
+   "name": "Papaya",
+   "section": "produce",
+   "aliases": [],
+   "deals": {
+    "staple": true
+   }
+  },
+  "paprika": {
+   "name": "Paprika",
+   "section": "spices",
+   "aliases": [
+    "pimenton",
+    "smoked paprika",
+    "sweet paprika"
+   ]
+  },
+  "parmesan": {
+   "name": "Parmesan",
+   "section": "dairy-eggs",
+   "aliases": [
+    "parmesan cheese",
+    "parmigiano",
+    "parmigiano reggiano"
+   ],
+   "parent": "cheese"
+  },
+  "parsnips": {
+   "name": "Parsnips",
+   "section": "produce",
+   "aliases": [
+    "parsnip"
+   ]
+  },
+  "passion-fruit": {
+   "name": "Passion fruit",
+   "section": "produce",
+   "aliases": [
+    "passionfruit",
+    "maracuya",
+    "lilikoi"
+   ]
+  },
+  "pasta-sauce": {
+   "name": "Pasta sauce",
+   "section": "pantry",
+   "aliases": [
+    "marinara",
+    "marinara sauce",
+    "tomato sauce"
+   ]
+  },
+  "pastries": {
+   "name": "Pastries",
+   "section": "bakery",
+   "aliases": [
+    "brioche twist",
+    "cream bun",
+    "danish",
+    "egg tart",
+    "ensaymada",
+    "fruit tart",
+    "pastry",
+    "pie",
+    "tart",
+    "toaster pastries"
+   ],
+   "product": true
+  },
+  "pea-shoots": {
+   "name": "Pea shoots",
+   "section": "produce",
+   "aliases": [
+    "dau mieu",
+    "dau miu",
+    "dou miao",
+    "pea sprouts",
+    "pea tips",
+    "snow pea tips"
+   ]
+  },
+  "peaches": {
+   "name": "Peaches",
+   "section": "produce",
+   "aliases": [
+    "peach"
+   ]
+  },
+  "peanut-butter": {
+   "name": "Peanut Butter",
+   "section": "pantry",
+   "aliases": [],
+   "popularity": "everyday"
+  },
+  "peanut-oil": {
+   "name": "Peanut Oil",
+   "section": "pantry",
+   "aliases": [],
+   "parent": "cooking-oil"
+  },
+  "peanuts": {
+   "name": "Peanuts",
+   "section": "pantry",
+   "aliases": [
+    "roasted peanuts",
+    "unsalted peanuts"
+   ],
+   "parent": "nuts"
+  },
+  "pear-balsamic-spoon-preserves": {
+   "name": "Pear Balsamic Spoon Preserves",
+   "section": "pantry",
+   "aliases": []
+  },
+  "pears": {
+   "name": "Pears",
+   "section": "produce",
+   "aliases": [
+    "asian pear",
+    "gan lu pear",
+    "ganlu pear",
+    "naju pear",
+    "nashi",
+    "nashi pear",
+    "pear"
+   ],
+   "deals": {
+    "staple": true
+   }
+  },
+  "peas": {
+   "name": "Green peas",
+   "section": "produce",
+   "aliases": [
+    "garden peas",
+    "english peas",
+    "sweet peas"
+   ]
+  },
+  "perilla-leaves": {
+   "name": "Perilla leaves",
+   "section": "produce",
+   "aliases": [
+    "kkaennip",
+    "perilla",
+    "sesame leaves",
+    "shiso leaves",
+    "tia to"
+   ],
+   "popularity": "specialty"
+  },
+  "persimmons": {
+   "name": "Persimmons",
+   "section": "produce",
+   "aliases": [
+    "fuyu",
+    "hachiya",
+    "persimmon"
+   ],
+   "deals": {
+    "staple": true
+   }
+  },
+  "pickled-jalapenos": {
+   "name": "Pickled Jalapenos",
+   "section": "international",
+   "aliases": []
+  },
+  "pine-nuts": {
+   "name": "Pine Nuts",
+   "section": "pantry",
+   "aliases": [],
+   "parent": "nuts"
+  },
+  "pineapple": {
+   "name": "Pineapple",
+   "section": "produce",
+   "aliases": [
+    "pineapples"
+   ]
+  },
+  "pizza-sauce": {
+   "name": "Pizza sauce",
+   "section": "pantry",
+   "aliases": [],
+   "parent": "pasta-sauce"
+  },
+  "plant-based-meat": {
+   "name": "Plant-based meat",
+   "section": "frozen",
+   "aliases": [
+    "plant based protein",
+    "plant-based protein",
+    "plant-based steak",
+    "vegan meat",
+    "vegetarian tripe"
+   ],
+   "product": true
+  },
+  "plant-milk": {
+   "name": "Plant milk",
+   "section": "dairy-eggs",
+   "aliases": [
+    "almond milk",
+    "almondmilk",
+    "flax milk",
+    "flaxmilk",
+    "nut milk",
+    "plant based milk",
+    "plant-based milk"
+   ]
+  },
+  "plantains": {
+   "name": "Plantains",
+   "section": "produce",
+   "aliases": [
+    "plantain",
+    "platano",
+    "saba banana"
+   ]
+  },
+  "plums": {
+   "name": "Plums",
+   "section": "produce",
+   "aliases": [
+    "plum",
+    "pluots",
+    "pluot"
+   ]
+  },
+  "poblano-peppers": {
+   "name": "Poblano peppers",
+   "section": "produce",
+   "aliases": [
+    "poblano",
+    "poblanos",
+    "pasilla peppers"
+   ]
+  },
+  "polenta-or-grits": {
+   "name": "Polenta or Grits",
+   "section": "pantry",
+   "aliases": []
+  },
+  "pollock": {
+   "name": "Pollock",
+   "section": "seafood",
+   "aliases": [
+    "alaska pollock",
+    "dried pollock",
+    "pollack"
+   ],
+   "parent": "fish"
+  },
+  "pomegranate": {
+   "name": "Pomegranate",
+   "section": "produce",
+   "aliases": [
+    "pomegranate arils",
+    "pomegranates"
+   ]
+  },
+  "pomegranate-molasses": {
+   "name": "Pomegranate Molasses",
+   "section": "pantry",
+   "aliases": []
+  },
+  "pomelo": {
+   "name": "Pomelo",
+   "section": "produce",
+   "aliases": [
+    "pummelo",
+    "shaddock"
+   ],
+   "deals": {
+    "staple": true
+   }
+  },
+  "pomfret": {
+   "name": "Pomfret",
+   "section": "seafood",
+   "aliases": [
+    "white pomfret"
+   ],
+   "parent": "fish"
+  },
+  "ponzu": {
+   "name": "Ponzu",
+   "section": "international",
+   "aliases": [
+    "ponzu sauce"
+   ]
+  },
+  "popcorn": {
+   "name": "Popcorn",
+   "section": "snacks-drinks",
+   "aliases": [
+    "caramel corn",
+    "kettle corn",
+    "pipcorn"
+   ],
+   "product": true
+  },
+  "poppy-seeds": {
+   "name": "Poppy Seeds",
+   "section": "spices",
+   "aliases": []
+  },
+  "pork": {
+   "name": "Pork",
+   "section": "meat",
+   "aliases": []
+  },
+  "pork-baby-back-ribs": {
+   "name": "Pork baby back ribs",
+   "section": "meat",
+   "aliases": [
+    "baby back",
+    "back ribs pork",
+    "pork back rib",
+    "pork back ribs"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "pork-other"
+   },
+   "parent": "pork"
+  },
+  "pork-belly": {
+   "name": "Pork Belly",
+   "section": "meat",
+   "aliases": [
+    "liempo",
+    "samgyeopsal",
+    "samgyupsal",
+    "skin-on pork belly"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "pork-other"
+   },
+   "parent": "pork"
+  },
+  "pork-belly-sliced": {
+   "name": "Pork belly, sliced",
+   "section": "meat",
+   "aliases": [
+    "pork belly sliced",
+    "pork belly thin sliced",
+    "sliced pork belly",
+    "thin sliced belly"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "pork-other"
+   },
+   "parent": "pork-belly"
+  },
+  "pork-chops": {
+   "name": "Pork chops",
+   "section": "meat",
+   "aliases": [
+    "loin chop",
+    "pork chop",
+    "pork loin chop",
+    "pork sirloin chops",
+    "sirloin chop"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "pork-chops"
+   },
+   "popularity": "everyday",
+   "parent": "pork"
+  },
+  "pork-feet": {
+   "name": "Pork feet",
+   "section": "meat",
+   "aliases": [
+    "front foot",
+    "pig feet",
+    "pig trotters",
+    "pigs feet",
+    "pork foot",
+    "pork trotter"
+   ],
+   "deals": {
+    "staple": false
+   },
+   "popularity": "specialty",
+   "parent": "pork"
+  },
+  "pork-hock": {
+   "name": "Pork hock or shank",
+   "section": "meat",
+   "aliases": [
+    "ham hock",
+    "ham hocks",
+    "pork hock",
+    "pork shank"
+   ],
+   "deals": {
+    "staple": false
+   },
+   "popularity": "specialty",
+   "parent": "pork"
+  },
+  "pork-jowl": {
+   "name": "Pork jowl",
+   "section": "meat",
+   "aliases": [
+    "jowl"
+   ],
+   "parent": "pork"
+  },
+  "pork-leg": {
+   "name": "Pork leg",
+   "section": "meat",
+   "aliases": [
+    "fresh ham",
+    "pork ham roast"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "pork-other"
+   },
+   "parent": "pork"
+  },
+  "pork-loin": {
+   "name": "Pork loin",
+   "section": "meat",
+   "aliases": [],
+   "deals": {
+    "staple": true,
+    "benchmark": "pork-other"
+   },
+   "popularity": "everyday",
+   "parent": "pork"
+  },
+  "pork-loin-sliced": {
+   "name": "Pork loin, thin sliced",
+   "section": "meat",
+   "aliases": [
+    "sliced pork loin",
+    "thin sliced pork loin",
+    "thin-sliced pork loin"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "parent": "pork-loin"
+  },
+  "pork-shoulder": {
+   "name": "Pork shoulder or butt",
+   "section": "meat",
+   "aliases": [
+    "boston butt",
+    "butt shabu",
+    "ct butt",
+    "kasim",
+    "picnic",
+    "pork arm picnic",
+    "pork butt",
+    "pork collar",
+    "pork shoulder"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "pork-other"
+   },
+   "parent": "pork"
+  },
+  "pork-sirloin": {
+   "name": "Pork sirloin roast",
+   "section": "meat",
+   "aliases": [
+    "pork sirloin",
+    "pork sirloin roast"
+   ],
+   "parent": "pork"
+  },
+  "pork-spareribs": {
+   "name": "Pork spareribs",
+   "section": "meat",
+   "aliases": [
+    "pork side ribs",
+    "side ribs",
+    "spare rib",
+    "sparerib"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "pork-other"
+   },
+   "parent": "pork"
+  },
+  "pork-stew-meat": {
+   "name": "Pork Stew Meat",
+   "section": "meat",
+   "aliases": [
+    "pork for stew",
+    "pork stew"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "pork-other"
+   },
+   "also": [
+    "pork-stew"
+   ],
+   "parent": "pork"
+  },
+  "pork-tenderloin": {
+   "name": "Pork tenderloin",
+   "section": "meat",
+   "aliases": [
+    "pork filet",
+    "pork fillet"
+   ],
+   "parent": "pork-loin"
+  },
+  "potato-chips": {
+   "name": "Potato chips",
+   "section": "snacks-drinks",
+   "aliases": [
+    "honey butter chip",
+    "kettle chips",
+    "potato chip"
+   ],
+   "parent": "chips",
+   "product": true
+  },
+  "potato-starch": {
+   "name": "Potato Starch",
+   "section": "pantry",
+   "aliases": [
+    "katakuriko"
+   ]
+  },
+  "potatoes-and-root-vegetables": {
+   "name": "Potatoes and Root Vegetables",
+   "section": "produce",
+   "aliases": [
+    "potato",
+    "potatoes"
+   ],
+   "popularity": "everyday"
+  },
+  "potatoes-red-yellow": {
+   "name": "Red or yellow potatoes",
+   "section": "produce",
+   "aliases": [
+    "baby potatoes",
+    "fingerling potatoes",
+    "gold potato",
+    "red potato",
+    "yellow potato",
+    "yukon gold",
+    "yukon gold potatoes"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "potatoes"
+   },
+   "popularity": "everyday",
+   "parent": "potatoes-and-root-vegetables"
+  },
+  "potatoes-russet": {
+   "name": "Russet potatoes",
+   "section": "produce",
+   "aliases": [
+    "baking potatoes",
+    "idaho potatoes",
+    "russet"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "potatoes"
+   },
+   "popularity": "everyday",
+   "parent": "potatoes-and-root-vegetables"
+  },
+  "potstickers": {
+   "name": "Potstickers",
+   "section": "frozen",
+   "aliases": [
+    "gyoza",
+    "potsticker"
+   ],
+   "parent": "dumplings"
+  },
+  "powdered-sugar": {
+   "name": "Powdered Sugar",
+   "section": "pantry",
+   "aliases": [
+    "confectioners' sugar",
+    "icing sugar"
+   ]
+  },
+  "prepared-meals": {
+   "name": "Prepared meals",
+   "section": "prepared",
+   "aliases": [
+    "chicken tenders",
+    "crispy pork",
+    "leek pie",
+    "onigiri",
+    "pork ear",
+    "roast pork",
+    "stewed",
+    "sticky rice with chinese sausage",
+    "stuffed mushrooms",
+    "yu fan"
+   ],
+   "product": true
+  },
+  "preserved-eggs": {
+   "name": "Preserved eggs",
+   "section": "international",
+   "aliases": [
+    "century egg",
+    "century eggs",
+    "preserved duck egg",
+    "salted duck egg"
+   ],
+   "parent": "eggs"
+  },
+  "preserved-vegetables": {
+   "name": "Preserved vegetables",
+   "section": "international",
+   "aliases": [
+    "pickled mustard",
+    "pickled mustard greens",
+    "pickled radish",
+    "pickled vegetable",
+    "preserved vegetable",
+    "sour mustard",
+    "wulin vegetable"
+   ]
+  },
+  "pretzels": {
+   "name": "Pretzels",
+   "section": "snacks-drinks",
+   "aliases": [
+    "pretzel",
+    "puffzels"
+   ],
+   "product": true
+  },
+  "protein-shakes": {
+   "name": "Protein shakes",
+   "section": "snacks-drinks",
+   "aliases": [
+    "plant-based shake",
+    "protein shake",
+    "shake"
+   ],
+   "parent": "drinks",
+   "product": true
+  },
+  "pudding": {
+   "name": "Pudding",
+   "section": "snacks-drinks",
+   "aliases": [
+    "gelatin or pudding",
+    "pudding cups"
+   ],
+   "product": true
+  },
+  "pumpkin-seeds": {
+   "name": "Pumpkin seeds",
+   "section": "pantry",
+   "aliases": [
+    "pepitas",
+    "pumpkin seed"
+   ]
+  },
+  "purple-napa-cabbage": {
+   "name": "Purple Napa Cabbage",
+   "section": "produce",
+   "aliases": [],
+   "parent": "napa-cabbage"
+  },
+  "quail-eggs": {
+   "name": "Quail eggs",
+   "section": "dairy-eggs",
+   "aliases": [
+    "quail egg"
+   ],
+   "parent": "eggs"
+  },
+  "quinoa": {
+   "name": "Quinoa",
+   "section": "pantry",
+   "aliases": []
+  },
+  "radishes": {
+   "name": "Radishes",
+   "section": "produce",
+   "aliases": [
+    "radish",
+    "red radishes"
+   ]
+  },
+  "rambutan": {
+   "name": "Rambutan",
+   "section": "produce",
+   "aliases": []
+  },
+  "ramen-noodles": {
+   "name": "Ramen noodles",
+   "section": "pantry",
+   "aliases": [
+    "ramen",
+    "ramen noodle"
+   ],
+   "parent": "noodles"
+  },
+  "raspberries": {
+   "name": "Raspberries",
+   "section": "produce",
+   "aliases": [
+    "raspberry"
+   ]
+  },
+  "ready-meals": {
+   "name": "Ready meals",
+   "section": "pantry",
+   "aliases": [
+    "congee",
+    "entree",
+    "entrees",
+    "mixed congee"
+   ],
+   "product": true
+  },
+  "red-curry-paste": {
+   "name": "Red Curry Paste",
+   "section": "international",
+   "aliases": []
+  },
+  "red-greens": {
+   "name": "Red Greens",
+   "section": "produce",
+   "aliases": [],
+   "parent": "leafy-greens"
+  },
+  "red-wine-vinegar": {
+   "name": "Red Wine Vinegar",
+   "section": "pantry",
+   "aliases": []
+  },
+  "refried-beans": {
+   "name": "Refried beans",
+   "section": "pantry",
+   "aliases": []
+  },
+  "rice": {
+   "name": "Rice",
+   "section": "pantry",
+   "aliases": [
+    "gao"
+   ]
+  },
+  "rice-balls": {
+   "name": "Sweet rice balls",
+   "section": "frozen",
+   "aliases": [
+    "rice ball",
+    "tang yuan",
+    "tangyuan"
+   ],
+   "product": true
+  },
+  "rice-cakes": {
+   "name": "Korean rice cakes",
+   "section": "pantry",
+   "aliases": [
+    "rice cake",
+    "topokki",
+    "tteok",
+    "tteokbokki"
+   ]
+  },
+  "rice-crackers": {
+   "name": "Rice crackers",
+   "section": "snacks-drinks",
+   "aliases": [
+    "kaki no tane",
+    "rice cracker",
+    "senbei"
+   ],
+   "parent": "crackers",
+   "product": true
+  },
+  "rice-flour": {
+   "name": "Rice flour",
+   "section": "pantry",
+   "aliases": []
+  },
+  "rice-long-grain": {
+   "name": "Rice, long grain",
+   "section": "pantry",
+   "aliases": [
+    "long grain",
+    "long-grain rice"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "rice-white"
+   },
+   "popularity": "everyday",
+   "parent": "rice"
+  },
+  "rice-medium-grain": {
+   "name": "Rice, medium grain (Calrose)",
+   "section": "pantry",
+   "aliases": [
+    "calrose",
+    "calrose rice",
+    "kokuho rose",
+    "kokuho rose rice"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "rice-white"
+   },
+   "popularity": "everyday",
+   "parent": "rice"
+  },
+  "rice-noodles": {
+   "name": "Rice noodles",
+   "section": "pantry",
+   "aliases": [
+    "ho fun",
+    "kway teow",
+    "luosi rice noodles",
+    "pad thai noodles",
+    "pho noodles",
+    "rice noodle",
+    "rice stick"
+   ],
+   "parent": "noodles"
+  },
+  "rice-paper": {
+   "name": "Rice Paper",
+   "section": "pantry",
+   "aliases": [
+    "banh trang",
+    "rice paper wrappers"
+   ]
+  },
+  "rice-vermicelli": {
+   "name": "Rice vermicelli",
+   "section": "pantry",
+   "aliases": [
+    "bihon",
+    "bun noodles",
+    "mai fun",
+    "maifun",
+    "pancit bihon",
+    "vermicelli"
+   ],
+   "parent": "rice-noodles"
+  },
+  "rice-vinegar": {
+   "name": "Rice Vinegar",
+   "section": "pantry",
+   "aliases": [
+    "rice wine vinegar",
+    "seasoned rice vinegar",
+    "unseasoned rice vinegar"
+   ]
+  },
+  "rice-wine": {
+   "name": "Rice cooking wine",
+   "section": "international",
+   "aliases": [
+    "mijiu",
+    "rice cooking wine"
+   ]
+  },
+  "roasted-walnut-oil": {
+   "name": "Roasted Walnut Oil",
+   "section": "pantry",
+   "aliases": []
+  },
+  "rock-sugar": {
+   "name": "Rock sugar",
+   "section": "pantry",
+   "aliases": []
+  },
+  "rockfish": {
+   "name": "Rockfish",
+   "section": "seafood",
+   "aliases": [
+    "rock cod",
+    "pacific snapper"
+   ],
+   "parent": "fish"
+  },
+  "rutabaga": {
+   "name": "Rutabaga",
+   "section": "produce",
+   "aliases": [
+    "rutabagas",
+    "swede"
+   ]
+  },
+  "sablefish": {
+   "name": "Sablefish",
+   "section": "seafood",
+   "aliases": [
+    "black cod",
+    "gindara"
+   ],
+   "parent": "fish"
+  },
+  "saffron": {
+   "name": "Saffron",
+   "section": "spices",
+   "aliases": [
+    "saffron threads"
+   ],
+   "popularity": "specialty"
+  },
+  "sake": {
+   "name": "Sake",
+   "section": "pantry",
+   "aliases": [
+    "cooking sake",
+    "japanese sake"
+   ]
+  },
+  "salad-dressing": {
+   "name": "Salad dressing",
+   "section": "pantry",
+   "aliases": [
+    "dressing",
+    "ranch"
+   ]
+  },
+  "salad-greens": {
+   "name": "Salad Greens",
+   "section": "produce",
+   "aliases": [
+    "baby greens",
+    "mesclun",
+    "mixed greens",
+    "salad blend",
+    "salad blends",
+    "spring mix"
+   ],
+   "popularity": "everyday",
+   "parent": "leafy-greens"
+  },
+  "salad-kits": {
+   "name": "Salad kits",
+   "section": "produce",
+   "aliases": [
+    "caesar salad kit",
+    "salad kit"
+   ],
+   "parent": "salad-greens",
+   "product": true
+  },
+  "salade-oceane": {
+   "name": "Salade Oceane",
+   "section": "international",
+   "aliases": [],
+   "popularity": "specialty"
+  },
+  "salami": {
+   "name": "Salami",
+   "section": "meat",
+   "aliases": [
+    "genoa salami",
+    "soppressata"
+   ]
+  },
+  "salmon": {
+   "name": "Salmon",
+   "section": "seafood",
+   "aliases": [],
+   "parent": "fish"
+  },
+  "salmon-atlantic": {
+   "name": "Atlantic salmon",
+   "section": "seafood",
+   "aliases": [],
+   "deals": {
+    "staple": true
+   },
+   "popularity": "everyday",
+   "parent": "salmon"
+  },
+  "salmon-other": {
+   "name": "Salmon (other)",
+   "section": "seafood",
+   "aliases": [
+    "chinook",
+    "chum salmon",
+    "coho",
+    "keta salmon",
+    "king salmon",
+    "pink salmon"
+   ],
+   "parent": "salmon",
+   "deals": {
+    "staple": true
+   }
+  },
+  "salmon-sockeye": {
+   "name": "Sockeye salmon",
+   "section": "seafood",
+   "aliases": [
+    "sockeye",
+    "sockeye salmon"
+   ],
+   "parent": "salmon"
+  },
+  "salmon-steaks": {
+   "name": "Salmon Steaks",
+   "section": "seafood",
+   "aliases": [
+    "salmon fillets"
+   ],
+   "parent": "salmon"
+  },
+  "salsa": {
+   "name": "Salsa",
+   "section": "pantry",
+   "aliases": [
+    "pico de gallo"
+   ]
+  },
+  "salted-black-beans": {
+   "name": "Salted Black Beans",
+   "section": "international",
+   "aliases": [
+    "douchi",
+    "fermented black beans"
+   ]
+  },
+  "sambal-oelek": {
+   "name": "Sambal Oelek",
+   "section": "spices",
+   "aliases": [
+    "sambal"
+   ]
+  },
+  "sand-ginger": {
+   "name": "Sand Ginger",
+   "section": "spices",
+   "aliases": [],
+   "popularity": "specialty"
+  },
+  "sandwiches": {
+   "name": "Sandwiches",
+   "section": "prepared",
+   "aliases": [
+    "grilled cheese",
+    "sando",
+    "sandwich",
+    "wrap sandwiches"
+   ],
+   "product": true
+  },
+  "sausage": {
+   "name": "Sausage",
+   "section": "meat",
+   "aliases": [
+    "andouille",
+    "chinese sausage",
+    "chorizo",
+    "ground sausage",
+    "kielbasa",
+    "lap cheong",
+    "lap chong",
+    "longanisa",
+    "longganisa",
+    "lop chong",
+    "sausage link",
+    "sausages",
+    "soondae"
+   ]
+  },
+  "savory-spice-rubs": {
+   "name": "Savory Spice Rubs",
+   "section": "spices",
+   "aliases": []
+  },
+  "scad": {
+   "name": "Scad",
+   "section": "seafood",
+   "aliases": [
+    "salay salay",
+    "yellowtail scad"
+   ],
+   "parent": "fish"
+  },
+  "scallion-pancakes": {
+   "name": "Scallion pancakes",
+   "section": "frozen",
+   "aliases": [
+    "green onion pancake",
+    "multi layer pancake",
+    "paratha",
+    "scallion pancake"
+   ],
+   "product": true
+  },
+  "scallops": {
+   "name": "Scallops",
+   "section": "seafood",
+   "aliases": [
+    "hotate",
+    "scallop",
+    "sea scallops"
+   ],
+   "parent": "shellfish"
+  },
+  "sea-bass": {
+   "name": "Sea bass",
+   "section": "seafood",
+   "aliases": [
+    "branzino",
+    "branzini",
+    "seabass"
+   ],
+   "parent": "fish"
+  },
+  "sea-bream": {
+   "name": "Sea bream",
+   "section": "seafood",
+   "aliases": [
+    "dorade",
+    "orate",
+    "seabream"
+   ],
+   "parent": "fish"
+  },
+  "seafood": {
+   "name": "Seafood",
+   "section": "seafood",
+   "aliases": [
+    "seafood mix",
+    "seafood medley"
+   ]
+  },
+  "seasoning-mix": {
+   "name": "Seasoning mix",
+   "section": "spices",
+   "aliases": [
+    "garlic salt",
+    "mix tamarind",
+    "seasoned salt",
+    "seasoning",
+    "sinigang mix",
+    "soup mix",
+    "taco seasoning",
+    "tamarind mix"
+   ]
+  },
+  "seaweed-mustard": {
+   "name": "Seaweed Mustard",
+   "section": "pantry",
+   "aliases": []
+  },
+  "seaweed-salt": {
+   "name": "Seaweed Salt",
+   "section": "pantry",
+   "aliases": []
+  },
+  "seaweed-snacks": {
+   "name": "Seaweed snacks",
+   "section": "snacks-drinks",
+   "aliases": [
+    "grab and go seaweed",
+    "seaweed snack",
+    "seaweed snacks"
+   ],
+   "product": true
+  },
+  "seaweed-tartare": {
+   "name": "Seaweed Tartare",
+   "section": "international",
+   "aliases": [],
+   "popularity": "specialty"
+  },
+  "serrano-peppers": {
+   "name": "Serrano peppers",
+   "section": "produce",
+   "aliases": [
+    "serrano chiles",
+    "serrano chilies"
+   ]
+  },
+  "sesame-oil": {
+   "name": "Sesame Oil",
+   "section": "pantry",
+   "aliases": [
+    "roasted sesame oil",
+    "toasted sesame oil"
+   ]
+  },
+  "sesame-paste": {
+   "name": "Chinese sesame paste",
+   "section": "international",
+   "aliases": [
+    "sesame butter"
+   ]
+  },
+  "seven-grain-mix": {
+   "name": "Seven Grain Mix",
+   "section": "pantry",
+   "aliases": []
+  },
+  "shallot": {
+   "name": "Shallot",
+   "section": "produce",
+   "aliases": [
+    "eschalot",
+    "eschalots",
+    "shallots"
+   ]
+  },
+  "shanghai-bok-choy": {
+   "name": "Shanghai Bok Choy",
+   "section": "produce",
+   "aliases": [
+    "baby bok choy",
+    "baby pak choi",
+    "bok choy",
+    "shanghai pak choi"
+   ],
+   "popularity": "everyday",
+   "parent": "bok-choy"
+  },
+  "shaoxing-wine": {
+   "name": "Shaoxing Wine",
+   "section": "pantry",
+   "aliases": [
+    "chinese cooking wine",
+    "huangjiu",
+    "rice wine",
+    "shao hsing",
+    "shaohsing",
+    "shaohsing cooking wine",
+    "shaohsing wine",
+    "shaoxing"
+   ]
+  },
+  "shellfish": {
+   "name": "Shellfish",
+   "section": "seafood",
+   "aliases": [],
+   "parent": "seafood"
+  },
+  "sherry-vinegar": {
+   "name": "Sherry Vinegar",
+   "section": "pantry",
+   "aliases": []
+  },
+  "shichimi-togarashi": {
+   "name": "Shichimi Togarashi",
+   "section": "spices",
+   "aliases": [
+    "shichimi",
+    "togarashi"
+   ]
+  },
+  "shiro-umeboshi": {
+   "name": "Shiro Umeboshi",
+   "section": "international",
+   "aliases": []
+  },
+  "short-grain-rice": {
+   "name": "Short-Grain Rice",
+   "section": "pantry",
+   "aliases": [
+    "hitomebore",
+    "japanese rice",
+    "japanese short-grain rice",
+    "koshihikari",
+    "rice, short grain",
+    "sekka",
+    "short grain",
+    "sushi rice"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "rice-white"
+   },
+   "also": [
+    "rice-short-grain"
+   ],
+   "popularity": "everyday",
+   "parent": "rice"
+  },
+  "shredded-preserved-radish": {
+   "name": "Shredded Preserved Radish",
+   "section": "international",
+   "aliases": [],
+   "parent": "preserved-vegetables"
+  },
+  "shredded-zha-cai": {
+   "name": "Shredded Zha Cai",
+   "section": "international",
+   "aliases": [
+    "pickled mustard stem",
+    "sichuan preserved vegetable",
+    "zha cai"
+   ],
+   "parent": "preserved-vegetables"
+  },
+  "shrimp": {
+   "name": "Shrimp",
+   "section": "seafood",
+   "aliases": [
+    "camarones",
+    "ebi",
+    "hipon",
+    "prawn"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "popularity": "everyday",
+   "parent": "shellfish"
+  },
+  "sichuan-peppercorn": {
+   "name": "Sichuan Peppercorn",
+   "section": "spices",
+   "aliases": [
+    "green sichuan pepper",
+    "hua jiao",
+    "huajiao",
+    "sichuan peppercorns",
+    "szechuan green pepper",
+    "szechuan pepper",
+    "szechuan peppercorns"
+   ]
+  },
+  "side-mixes": {
+   "name": "Rice & pasta side mixes",
+   "section": "pantry",
+   "aliases": [
+    "pasta roni",
+    "rice a roni"
+   ],
+   "product": true
+  },
+  "smelt": {
+   "name": "Smelt",
+   "section": "seafood",
+   "aliases": [
+    "shishamo",
+    "smeltfish"
+   ],
+   "parent": "fish"
+  },
+  "smoked-salmon": {
+   "name": "Smoked salmon",
+   "section": "seafood",
+   "aliases": [
+    "lox",
+    "nova lox",
+    "smoked wild caught king salmon"
+   ],
+   "parent": "salmon"
+  },
+  "snack-bars": {
+   "name": "Snack bars",
+   "section": "snacks-drinks",
+   "aliases": [
+    "granola bar",
+    "granola bars",
+    "granola bites",
+    "meal bars",
+    "nut bars",
+    "protein bar",
+    "protein bars",
+    "rice krispies treats",
+    "zbars"
+   ],
+   "product": true
+  },
+  "snack-packs": {
+   "name": "Snack packs & lunch kits",
+   "section": "prepared",
+   "aliases": [
+    "cracker snack pack",
+    "lunch kit",
+    "lunchables",
+    "snack pack"
+   ],
+   "product": true
+  },
+  "snacks": {
+   "name": "Other snacks",
+   "section": "snacks-drinks",
+   "aliases": [
+    "konjac jelly",
+    "konjac snack"
+   ],
+   "product": true
+  },
+  "snapper": {
+   "name": "Snapper",
+   "section": "seafood",
+   "aliases": [
+    "red snapper"
+   ],
+   "parent": "fish"
+  },
+  "snow-peas": {
+   "name": "Snow peas",
+   "section": "produce",
+   "aliases": [
+    "snow pea",
+    "mangetout",
+    "chinese pea pods"
+   ]
+  },
+  "soba": {
+   "name": "Soba",
+   "section": "pantry",
+   "aliases": [
+    "soba noodles"
+   ],
+   "parent": "noodles"
+  },
+  "soda": {
+   "name": "Soda",
+   "section": "snacks-drinks",
+   "aliases": [
+    "7up",
+    "a&w",
+    "calpico",
+    "canada dry",
+    "coca cola",
+    "coke",
+    "fanta",
+    "grass jelly drink",
+    "italian sparkling drink",
+    "jarritos",
+    "mixers",
+    "pepsi",
+    "prebiotic soda",
+    "sarsaparilla",
+    "sodas",
+    "soft drink",
+    "sparkling drink"
+   ],
+   "parent": "drinks",
+   "product": true
+  },
+  "sole": {
+   "name": "Sole",
+   "section": "seafood",
+   "aliases": [
+    "dover sole",
+    "petrale sole"
+   ],
+   "parent": "fish"
+  },
+  "somen": {
+   "name": "Somen",
+   "section": "pantry",
+   "aliases": [
+    "somen noodles"
+   ],
+   "parent": "noodles"
+  },
+  "soup": {
+   "name": "Soup",
+   "section": "pantry",
+   "aliases": [
+    "chowder",
+    "chunky soup",
+    "clam chowder",
+    "soup cup",
+    "soups"
+   ],
+   "product": true
+  },
+  "sour-cream": {
+   "name": "Sour cream",
+   "section": "dairy-eggs",
+   "aliases": [
+    "crema mexicana",
+    "mexican crema"
+   ]
+  },
+  "soy-milk": {
+   "name": "Soy milk",
+   "section": "dairy-eggs",
+   "aliases": [
+    "soy drink",
+    "soya milk",
+    "soymilk"
+   ],
+   "parent": "plant-milk"
+  },
+  "soy-sauce": {
+   "name": "Soy Sauce",
+   "section": "international",
+   "aliases": [
+    "light soy sauce",
+    "regular soy sauce",
+    "shoyu",
+    "soya sauce",
+    "toyo",
+    "usukuchi"
+   ],
+   "popularity": "everyday"
+  },
+  "spicy-citrus-tube": {
+   "name": "Spicy Citrus Tube",
+   "section": "dairy-eggs",
+   "aliases": []
+  },
+  "spinach": {
+   "name": "Spinach",
+   "section": "produce",
+   "aliases": [
+    "bunch spinach",
+    "loose spinach"
+   ],
+   "parent": "leafy-greens"
+  },
+  "spring-rolls": {
+   "name": "Spring rolls & lumpia",
+   "section": "frozen",
+   "aliases": [
+    "egg roll",
+    "eggroll",
+    "eggrolls",
+    "loompya",
+    "lumpia",
+    "lumpiang shanghai",
+    "spring roll",
+    "vegetable roll"
+   ],
+   "product": true
+  },
+  "squash": {
+   "name": "Squash",
+   "section": "produce",
+   "aliases": []
+  },
+  "squash-winter": {
+   "name": "Winter squash",
+   "section": "produce",
+   "aliases": [
+    "acorn squash",
+    "butternut",
+    "butternut squash"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "parent": "squash"
+  },
+  "squid": {
+   "name": "Squid or calamari",
+   "section": "seafood",
+   "aliases": [
+    "calamari",
+    "pusit",
+    "squid",
+    "squid carved"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "parent": "seafood"
+  },
+  "sriracha": {
+   "name": "Sriracha",
+   "section": "international",
+   "aliases": [
+    "sriracha sauce"
+   ],
+   "parent": "chili-sauce"
+  },
+  "ssamjang": {
+   "name": "Ssamjang",
+   "section": "international",
+   "aliases": []
+  },
+  "star-anise": {
+   "name": "Star Anise",
+   "section": "spices",
+   "aliases": [
+    "bajiao",
+    "star anise pods"
+   ]
+  },
+  "starfruit": {
+   "name": "Starfruit",
+   "section": "produce",
+   "aliases": [
+    "star fruit",
+    "carambola"
+   ],
+   "popularity": "specialty"
+  },
+  "strawberries": {
+   "name": "Strawberries",
+   "section": "produce",
+   "aliases": [
+    "strawberry"
+   ]
+  },
+  "sugar-snap-peas": {
+   "name": "Sugar snap peas",
+   "section": "produce",
+   "aliases": [
+    "snap peas",
+    "sugar snaps",
+    "sugar snap"
+   ]
+  },
+  "summer-squash": {
+   "name": "Summer squash",
+   "section": "produce",
+   "aliases": [
+    "gray squash",
+    "grey squash",
+    "summer squash",
+    "yellow squash"
+   ],
+   "parent": "squash"
+  },
+  "sun-dried-tomatoes": {
+   "name": "Sun-Dried Tomatoes",
+   "section": "pantry",
+   "aliases": []
+  },
+  "sunflower-seeds": {
+   "name": "Sunflower Seeds",
+   "section": "pantry",
+   "aliases": [
+    "sunflower seed"
+   ]
+  },
+  "sushi": {
+   "name": "Sushi",
+   "section": "prepared",
+   "aliases": [
+    "sushi roll",
+    "sushi set"
+   ],
+   "product": true
+  },
+  "sushi-ginger-gari": {
+   "name": "Sushi Ginger Gari",
+   "section": "international",
+   "aliases": [
+    "gari",
+    "pickled ginger"
+   ]
+  },
+  "swai": {
+   "name": "Swai",
+   "section": "seafood",
+   "aliases": [
+    "basa",
+    "gass fish",
+    "pangasius"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "parent": "fish"
+  },
+  "sweet-onions": {
+   "name": "Sweet onions",
+   "section": "produce",
+   "aliases": [
+    "mayan sweet onion",
+    "sweet onion",
+    "vidalia",
+    "walla walla"
+   ],
+   "parent": "onion"
+  },
+  "sweet-potato-leaves": {
+   "name": "Sweet potato leaves",
+   "section": "produce",
+   "aliases": [
+    "camote tops",
+    "sweet potato leaves",
+    "yam leaf",
+    "yam leaves"
+   ],
+   "parent": "asian-greens"
+  },
+  "sweet-potato-noodles": {
+   "name": "Sweet Potato Noodles",
+   "section": "pantry",
+   "aliases": [
+    "dangmyeon",
+    "japchae noodles",
+    "korean glass noodles",
+    "sweet potato starch noodles"
+   ],
+   "parent": "noodles"
+  },
+  "sweet-potatoes": {
+   "name": "Sweet potatoes or yams",
+   "section": "produce",
+   "aliases": [
+    "camote",
+    "garnet yams",
+    "japanese sweet potato",
+    "kumara",
+    "roasted sweet potato",
+    "satsuma imo",
+    "sweet potato",
+    "yam"
+   ],
+   "deals": {
+    "staple": true
+   },
+   "popularity": "everyday"
+  },
+  "sweet-soups": {
+   "name": "Sweet soups & dessert drinks",
+   "section": "pantry",
+   "aliases": [
+    "bean dessert",
+    "peanut soup",
+    "red bean dessert"
+   ],
+   "product": true
+  },
+  "taco-shells": {
+   "name": "Taco shells",
+   "section": "pantry",
+   "aliases": [
+    "taco shell"
+   ]
+  },
+  "tahini": {
+   "name": "Tahini",
+   "section": "international",
+   "aliases": [
+    "sesame paste",
+    "tahina"
+   ]
+  },
+  "tajin": {
+   "name": "Tajin",
+   "section": "spices",
+   "aliases": []
+  },
+  "tamari": {
+   "name": "Tamari",
+   "section": "international",
+   "aliases": [
+    "gluten-free soy sauce"
+   ],
+   "parent": "soy-sauce"
+  },
+  "tamarind-paste": {
+   "name": "Tamarind Paste",
+   "section": "international",
+   "aliases": []
+  },
+  "tapioca-pearls": {
+   "name": "Tapioca pearls",
+   "section": "pantry",
+   "aliases": [
+    "boba",
+    "tapioca pearl",
+    "boba pearls"
+   ]
+  },
+  "taro": {
+   "name": "Taro",
+   "section": "produce",
+   "aliases": [
+    "dasheen",
+    "eddo",
+    "gabi",
+    "satoimo",
+    "taro root"
+   ],
+   "deals": {
+    "staple": true
+   }
+  },
+  "tea": {
+   "name": "Tea",
+   "section": "snacks-drinks",
+   "aliases": [
+    "citron tea",
+    "genmaicha",
+    "ginseng root tea",
+    "ginseng tea",
+    "herbal tea",
+    "honey citron tea",
+    "honey tea",
+    "loose leaf tea",
+    "tea bag",
+    "tea bags",
+    "tea concentrate",
+    "teabag",
+    "tulsi tea"
+   ]
+  },
+  "thai-basil": {
+   "name": "Thai Basil",
+   "section": "produce",
+   "aliases": [
+    "holy basil",
+    "horapha",
+    "thai sweet basil"
+   ],
+   "parent": "fresh-herbs"
+  },
+  "thai-chilies": {
+   "name": "Thai Chilies",
+   "section": "produce",
+   "aliases": [
+    "bird chilies",
+    "bird's eye chilies",
+    "birds eye chili",
+    "birds eye chillies",
+    "bird’s eye chilies",
+    "fresh chilies",
+    "red chilies",
+    "siling labuyo",
+    "thai bird chilies"
+   ]
+  },
+  "tilapia": {
+   "name": "Tilapia",
+   "section": "seafood",
+   "aliases": [],
+   "deals": {
+    "staple": true
+   },
+   "parent": "fish"
+  },
+  "tinned-anchovies": {
+   "name": "Tinned Anchovies",
+   "section": "pantry",
+   "aliases": [],
+   "parent": "tinned-fish"
+  },
+  "tinned-eel-and-saury": {
+   "name": "Tinned Eel and Saury",
+   "section": "pantry",
+   "aliases": [],
+   "popularity": "specialty",
+   "parent": "tinned-fish"
+  },
+  "tinned-fish": {
+   "name": "Tinned fish",
+   "section": "pantry",
+   "aliases": [
+    "canned fish",
+    "dace",
+    "dace black beans",
+    "fried dace"
+   ]
+  },
+  "tinned-sardines": {
+   "name": "Tinned Sardines",
+   "section": "pantry",
+   "aliases": [
+    "sardine",
+    "sardines"
+   ],
+   "parent": "tinned-fish"
+  },
+  "tinned-shellfish-and-squid": {
+   "name": "Tinned Shellfish and Squid",
+   "section": "pantry",
+   "aliases": [
+    "canned whelk",
+    "whelk"
+   ]
+  },
+  "tinned-smoked-salmon-and-trout": {
+   "name": "Tinned Smoked Salmon and Trout",
+   "section": "pantry",
+   "aliases": [],
+   "parent": "tinned-fish"
+  },
+  "toasted-sesame-seeds": {
+   "name": "Toasted Sesame Seeds",
+   "section": "international",
+   "aliases": [
+    "sesame seeds",
+    "white sesame seeds"
+   ]
+  },
+  "tofu": {
+   "name": "Tofu",
+   "section": "produce",
+   "aliases": [
+    "bean curd",
+    "extra-firm tofu",
+    "firm tofu",
+    "medium-firm tofu",
+    "silken tofu",
+    "soft tofu",
+    "soy tofu",
+    "tofu sheets",
+    "tofu slices"
+   ],
+   "deals": {
+    "staple": false
+   },
+   "popularity": "everyday"
+  },
+  "tom-yum-paste": {
+   "name": "Tom yum paste",
+   "section": "international",
+   "aliases": [
+    "tom yum"
+   ]
+  },
+  "tomato-paste": {
+   "name": "Tomato Paste",
+   "section": "pantry",
+   "aliases": [
+    "tomato puree"
+   ]
+  },
+  "tomatoes": {
+   "name": "Tomatoes",
+   "section": "produce",
+   "aliases": [
+    "tomato"
+   ],
+   "deals": {
+    "staple": true,
+    "benchmark": "tomatoes"
+   },
+   "popularity": "everyday"
+  },
+  "tonkatsu-sauce": {
+   "name": "Tonkatsu Sauce",
+   "section": "international",
+   "aliases": [
+    "bulldog sauce"
+   ]
+  },
+  "toor-dal": {
+   "name": "Toor Dal",
+   "section": "pantry",
+   "aliases": []
+  },
+  "tortilla-chips": {
+   "name": "Tortilla chips",
+   "section": "snacks-drinks",
+   "aliases": [
+    "tortilla chip",
+    "totopos"
+   ],
+   "parent": "chips",
+   "product": true
+  },
+  "tortillas": {
+   "name": "Tortillas",
+   "section": "bakery",
+   "aliases": []
+  },
+  "trail-mix": {
+   "name": "Trail mix",
+   "section": "snacks-drinks",
+   "aliases": [
+    "mixed beans and nuts"
+   ],
+   "product": true
+  },
+  "trout": {
+   "name": "Trout",
+   "section": "seafood",
+   "aliases": [
+    "rainbow trout",
+    "steelhead",
+    "steelhead trout"
+   ],
+   "parent": "fish"
+  },
+  "tsaoko": {
+   "name": "Tsaoko",
+   "section": "spices",
+   "aliases": [],
+   "popularity": "specialty"
+  },
+  "tuna": {
+   "name": "Tuna",
+   "section": "seafood",
+   "aliases": [
+    "ahi",
+    "ahi tuna",
+    "albacore",
+    "tuna block",
+    "tuna steak",
+    "yellowfin"
+   ],
+   "parent": "fish"
+  },
+  "turkey": {
+   "name": "Turkey",
+   "section": "meat",
+   "aliases": [
+    "ground turkey",
+    "turkey breast",
+    "turkey tenderloin"
+   ]
+  },
+  "turmeric": {
+   "name": "Turmeric",
+   "section": "spices",
+   "aliases": [
+    "ground turmeric",
+    "haldi"
+   ]
+  },
+  "turnips": {
+   "name": "Turnips",
+   "section": "produce",
+   "aliases": [
+    "turnip"
+   ]
+  },
+  "udon": {
+   "name": "Udon noodles",
+   "section": "frozen",
+   "aliases": [
+    "udon",
+    "udon noodles"
+   ],
+   "deals": {
+    "staple": false
+   },
+   "parent": "noodles"
+  },
+  "ume-plum-vinegar": {
+   "name": "Ume Plum Vinegar",
+   "section": "pantry",
+   "aliases": []
+  },
+  "unagi": {
+   "name": "Unagi",
+   "section": "seafood",
+   "aliases": [
+    "bbq eel",
+    "eel",
+    "roasted eel"
+   ],
+   "parent": "fish"
+  },
+  "unsweetened-coconut-flakes": {
+   "name": "Unsweetened Coconut Flakes",
+   "section": "pantry",
+   "aliases": []
+  },
+  "vanilla-extract": {
+   "name": "Vanilla Extract",
+   "section": "spices",
+   "aliases": [
+    "vanilla"
+   ]
+  },
+  "vegetable-base": {
+   "name": "Vegetable Base",
+   "section": "pantry",
+   "aliases": [
+    "vegetable broth",
+    "vegetable stock"
+   ]
+  },
+  "vegetarian-oyster-sauce": {
+   "name": "Vegetarian Oyster Sauce",
+   "section": "international",
+   "aliases": []
+  },
+  "walnuts": {
+   "name": "Walnuts",
+   "section": "pantry",
+   "aliases": [],
+   "parent": "nuts"
+  },
+  "water-spinach": {
+   "name": "Water spinach",
+   "section": "produce",
+   "aliases": [
+    "kang kong",
+    "kangkong",
+    "on choy",
+    "ong choy",
+    "rau muong",
+    "water spinach"
+   ],
+   "parent": "asian-greens"
+  },
+  "watermelon": {
+   "name": "Watermelon",
+   "section": "produce",
+   "aliases": [
+    "watermelons",
+    "seedless watermelon"
+   ],
+   "parent": "melon"
+  },
+  "weakfish": {
+   "name": "Weakfish",
+   "section": "seafood",
+   "aliases": [],
+   "deals": {
+    "staple": true
+   },
+   "popularity": "specialty",
+   "parent": "fish"
+  },
+  "wheat-flour": {
+   "name": "Wheat Flour",
+   "section": "pantry",
+   "aliases": [
+    "atta",
+    "chakki atta"
+   ]
+  },
+  "white-miso": {
+   "name": "White Miso",
+   "section": "international",
+   "aliases": [
+    "shiro miso",
+    "sweet white miso"
+   ],
+   "parent": "miso"
+  },
+  "white-pepper": {
+   "name": "White Pepper",
+   "section": "spices",
+   "aliases": [
+    "ground white pepper",
+    "white peppercorns"
+   ]
+  },
+  "white-sugar": {
+   "name": "White Sugar",
+   "section": "pantry",
+   "aliases": [
+    "caster sugar",
+    "granulated sugar",
+    "pure cane sugar",
+    "superfine sugar"
+   ],
+   "popularity": "everyday"
+  },
+  "white-vinegar": {
+   "name": "White Vinegar",
+   "section": "pantry",
+   "aliases": [
+    "distilled vinegar",
+    "distilled white vinegar"
+   ]
+  },
+  "white-wine-vinegar": {
+   "name": "White Wine Vinegar",
+   "section": "pantry",
+   "aliases": []
+  },
+  "whole-dried-kombu": {
+   "name": "Whole Dried Kombu",
+   "section": "international",
+   "aliases": []
+  },
+  "winter-melon": {
+   "name": "Winter melon",
+   "section": "produce",
+   "aliases": [
+    "wax gourd",
+    "dong gua",
+    "ash gourd"
+   ]
+  },
+  "wonton-wrappers": {
+   "name": "Wonton & dumpling wrappers",
+   "section": "international",
+   "aliases": [
+    "wonton wrappers",
+    "wonton skins",
+    "dumpling wrappers",
+    "dumpling skins",
+    "gyoza wrappers",
+    "potsticker wrappers",
+    "egg roll wrappers",
+    "lumpia wrappers"
+   ]
+  },
+  "wood-ear": {
+   "name": "Wood ear mushrooms",
+   "section": "international",
+   "aliases": [
+    "black fungus",
+    "cloud ear",
+    "wood ear"
+   ],
+   "parent": "dried-mushrooms"
+  },
+  "worcestershire-sauce": {
+   "name": "Worcestershire Sauce",
+   "section": "pantry",
+   "aliases": [
+    "worcester sauce",
+    "worcestershire"
+   ]
+  },
+  "xo-sauce": {
+   "name": "XO sauce",
+   "section": "international",
+   "aliases": [
+    "xo"
+   ]
+  },
+  "yeast": {
+   "name": "Yeast",
+   "section": "pantry",
+   "aliases": [
+    "active dry yeast",
+    "instant yeast"
+   ]
+  },
+  "yellow-curry-paste": {
+   "name": "Yellow Curry Paste",
+   "section": "international",
+   "aliases": []
+  },
+  "yellow-or-whole-grain-mustard": {
+   "name": "Yellow or Whole-Grain Mustard",
+   "section": "pantry",
+   "aliases": []
+  },
+  "yellowtail": {
+   "name": "Yellowtail (hamachi)",
+   "section": "seafood",
+   "aliases": [
+    "hamachi",
+    "yellow tail",
+    "yellow-tail fish",
+    "yellowtail"
+   ],
+   "deals": {
+    "staple": false
+   },
+   "parent": "fish"
+  },
+  "yogurt": {
+   "name": "Yogurt",
+   "section": "dairy-eggs",
+   "aliases": [
+    "dahi",
+    "fermented milk drink",
+    "greek yogurt",
+    "kefir",
+    "plain yogurt",
+    "skyr",
+    "yakult",
+    "yoghurt",
+    "yogurt drink",
+    "yogurt smoothies",
+    "yogurt tubes"
+   ],
+   "deals": {
+    "staple": false
+   },
+   "popularity": "everyday"
+  },
+  "yoka-miso": {
+   "name": "Yoka Miso",
+   "section": "international",
+   "aliases": [],
+   "parent": "miso"
+  },
+  "yu-choy": {
+   "name": "Yu choy",
+   "section": "produce",
+   "aliases": [
+    "choi sum",
+    "choy sum",
+    "yu choi",
+    "yu choy",
+    "yu choy sum"
+   ],
+   "parent": "asian-greens"
+  },
+  "yukari-shiso-furikake": {
+   "name": "Yukari Shiso Furikake",
+   "section": "international",
+   "aliases": []
+  },
+  "yuzu-dressing": {
+   "name": "Yuzu Dressing",
+   "section": "international",
+   "aliases": []
+  },
+  "yuzu-kosho": {
+   "name": "Yuzu Kosho",
+   "section": "international",
+   "aliases": []
+  },
+  "zaatar": {
+   "name": "Za'atar",
+   "section": "spices",
+   "aliases": []
+  },
+  "zucchini": {
+   "name": "Zucchini",
+   "section": "produce",
+   "aliases": [
+    "courgette"
+   ],
+   "parent": "summer-squash"
+  }
+ }
+}

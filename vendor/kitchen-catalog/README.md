@@ -1,0 +1,1 @@
+A copy of [KitchenCatalog](https://github.com/kyle-pace/kitchen-catalog) (private), so cloud builds can match ingredients without access to that repo. `VERSION` is the commit it came from. Don't edit these files; change the catalog there, then run `npm run sync-catalog`.

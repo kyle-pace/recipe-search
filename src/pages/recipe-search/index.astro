@@ -1,0 +1,798 @@
+---
+// Recipe search: one search box across the recipe sites Kyle trusts, from our own index
+// (public/recipe-search/index.json, built from data/ by scripts/build-index.mjs).
+// The page is a shell; src/scripts/search.ts loads the index and does the searching in
+// the browser. Patterns came from a Mobbin pass (collection "Recipe search"):
+// typeahead with "see all", ingredient chips, one row of filter chips, photo cards that
+// name their site, and one-tap fixes when nothing matches.
+import DevLayout from 'kp-design/layouts/DevLayout.astro';
+import { StatusBadge } from 'kp-design';
+---
+
+<DevLayout
+  title="Recipe search"
+  description="One search box across the recipe sites I trust: The Woks of Life, Hot Thai Kitchen and Smitten Kitchen. Search by dish or by what you have; every result opens on the creator’s own site."
+  accent="mint"
+  image="/recipe-search/og.png"
+  imageAlt="Recipe search: one search box across the recipe sites I trust, on kylepace.dev."
+>
+  <link slot="head" rel="preload" href="/recipe-search/index.json" as="fetch" crossorigin="anonymous" />
+
+  <header class="intro">
+    <p class="eyebrow"><a href="https://kylepace.dev/labs/">Labs</a> <StatusBadge status="in-progress" /></p>
+    <h1>One search box for the recipe sites I trust.</h1>
+    <p class="lede prose">
+      Search by dish, or add what you have and see what it makes. Every result opens on the creator’s own site.
+    </p>
+  </header>
+
+  <div class="app" id="app" data-state="loading">
+    <form class="search" role="search" id="search-form" action="/recipe-search/" method="get">
+      <label class="visually-hidden" for="q">Search recipes or add an ingredient</label>
+      <div class="field">
+        <svg class="field-icon" aria-hidden="true" viewBox="0 0 24 24" width="22" height="22"
+          ><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"></circle><path
+            d="m15.5 15.5 5 5"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"></path></svg
+        >
+        <input
+          id="q"
+          name="q"
+          type="search"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="Dish or ingredient"
+          role="combobox"
+          aria-autocomplete="list"
+          aria-expanded="false"
+          aria-controls="suggestions"
+          aria-describedby="q-hint"
+        />
+        <button class="go" type="submit">Search</button>
+      </div>
+      <p id="q-hint" class="visually-hidden">
+        As you type, suggestions appear below. Pick an ingredient to search by what you have.
+      </p>
+      <div class="suggestions" id="suggestions-panel" hidden>
+        <div id="suggestions" role="listbox" aria-label="Suggestions"></div>
+      </div>
+    </form>
+
+    <div class="with" id="with" hidden>
+      <span class="with-label" id="with-label">Uses</span>
+      <ul class="chips" id="with-chips" aria-labelledby="with-label"></ul>
+    </div>
+
+    <div class="filters" role="group" aria-label="Filters">
+      <button class="filter" type="button" popovertarget="f-site" id="f-site-btn">
+        <span class="filter-name">Site</span><span class="filter-value" id="f-site-value"></span>
+      </button>
+      <button class="filter" type="button" popovertarget="f-time" id="f-time-btn">
+        <span class="filter-name">Time</span><span class="filter-value" id="f-time-value"></span>
+      </button>
+      <button class="filter" type="button" popovertarget="f-cuisine" id="f-cuisine-btn">
+        <span class="filter-name">Cuisine</span><span class="filter-value" id="f-cuisine-value"></span>
+      </button>
+      <button class="clear-all" type="button" id="clear-all" hidden>Clear all</button>
+    </div>
+
+    <div class="pop" id="f-site" popover>
+      <fieldset>
+        <legend>Sites</legend>
+        <div id="f-site-options" class="options"></div>
+      </fieldset>
+    </div>
+    <div class="pop" id="f-time" popover>
+      <fieldset>
+        <legend>Ready in</legend>
+        <div class="options" id="f-time-options"></div>
+      </fieldset>
+    </div>
+    <div class="pop" id="f-cuisine" popover>
+      <fieldset>
+        <legend>Cuisine</legend>
+        <div class="options" id="f-cuisine-options"></div>
+      </fieldset>
+    </div>
+
+    <p class="status" id="status" role="status" aria-live="polite">Loading the recipes…</p>
+
+    <section class="start" id="start" aria-labelledby="start-title" hidden>
+      <h2 id="start-title">Start with what you have</h2>
+      <p class="muted">Pick a few. Recipes that use the most of them come first.</p>
+      <ul class="chips popular" id="popular"></ul>
+      <h2 class="try-title">Or try</h2>
+      <ul class="chips" id="try"></ul>
+    </section>
+
+    <h2 class="visually-hidden" id="results-title">Recipes</h2>
+    <ol class="results" id="results" aria-labelledby="results-title"></ol>
+    <button class="more" type="button" id="more" hidden>Show more</button>
+
+    <section class="videos" id="videos" aria-labelledby="videos-title" hidden>
+      <h2 id="videos-title">On YouTube</h2>
+      <ol class="results video-results" id="video-results"></ol>
+    </section>
+
+    <section class="empty" id="empty" aria-labelledby="empty-title" hidden>
+      <h2 id="empty-title">Nothing matches all of that</h2>
+      <p class="muted" id="empty-hint">Try one of these:</p>
+      <ul class="fixes" id="fixes"></ul>
+    </section>
+
+    <p class="also" id="also" hidden></p>
+
+    <noscript>
+      <p class="status">
+        Search runs in your browser, so it needs JavaScript. You can still search
+        <a href="https://thewoksoflife.com/?s=">The Woks of Life</a>,
+        <a href="https://hot-thai-kitchen.com/?s=">Hot Thai Kitchen</a> and
+        <a href="https://smittenkitchen.com/?s=">Smitten Kitchen</a> directly.
+      </p>
+    </noscript>
+  </div>
+
+  <section class="about prose" aria-labelledby="about-title">
+    <h2 id="about-title">What’s in here</h2>
+    <ul id="sources-list" class="sources-list"></ul>
+    <p class="muted">
+      A weekly job reads each site’s sitemap, follows its robots.txt, and keeps only what it takes to find a recipe:
+      the title, link, photo link, ingredient names, time and cuisine. Never the recipe itself. Photos load from each
+      site, only when they’re on screen. <span id="crawled"></span>
+    </p>
+  </section>
+
+  <script>
+    import '../../scripts/search.ts';
+  </script>
+</DevLayout>
+
+<style>
+  .intro {
+    padding-bottom: var(--space-6);
+  }
+
+  .intro h1 {
+    max-width: 20ch;
+  }
+
+  .eyebrow {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+  }
+
+  .eyebrow a {
+    color: inherit;
+  }
+
+  .lede {
+    font-size: var(--step-1);
+    color: var(--ink-muted);
+  }
+
+  .muted {
+    color: var(--ink-muted);
+  }
+
+  /* Elements set to display: flex or block below still hide when [hidden]. */
+  .app [hidden] {
+    display: none !important;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* Search field: the one strong surface on the page. */
+  .search {
+    position: relative;
+    max-width: 48rem;
+  }
+
+  .field {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-1) var(--space-1) var(--space-4);
+    background: var(--bg-raised);
+    border: 2px solid var(--line);
+    border-radius: 999px;
+  }
+
+  .field:focus-within {
+    border-color: var(--accent-ink);
+  }
+
+  .field-icon {
+    flex: none;
+    color: var(--ink-muted);
+  }
+
+  .field input {
+    flex: 1;
+    min-width: 0;
+    min-height: 2.75rem;
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    font-size: var(--step-1);
+  }
+
+  .field input:focus {
+    outline: none;
+  }
+
+  .field input::placeholder {
+    color: var(--ink-muted);
+    opacity: 1;
+  }
+
+  .field input::-webkit-search-cancel-button {
+    cursor: pointer;
+  }
+
+  .go {
+    flex: none;
+    min-height: 2.75rem;
+    padding: 0 var(--space-6);
+    border: 0;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--bg);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* Typeahead */
+  .suggestions {
+    position: absolute;
+    z-index: 5;
+    inset: calc(100% + var(--space-2)) 0 auto 0;
+    padding: var(--space-2);
+    background: var(--bg-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 12px 32px rgb(0 0 0 / 0.18);
+  }
+
+  .suggestions :global(.group-label) {
+    margin: var(--space-2) var(--space-3) var(--space-1);
+    font-size: var(--step--1);
+    font-weight: 700;
+    color: var(--ink-muted);
+  }
+
+  .suggestions :global([role='option']) {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+    min-height: 2.75rem;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+  }
+
+  .suggestions :global([role='option'][aria-selected='true']) {
+    background: color-mix(in oklab, var(--accent) 22%, transparent);
+    outline: 2px solid var(--accent-ink);
+    outline-offset: -2px;
+  }
+
+  .suggestions :global([aria-selected='true'] .opt-meta) {
+    color: var(--ink);
+  }
+
+  .suggestions :global(.opt-thumb) {
+    flex: none;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+    background: var(--line);
+  }
+
+  .suggestions :global(.opt-text) {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .suggestions :global(.opt-meta) {
+    font-size: var(--step--1);
+    color: var(--ink-muted);
+  }
+
+  .suggestions :global(.opt-plus) {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--accent-ink);
+    color: var(--accent-ink);
+    font-weight: 700;
+  }
+
+  /* Chips: ingredients you're using, popular ingredients and suggested searches. */
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .chips :global(button) {
+    display: inline-flex;
+    gap: var(--space-2);
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0 var(--space-4);
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    background: var(--bg-raised);
+    color: var(--ink);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .chips :global(button:hover) {
+    border-color: var(--accent-ink);
+  }
+
+  .chips :global(.chip-count) {
+    font-size: var(--step--1);
+    color: var(--ink-muted);
+  }
+
+  .with {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: center;
+    margin-top: var(--space-4);
+  }
+
+  .with-label {
+    font-weight: 700;
+  }
+
+  .with :global(.chips button) {
+    background: color-mix(in oklab, var(--accent) 20%, var(--bg-raised));
+    border-color: var(--accent-ink);
+  }
+
+  .chips :global(.x) {
+    font-size: 1.25em;
+    line-height: 1;
+  }
+
+  /* One row of filters, Walmart and Upwork style. */
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    align-items: center;
+    margin-top: var(--space-4);
+  }
+
+  .filter {
+    display: inline-flex;
+    gap: 0;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0 var(--space-4);
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .filter::after {
+    content: '';
+    width: 0.45em;
+    height: 0.45em;
+    margin-left: var(--space-3);
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: translateY(-25%) rotate(45deg);
+  }
+
+  .filter[data-active] {
+    border-color: var(--accent-ink);
+    background: color-mix(in oklab, var(--accent) 20%, transparent);
+  }
+
+  .filter-value:not(:empty)::before {
+    content: ': ';
+  }
+
+  .filter-value {
+    font-weight: 700;
+  }
+
+  .clear-all {
+    min-height: 2.75rem;
+    padding: 0 var(--space-3);
+    border: 0;
+    background: none;
+    color: var(--accent-ink);
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .pop {
+    margin: 0;
+    min-width: 15rem;
+    max-width: min(22rem, calc(100vw - 2 * var(--gutter)));
+    max-height: min(26rem, 70vh);
+    overflow: auto;
+    padding: var(--space-4);
+    background: var(--bg-raised);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 12px 32px rgb(0 0 0 / 0.2);
+  }
+
+  .pop fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .pop legend {
+    padding: 0;
+    margin-bottom: var(--space-2);
+    font-weight: 700;
+  }
+
+  .options :global(label) {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+    min-height: 2.75rem;
+    cursor: pointer;
+  }
+
+  .options :global(input) {
+    width: 1.25rem;
+    height: 1.25rem;
+    accent-color: var(--accent-ink);
+  }
+
+  .options :global(.count) {
+    margin-left: auto;
+    padding-left: var(--space-4);
+    color: var(--ink-muted);
+    font-size: var(--step--1);
+  }
+
+  /* On phones, filter menus come up from the bottom. */
+  @media (max-width: 40rem) {
+    .pop {
+      inset: auto 0 0 0 !important;
+      max-width: none;
+      width: 100%;
+      border-radius: var(--radius) var(--radius) 0 0;
+      padding-bottom: calc(var(--space-6) + env(safe-area-inset-bottom));
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .pop:popover-open {
+      animation: pop-in var(--duration-fast) var(--ease-out);
+    }
+
+    @keyframes pop-in {
+      from {
+        opacity: 0;
+        transform: translateY(-4px);
+      }
+    }
+  }
+
+  .status {
+    margin: var(--space-6) 0 var(--space-4);
+    color: var(--ink-muted);
+  }
+
+  .status :global(strong) {
+    color: var(--ink);
+  }
+
+  .start h2,
+  .empty h2,
+  .videos h2 {
+    font-size: var(--step-1);
+    margin: 0 0 var(--space-2);
+  }
+
+  .start .muted {
+    margin: 0 0 var(--space-4);
+  }
+
+  .start .try-title {
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-4);
+  }
+
+  /* Results: photo cards that say whose recipe it is. */
+  .results {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: var(--space-6) var(--space-4);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .results :global(.card) {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .results :global(.photo) {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: color-mix(in oklab, var(--src) 18%, var(--bg-raised));
+  }
+
+  .results :global(.photo img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .results :global(.photo .no-photo) {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: var(--space-4);
+    text-align: center;
+    font-weight: 700;
+    font-size: var(--step-1);
+    color: var(--src-ink);
+  }
+
+  .results :global(.time) {
+    position: absolute;
+    left: var(--space-2);
+    bottom: var(--space-2);
+    padding: 0.15em 0.6em;
+    border-radius: 999px;
+    background: rgb(20 19 23 / 0.82);
+    color: #f3efe8;
+    font-size: var(--step--1);
+    font-weight: 700;
+  }
+
+  .results :global(.badge-yt) {
+    position: absolute;
+    right: var(--space-2);
+    top: var(--space-2);
+    padding: 0.15em 0.6em;
+    border-radius: 999px;
+    background: #fff;
+    color: #b00000;
+    font-size: var(--step--1);
+    font-weight: 700;
+  }
+
+  .results :global(h3) {
+    margin: var(--space-3) 0 var(--space-1);
+    font-size: var(--step-0);
+    line-height: 1.3;
+  }
+
+  .results :global(h3 a) {
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  /* The whole card is the link's hit area; the title stays the accessible name. */
+  .results :global(h3 a::after) {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius);
+  }
+
+  .results :global(h3 a:focus-visible) {
+    outline: none;
+  }
+
+  .results :global(h3 a:focus-visible::after) {
+    outline: 3px solid var(--accent-ink);
+    outline-offset: 3px;
+  }
+
+  .results :global(.card:hover h3 a) {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+  }
+
+  .results :global(.src) {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    margin: 0;
+    font-size: var(--step--1);
+    color: var(--ink-muted);
+  }
+
+  .results :global(.src-mark) {
+    flex: none;
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 3px;
+    background: var(--src);
+  }
+
+  .results :global(.uses) {
+    margin: var(--space-1) 0 0;
+    font-size: var(--step--1);
+  }
+
+  .results :global(.uses strong) {
+    color: var(--accent-ink);
+  }
+
+  .results :global(mark) {
+    background: color-mix(in oklab, var(--accent) 35%, transparent);
+    color: inherit;
+    border-radius: 2px;
+  }
+
+  .more {
+    display: block;
+    margin: var(--space-8) auto 0;
+    min-height: 2.75rem;
+    padding: 0 var(--space-8);
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .videos {
+    margin-top: var(--space-12);
+  }
+
+  .videos .results :global(.photo) {
+    aspect-ratio: 16 / 9;
+  }
+
+  /* Nothing found: one-tap ways out, Pinterest style. */
+  .fixes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    padding: 0;
+    margin: var(--space-4) 0 0;
+    list-style: none;
+  }
+
+  .fixes :global(button) {
+    min-height: 2.75rem;
+    padding: 0 var(--space-4);
+    border: 0;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--ink) 9%, transparent);
+    color: var(--ink);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .fixes :global(button:hover) {
+    background: color-mix(in oklab, var(--ink) 15%, transparent);
+  }
+
+  .also {
+    margin-top: var(--space-12);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--line);
+    color: var(--ink-muted);
+  }
+
+  .about {
+    margin-top: var(--space-16);
+  }
+
+  .about h2 {
+    font-size: var(--step-1);
+  }
+
+  .sources-list {
+    padding: 0;
+    list-style: none;
+  }
+
+  .sources-list :global(li) {
+    display: flex;
+    gap: var(--space-2);
+    align-items: baseline;
+    padding: var(--space-1) 0;
+  }
+
+  .sources-list :global(.src-mark) {
+    flex: none;
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 3px;
+    background: var(--src);
+    transform: translateY(0.05em);
+  }
+
+  .sources-list :global(.count),
+  .sources-list :global(.why) {
+    color: var(--ink-muted);
+  }
+
+  .app[data-state='loading'] .filters,
+  .app[data-state='loading'] .results {
+    opacity: 0.5;
+  }
+
+  /* Each site's own tint, like book spines on a shelf: a fill for marks and a
+     text-safe shade, in light and dark. Names always sit next to the color. */
+  .app,
+  .about {
+    --src: var(--line);
+    --src-ink: var(--ink);
+  }
+
+  :global([data-src='woks']) {
+    --src: #c8382c;
+    --src-ink: light-dark(#a3271f, #ee8a80);
+  }
+
+  :global([data-src='htk']) {
+    --src: #d79a22;
+    --src-ink: light-dark(#85570a, #e2b15a);
+  }
+
+  :global([data-src='sk']) {
+    --src: #8a5cc4;
+    --src-ink: light-dark(#6a3f9e, #c3a2ec);
+  }
+
+  :global([data-src='joc']) {
+    --src: #3f74b8;
+    --src-ink: light-dark(#2b5c99, #8cb4ec);
+  }
+
+  :global([data-src='maangchi']) {
+    --src: #c4447f;
+    --src-ink: light-dark(#a8336a, #ef8fbd);
+  }
+
+  :global([data-src='youtube']) {
+    --src: #d01a1a;
+    --src-ink: light-dark(#b00000, #f08a8a);
+  }
+</style>

@@ -2,8 +2,13 @@
   "name": "recipe-search",
   "private": true,
   "type": "module",
-  "description": "One search box across the recipe sites Kyle trusts, from our own small index.",
+  "description": "One search box across the recipe sites Kyle trusts, from our own small index. Live at kylepace.dev/recipe-search/.",
   "scripts": {
+    "dev": "node scripts/build-index.mjs && astro dev",
+    "index": "node scripts/build-index.mjs",
+    "build": "node scripts/build-index.mjs && astro build",
+    "preview": "npm run build && wrangler dev",
+    "sync-catalog": "node scripts/sync-catalog.mjs",
     "crawl": "node crawler/crawl.mjs",
     "test": "node --test crawler/test/*.test.mjs"
   },
@@ -11,6 +16,13 @@
     "node": ">=22"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^14.4.6",
+    "astro": "^7.4.7",
+    "kp-design": "github:kyle-pace/kp-design#c519d044834f38804a4b569b799bd8abf1dd9684",
     "yaml": "^2.6.0"
+  },
+  "devDependencies": {
+    "axe-core": "^4.14.0",
+    "wrangler": "^4.158.0"
   }
 }

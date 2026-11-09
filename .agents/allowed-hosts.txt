@@ -1,0 +1,12 @@
+# Outside hosts this project talks to, beyond its own domain (see the principles).
+# Recipe photos on result cards, loaded from each recipe's own site, lazily and with no
+# referrer. Kyle's call, 2026-11-08. Drop a host if its site blocks it or asks us to stop.
+thewoksoflife.com
+hot-thai-kitchen.com
+# Smitten Kitchen serves its photos through WordPress.com's image CDN.
+i0.wp.com
+# Paused sites, for when they're indexed again (photos from their own sites).
+www.justonecookbook.com
+www.maangchi.com
+# Video thumbnails for Kenji's YouTube results, once the YouTube key is in place.
+i.ytimg.com
