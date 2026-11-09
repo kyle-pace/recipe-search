@@ -1,12 +1,21 @@
 # Outside hosts this project talks to, beyond its own domain (see the principles).
-# Recipe photos on result cards, loaded from each recipe's own site, lazily and with no
-# referrer. Kyle's call, 2026-11-08. Drop a host if its site blocks it or asks us to stop.
+# A copy is published at kylepace.dev/recipe-search/allowed-hosts.txt (the repo is
+# private) for the Connections page. Drop a photo host if its site blocks us or asks.
+
+# Recipe photos from The Woks of Life, on its own results, lazily and with no referrer. Approved by Kyle, 2026-11-08.
 thewoksoflife.com
+
+# Recipe photos from Hot Thai Kitchen, on its own results, lazily and with no referrer. Approved by Kyle, 2026-11-08.
 hot-thai-kitchen.com
-# Smitten Kitchen serves its photos through WordPress.com's image CDN.
+
+# Recipe photos from Smitten Kitchen, served by WordPress.com's image CDN, lazily and with no referrer. Approved by Kyle, 2026-11-08.
 i0.wp.com
-# Paused sites, for when they're indexed again (photos from their own sites).
+
+# Recipe photos from Just One Cookbook, once the site is searchable again. Approved by Kyle, 2026-11-08.
 www.justonecookbook.com
+
+# Recipe photos from Maangchi, once the site is searchable again. Approved by Kyle, 2026-11-08.
 www.maangchi.com
-# Video thumbnails for Kenji's YouTube results, once the YouTube key is in place.
+
+# Thumbnails for J. Kenji López-Alt's YouTube videos, once the YouTube key is in place. Approved by Kyle, 2026-11-08.
 i.ytimg.com

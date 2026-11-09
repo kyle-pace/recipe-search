@@ -6,7 +6,7 @@
 //
 //   node scripts/build-index.mjs            # writes the index
 //   node scripts/build-index.mjs --report   # also lists the most common unmatched lines
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, copyFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'yaml';
@@ -199,6 +199,8 @@ const index = {
 mkdirSync(dirname(out), { recursive: true });
 const json = JSON.stringify(index);
 writeFileSync(out, json);
+// The repo is private, so the hub's Connections page reads this copy of the list.
+copyFileSync(join(root, '.agents/allowed-hosts.txt'), join(dirname(out), 'allowed-hosts.txt'));
 console.log(
   `index: ${recipes.length} recipes from ${srcList.length} sites, ${videos.length} videos, ${ing.length} ingredients, ` +
     `${cuisines.length} cuisines; ${Math.round((matched / lines) * 100)}% of ingredient lines matched; ${Math.round(json.length / 1024)} KB`,
