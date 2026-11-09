@@ -1,14 +1,50 @@
 {
- "run": "2026-11-09T06:20:52.713Z",
+ "run": "2026-11-09T06:27:31.500Z",
  "options": {
   "limit": null,
   "delayMs": 4000
  },
  "sources": {
+  "woks-yt": {
+   "id": "woks-yt",
+   "name": "The Woks of Life",
+   "result": "ok",
+   "count": 403
+  },
+  "htk-yt": {
+   "id": "htk-yt",
+   "name": "Hot Thai Kitchen",
+   "result": "ok",
+   "count": 831
+  },
+  "sk-yt": {
+   "id": "sk-yt",
+   "name": "Smitten Kitchen",
+   "result": "ok",
+   "count": 90
+  },
+  "joc-yt": {
+   "id": "joc-yt",
+   "name": "Just One Cookbook",
+   "result": "ok",
+   "count": 588
+  },
+  "maangchi-yt": {
+   "id": "maangchi-yt",
+   "name": "Maangchi",
+   "result": "ok",
+   "count": 611
+  },
+  "ccd": {
+   "id": "ccd",
+   "name": "Chinese Cooking Demystified",
+   "result": "ok",
+   "count": 362
+  },
   "kenji": {
    "id": "kenji",
    "name": "J. Kenji López-Alt",
-   "result": "ok",
+   "result": "not run",
    "count": 876
   },
   "woks": {
