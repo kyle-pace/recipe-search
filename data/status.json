@@ -1,44 +1,153 @@
 {
- "run": "2026-11-09T06:27:31.500Z",
+ "run": "2026-11-09T07:03:49.799Z",
  "options": {
   "limit": null,
   "delayMs": 4000
  },
  "sources": {
+  "mala": {
+   "id": "mala",
+   "name": "The Mala Market",
+   "result": "ok",
+   "fetched": 225,
+   "added": 198,
+   "updated": 0,
+   "removed": 0,
+   "noRecipe": 27,
+   "httpErrors": {},
+   "sitemapPages": 225,
+   "waiting": 0,
+   "count": 198
+  },
+  "rte": {
+   "id": "rte",
+   "name": "RecipeTin Eats",
+   "result": "ok",
+   "fetched": 1748,
+   "added": 1538,
+   "updated": 0,
+   "removed": 0,
+   "noRecipe": 210,
+   "httpErrors": {},
+   "sitemapPages": 1748,
+   "waiting": 0,
+   "count": 1538
+  },
+  "rtj": {
+   "id": "rtj",
+   "name": "RecipeTin Japan",
+   "result": "ok",
+   "fetched": 441,
+   "added": 430,
+   "updated": 0,
+   "removed": 0,
+   "noRecipe": 11,
+   "httpErrors": {},
+   "sitemapPages": 441,
+   "waiting": 0,
+   "count": 430
+  },
+  "sudachi": {
+   "id": "sudachi",
+   "name": "Sudachi",
+   "result": "blocked",
+   "fetched": 505,
+   "added": 395,
+   "updated": 0,
+   "removed": 0,
+   "noRecipe": 106,
+   "httpErrors": {
+    "429": 4
+   },
+   "sitemapPages": 606,
+   "waiting": 101,
+   "error": "HTTP 429 three times in a row",
+   "count": 395
+  },
+  "mwl": {
+   "id": "mwl",
+   "name": "Made With Lau",
+   "result": "ok",
+   "fetched": 197,
+   "added": 197,
+   "updated": 0,
+   "removed": 0,
+   "noRecipe": 0,
+   "httpErrors": {},
+   "sitemapPages": 197,
+   "waiting": 0,
+   "count": 197
+  },
+  "rte-yt": {
+   "id": "rte-yt",
+   "name": "RecipeTin Eats",
+   "result": "ok",
+   "count": 1433
+  },
+  "rtj-yt": {
+   "id": "rtj-yt",
+   "name": "RecipeTin Japan",
+   "result": "ok",
+   "count": 75
+  },
+  "sudachi-yt": {
+   "id": "sudachi-yt",
+   "name": "Sudachi",
+   "result": "ok",
+   "count": 572
+  },
+  "mwl-yt": {
+   "id": "mwl-yt",
+   "name": "Made With Lau",
+   "result": "ok",
+   "count": 605
+  },
+  "rhs-yt": {
+   "id": "rhs-yt",
+   "name": "Red House Spice",
+   "result": "ok",
+   "count": 130
+  },
+  "fca": {
+   "id": "fca",
+   "name": "French Cooking Academy",
+   "result": "ok",
+   "count": 544
+  },
   "woks-yt": {
    "id": "woks-yt",
    "name": "The Woks of Life",
-   "result": "ok",
+   "result": "not run",
    "count": 403
   },
   "htk-yt": {
    "id": "htk-yt",
    "name": "Hot Thai Kitchen",
-   "result": "ok",
+   "result": "not run",
    "count": 831
   },
   "sk-yt": {
    "id": "sk-yt",
    "name": "Smitten Kitchen",
-   "result": "ok",
+   "result": "not run",
    "count": 90
   },
   "joc-yt": {
    "id": "joc-yt",
    "name": "Just One Cookbook",
-   "result": "ok",
+   "result": "not run",
    "count": 588
   },
   "maangchi-yt": {
    "id": "maangchi-yt",
    "name": "Maangchi",
-   "result": "ok",
+   "result": "not run",
    "count": 611
   },
   "ccd": {
    "id": "ccd",
    "name": "Chinese Cooking Demystified",
-   "result": "ok",
+   "result": "not run",
    "count": 362
   },
   "kenji": {
@@ -104,5 +213,7 @@
    "error": "refuses cloud servers (HTTP 403 on its sitemap from GitHub Actions, 2026-11-02)"
   }
  },
- "alerts": []
+ "alerts": [
+  "sudachi: blocked (HTTP 429 three times in a row)"
+ ]
 }
