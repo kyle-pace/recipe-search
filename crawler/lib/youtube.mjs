@@ -24,8 +24,52 @@ export async function fetchChannelVideos(channelUrl, key, { fetchImpl = fetch } 
     pageToken = data.nextPageToken;
     if (!pageToken) break;
   }
+  // Mark Shorts (sh: 1), so the index can leave them out. YouTube keeps each channel's
+  // Shorts in their own playlist, "UUSH" plus the channel id (the uploads list is "UU"
+  // plus it). That list isn't documented, so if it can't be read, fall back to the
+  // documented way: a video a minute or shorter counts as a Short.
+  const shorts = await shortIds(fetchImpl, key, uploads, videos).catch(() => null) ?? (await shortByLength(fetchImpl, key, videos));
+  for (const v of videos) if (shorts.has(v.id)) v.sh = 1;
   videos.sort((a, b) => (a.p < b.p ? 1 : a.p > b.p ? -1 : 0));
   return videos;
+}
+
+async function shortIds(fetchImpl, key, uploads) {
+  const ids = new Set();
+  let pageToken = '';
+  for (let page = 0; page < 100; page++) {
+    const url = `${API}/playlistItems?part=contentDetails&maxResults=50&playlistId=UUSH${uploads.slice(2)}&key=${key}${pageToken ? `&pageToken=${pageToken}` : ''}`;
+    let data;
+    try {
+      data = await getJson(fetchImpl, url);
+    } catch (err) {
+      // A channel with no Shorts has no Shorts playlist: that's an empty list, not a failure.
+      if (/HTTP 404/.test(err.message) && page === 0) return ids;
+      throw err;
+    }
+    for (const item of data.items || []) if (item.contentDetails?.videoId) ids.add(item.contentDetails.videoId);
+    pageToken = data.nextPageToken;
+    if (!pageToken) break;
+  }
+  return ids;
+}
+
+async function shortByLength(fetchImpl, key, videos) {
+  const ids = new Set();
+  for (let i = 0; i < videos.length; i += 50) {
+    const batch = videos.slice(i, i + 50).map((v) => v.id);
+    const data = await getJson(fetchImpl, `${API}/videos?part=contentDetails&id=${batch.join(',')}&key=${key}`);
+    for (const item of data.items || []) if (seconds(item.contentDetails?.duration) <= 60) ids.add(item.id);
+  }
+  return ids;
+}
+
+/** "PT1M5S" -> 65 */
+export function seconds(iso = '') {
+  const m = iso.match(/^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/);
+  if (!m) return Infinity;
+  const [, d = 0, h = 0, mi = 0, s = 0] = m.map((x) => Number(x || 0));
+  return ((d * 24 + h) * 60 + mi) * 60 + s;
 }
 
 export function toVideo(item) {

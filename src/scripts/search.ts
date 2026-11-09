@@ -114,6 +114,7 @@ const state = {
   sites: new Set<string>(), // creator ids
   time: 0,
   cuisine: '',
+  show: '' as '' | 'recipes' | 'videos', // both, or just one kind
   shown: PAGE,
   picked: -1, // a recipe picked at random, by index into recipes
 };
@@ -255,7 +256,9 @@ function search(opts: { q?: string; with?: number[]; skip?: Skip } = {}): Hit[] 
 function searchVideos(opts: { q?: string; skip?: Skip } = {}): VideoRow[] {
   const q = words(opts.q ?? state.q);
   const sites = opts.skip === 'site' ? new Set<string>() : state.sites;
-  if (!q.length && !sites.size) return [];
+  // Videos come along when there are words or a creator; ingredients alone bring them
+  // only when you've asked for videos.
+  if (!q.length && !sites.size && !(state.show === 'videos' && state.with.length)) return [];
   const chanWords = data.videos.sources.map((c) => words(c.name));
   const matched = data.videos.rows.filter((v) => {
     if (sites.size && !sites.has(creatorOfChannel(v[0]))) return false;
@@ -274,7 +277,7 @@ function searchVideos(opts: { q?: string; skip?: Skip } = {}): VideoRow[] {
 }
 
 const isBlank = () => !state.q && !state.with.length && !state.sites.size && !state.time && !state.cuisine;
-const filterCount = () => Number(!!state.sites.size) + Number(!!state.time) + Number(!!state.cuisine);
+const filterCount = () => Number(!!state.sites.size) + Number(!!state.time) + Number(!!state.cuisine) + Number(!!state.show);
 
 // ---------------------------------------------------------------------------------------
 // Rendering
@@ -348,8 +351,8 @@ function render() {
     return;
   }
 
-  const hits = search();
-  const videos = searchVideos();
+  const hits = state.show === 'videos' ? [] : search();
+  const videos = state.show === 'recipes' ? [] : searchVideos();
   const shown = hits.slice(0, state.shown);
   resultsEl.innerHTML = shown.map((h, n) => `<li>${row(h, n + 1, q)}</li>`).join('');
   moreBtn.hidden = hits.length <= state.shown;
@@ -357,13 +360,14 @@ function render() {
 
   const count = `<strong>${hits.length.toLocaleString()}</strong>`;
   const vids = videos.length ? ` and ${plural(videos.length, 'video')} on YouTube` : '';
-  if (!hits.length && videos.length) statusEl.innerHTML = `<strong>${videos.length.toLocaleString()}</strong> ${videos.length === 1 ? 'video' : 'videos'} on YouTube.`;
+  if (state.show === 'videos' && !videos.length) statusEl.textContent = 'No videos match all of that.';
+  else if (!hits.length && videos.length) statusEl.innerHTML = `<strong>${videos.length.toLocaleString()}</strong> ${videos.length === 1 ? 'video' : 'videos'} on YouTube.`;
   else if (!hits.length) statusEl.textContent = 'Nothing matches all of that.';
   else if (state.with.length > 1)
     statusEl.innerHTML = `${count} ${hits.length === 1 ? 'recipe uses' : 'recipes use'} at least one of them${vids}. The ones that use the most come first.`;
   else statusEl.innerHTML = `${count} ${hits.length === 1 ? 'recipe' : 'recipes'}${vids}.`;
 
-  if (!hits.length && !videos.length) renderEmpty();
+  if (!hits.length && !videos.length && state.show !== 'videos') renderEmpty();
   // Six videos under the recipes; a page at a time when there are only videos (a
   // YouTube-only creator like Kenji).
   const only = !hits.length;
@@ -496,6 +500,15 @@ function buildFilters() {
         `<label><input type="checkbox" name="site" value="${esc(c.id)}"> ${esc(c.name)} <span class="count"></span></label>`,
     )
     .join('');
+  $('f-show-options').innerHTML = (
+    [
+      ['', 'Recipes and videos'],
+      ['recipes', 'Recipes'],
+      ['videos', 'Videos'],
+    ] as const
+  )
+    .map(([v, label]) => `<label><input type="radio" name="show" value="${v}"> ${label} <span class="count"></span></label>`)
+    .join('');
   $('f-time-options').innerHTML = [0, ...TIMES]
     .map(
       (t) => `<label><input type="radio" name="time" value="${t}"> ${t ? `${t} minutes or less` : 'Any time'} <span class="count"></span></label>`,
@@ -511,6 +524,7 @@ function buildFilters() {
       if (el.name === 'site') el.checked ? state.sites.add(el.value) : state.sites.delete(el.value);
       if (el.name === 'time') state.time = Number(el.value);
       if (el.name === 'cuisine') state.cuisine = el.value;
+      if (el.name === 'show') state.show = el.value as typeof state.show;
       state.shown = PAGE;
       render();
       updateCounts(pop);
@@ -540,6 +554,18 @@ function buildFilters() {
 
 /** Each option's count, given everything else you've picked, so "Thai 12" means 12 here. */
 function updateCounts(pop: HTMLElement) {
+  if (pop.id === 'f-show') {
+    const was = state.show;
+    const n = (show: typeof state.show) => {
+      state.show = show;
+      const r = show === 'videos' ? 0 : search().length;
+      const v = show === 'recipes' ? 0 : searchVideos().length;
+      return show === 'recipes' ? plural(r, 'recipe') : show === 'videos' ? plural(v, 'video') : `${plural(r, 'recipe')}, ${plural(v, 'video')}`;
+    };
+    for (const label of pop.querySelectorAll('label')) label.querySelector('.count')!.textContent = n(label.querySelector('input')!.value as typeof state.show);
+    state.show = was;
+    return;
+  }
   const kind = pop.id.slice(2) as Skip;
   const hits = isBlank() ? recipes.map((r) => ({ r })) : search({ skip: kind });
   const vids = kind === 'site' ? (state.q ? searchVideos({ skip: 'site' }) : data.videos.rows) : [];
@@ -568,10 +594,13 @@ function renderFilterButtons() {
   set('f-site', site);
   set('f-time', state.time ? `${state.time} minutes or less` : '');
   set('f-cuisine', state.cuisine);
+  set('f-show', state.show === 'recipes' ? 'recipes only' : state.show === 'videos' ? 'videos only' : '');
+  $('f-show-value').textContent = state.show ? $('f-show-value').textContent : 'recipes and videos';
   for (const el of document.querySelectorAll<HTMLInputElement>('.pop input')) {
     if (el.name === 'site') el.checked = state.sites.has(el.value);
     if (el.name === 'time') el.checked = Number(el.value) === state.time;
     if (el.name === 'cuisine') el.checked = el.value === state.cuisine;
+    if (el.name === 'show') el.checked = el.value === state.show;
   }
   $('clear-all').hidden = isBlank();
 }
@@ -786,6 +815,7 @@ function writeUrl(push: boolean) {
   if (state.sites.size) u.searchParams.set('site', [...state.sites].join(','));
   if (state.time) u.searchParams.set('time', String(state.time));
   if (state.cuisine) u.searchParams.set('cuisine', state.cuisine);
+  if (state.show) u.searchParams.set('show', state.show);
   if (u.href === location.href) return;
   history[push ? 'pushState' : 'replaceState'](null, '', u);
 }
@@ -802,6 +832,8 @@ function readUrl() {
   state.time = TIMES.includes(t) ? t : 0;
   const c = p.get('cuisine') || '';
   state.cuisine = data.cuisines.some(([name]) => name === c) ? c : '';
+  const show = p.get('show');
+  state.show = show === 'recipes' || show === 'videos' ? show : '';
   state.shown = PAGE;
   state.picked = -1;
 }
@@ -895,6 +927,7 @@ function clearAll() {
   state.sites.clear();
   state.time = 0;
   state.cuisine = '';
+  state.show = '';
   state.picked = -1;
   qInput.value = '';
 }

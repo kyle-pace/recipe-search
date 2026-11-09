@@ -66,6 +66,7 @@ import '../../styles/theme.css';
       </form>
 
       <div class="filters" role="group" aria-label="Narrow it down">
+        <button class="filter" type="button" popovertarget="f-show" id="f-show-btn">Show: <span id="f-show-value">recipes and videos</span></button>
         <button class="filter" type="button" popovertarget="f-cuisine" id="f-cuisine-btn">Cuisine: <span id="f-cuisine-value">any</span></button>
         <button class="filter" type="button" popovertarget="f-site" id="f-site-btn">Creator: <span id="f-site-value">any</span></button>
         <button class="filter" type="button" popovertarget="f-time" id="f-time-btn">Time: <span id="f-time-value">any</span></button>
@@ -73,6 +74,9 @@ import '../../styles/theme.css';
         <button class="clear-all" type="button" id="clear-all" hidden>Start over</button>
       </div>
 
+      <div class="pop" id="f-show" popover>
+        <fieldset><legend>Show</legend><div class="options" id="f-show-options"></div></fieldset>
+      </div>
       <div class="pop" id="f-cuisine" popover>
         <fieldset><legend>Cuisine</legend><div class="options" id="f-cuisine-options"></div></fieldset>
       </div>

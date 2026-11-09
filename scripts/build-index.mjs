@@ -153,8 +153,9 @@ for (const v of sources.videos || []) {
   const file = join(root, 'data', `${v.id}.json`);
   const rows = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : [];
   const ci = channels.length;
-  channels.push({ id: v.id, name: v.name, channel: v.channel, site: v.site || '', count: rows.length });
+  channels.push({ id: v.id, name: v.name, channel: v.channel, site: v.site || '', count: rows.filter((r) => !r.sh).length });
   for (const row of rows) {
+    if (row.sh) continue; // Shorts stay out of the search (crawler/lib/youtube.mjs marks them)
     const ids = new Set();
     const m = match(catalog, decode(row.n));
     if (m && !catalog.items[m.id].product) for (const id of withParents(m.id)) ids.add(id);

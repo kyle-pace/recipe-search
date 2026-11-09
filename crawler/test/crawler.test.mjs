@@ -5,7 +5,7 @@ import { parseSitemap, readSitemaps } from '../lib/sitemap.mjs';
 import { extractRecipe } from '../lib/extract.mjs';
 import { ingredientName } from '../lib/ingredients.mjs';
 import { toMinutes } from '../lib/text.mjs';
-import { toVideo } from '../lib/youtube.mjs';
+import { toVideo, seconds, fetchChannelVideos } from '../lib/youtube.mjs';
 
 test('robots: AI-bot blocks leave us alone; wp-json stays off limits', () => {
   const txt = `User-agent: GPTBot\nDisallow: /\n\nUser-agent: CCBot\nDisallow: /\n\nUser-agent: *\nDisallow: /wp-json/\nDisallow: /wp-admin/\nAllow: /wp-admin/admin-ajax.php\n`;
@@ -159,4 +159,25 @@ test('YouTube: public videos only, short descriptions', () => {
   assert.ok(v.d.length <= 281);
   assert.equal(toVideo({ snippet: { title: 'Private video', resourceId: { videoId: 'x' } } }), null);
   assert.equal(toVideo({ snippet: { title: 'x', resourceId: { videoId: 'y' } }, status: { privacyStatus: 'unlisted' } }), null);
+});
+
+test('YouTube: Shorts are marked from the channel\'s Shorts playlist', async () => {
+  const item = (id, title) => ({ snippet: { title, publishedAt: '2026-11-01T00:00:00Z', resourceId: { videoId: id } }, status: { privacyStatus: 'public' } });
+  const fake = async (url) => {
+    const json = (body, status = 200) => ({ ok: status === 200, status, json: async () => body, text: async () => JSON.stringify(body) });
+    if (url.includes('/channels?')) return json({ items: [{ contentDetails: { relatedPlaylists: { uploads: 'UUabc' } } }] });
+    if (url.includes('playlistId=UUSHabc')) return json({ items: [{ contentDetails: { videoId: 's1' } }] });
+    if (url.includes('playlistId=UUabc')) return json({ items: [item('v1', 'Pork Chops'), item('s1', 'Quick tip #shorts')] });
+    return json({}, 404);
+  };
+  const vids = await fetchChannelVideos('https://www.youtube.com/@test', 'k', { fetchImpl: fake });
+  assert.equal(vids.find((v) => v.id === 's1').sh, 1);
+  assert.equal(vids.find((v) => v.id === 'v1').sh, undefined);
+});
+
+test('YouTube: video length from ISO 8601', () => {
+  assert.equal(seconds('PT59S'), 59);
+  assert.equal(seconds('PT1M5S'), 65);
+  assert.equal(seconds('PT1H2M'), 3720);
+  assert.equal(seconds('P0D'), 0);
 });
