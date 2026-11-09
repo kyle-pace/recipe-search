@@ -25,6 +25,14 @@ Accessibility is designed in from the first commit, not audited in at the end.
 - Respect user settings: reduced motion, light/dark preference, text zoom to 200% without breaking layout. On Apple platforms: Dynamic Type, VoiceOver labels and hints, Reduce Motion, Increase Contrast.
 - Motion is short (under 300 ms for interface animation), never `ease-in`, and on the web only runs inside `@media (prefers-reduced-motion: no-preference)`.
 
+### Every screen size from day one
+
+Layouts are designed for phones, tablets and big screens from the first commit, not stretched or squeezed in later.
+
+- **Apps** are built for both phone and tablet from day one. On Apple platforms that means one universal iPhone and iPad app that supports iPad multitasking (Split View, Slide Over, Stage Manager) and resizable windows. On iPad, support every orientation. On iPhone, portrait is the default; add landscape only where it helps the app (video, maps, wide charts, a recipe propped up while cooking). Use size classes and adaptive SwiftUI layouts (`NavigationSplitView`, `ViewThatFits`, grids) so iPad gets a layout that uses the space, not a blown-up phone screen.
+- **Web projects** are fully responsive: mobile first, fluid from 320 px wide up to large desktop monitors. No sideways scrolling at 320 px. Cap line length for reading (about 70 characters), and let wider screens add columns instead of stretching text.
+- Prefer fluid layouts (flexbox, grid, `clamp()`, container queries) over many fixed breakpoints. Handle touch, mouse and keyboard on every size, and respect safe areas and notches.
+
 ### Type
 
 - Atkinson Hyperlegible Next for all text and Atkinson Hyperlegible Mono for code, in every product.
@@ -79,6 +87,13 @@ Every project uses the same rules, so charts read the same way everywhere.
 - **Images** are lighter, because an outside image can only learn that someone visited, not run code. An image host can be added without asking when the image belongs to the content being shown (a recipe site's own photo on a result for its recipe, a book's cover from the library that lists it). Load those images with `referrerpolicy="no-referrer"` and `loading="lazy"`, add the host to `.agents/allowed-hosts.txt` with a comment saying what it's for, and mention the new host to Kyle when you report back. Decorative images, stock photos and anything that looks like tracking still need his OK.
 - All of this applies to hosts that JavaScript calls at runtime too, even though the CI check only sees HTML and CSS. List those in the same file.
 
+### Look and feel: no generated defaults
+
+- Before building a page or app's look, write a short plan in `design/PLAN.md`: the subject and who it's for, the one bold element, 4 to 6 named colors (light and dark), and the layout as a sketch. Take the ideas from the subject's own world, not from other websites. If a frontend-design skill is available, load it.
+- Check the plan against the generated defaults and change anything that matches: a big headline over a muted sentence and a pill button; pills or one corner radius on everything; grids of identical cards; small labels above headings; colored dots or squares as decoration; details joined with middle dots; monospace for small labels; copy that explains the interface instead of using it.
+- Spend boldness in one place and keep the rest quiet. Look at screenshots (phone and desktop, light and dark) before calling it done.
+- Experiments on kylepace.dev are their own pages (kp-design's `LabLayout`) with their own look. The app comes first; the explanation goes in an About section linked from the top bar.
+
 ### How things get built
 
 - Static and simple by default. Add JavaScript, servers or dependencies only where they earn it.
@@ -106,7 +121,7 @@ Kyle is a product leader building his development skills through this work. Trea
 
 - The build passes, and so do any tests and linters.
 - Run an accessibility check on what changed (axe on the web, Accessibility Inspector on Apple platforms), fix what it finds, and tab through new UI with the keyboard.
-- Look at it in both light and dark mode, and at a narrow phone width.
+- Look at it in both light and dark mode at phone, tablet and desktop sizes: on the web at least 320, 768, 1280 and 1920 px wide; for Apple apps on the smallest iPhone, a large iPhone and an iPad in portrait, landscape and Split View.
 - CI runs a third-party check that fails if a page loads scripts, styles, fonts or images from a host that isn't allowed. Don't add a host just to get past it: ask Kyle, or for a content image follow the image rule above.
 
 <!-- END principles -->
