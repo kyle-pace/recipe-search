@@ -298,6 +298,11 @@ import '../../styles/theme.css';
     min-height: 2.5rem;
     padding: 0;
     border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    /* Safari draws its own inner shadow along the top of a text field; the box is the field here. */
+    appearance: none;
+    -webkit-appearance: none;
     background: transparent;
     color: var(--ink);
     font: inherit;
