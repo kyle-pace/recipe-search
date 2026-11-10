@@ -12,7 +12,7 @@ One search box across the recipe sites I trust: The Woks of Life, Just One Cookb
 4. The data becomes a static search index that runs in the browser (`scripts/build-index.mjs`, on every build). Free to host, no server, and nothing typed leaves the page.
 5. Sites we can't index, like Serious Eats, get an "Also search" link instead.
 
-See `sources.yaml` for every source and why it's in or out, and `CLAUDE.md` for the rules.
+Every source and why it's in or out lives in [KitchenCatalog](https://github.com/kyle-pace/kitchen-catalog)'s `recipe-sources/sources.json` (vendored to `vendor/kitchen-catalog/`; edit it there, then `npm run sync-catalog`). See `CLAUDE.md` for the rules.
 
 ## The crawler
 
@@ -22,7 +22,7 @@ npm test
 node crawler/crawl.mjs --limit 5 --sources woks   # a small try
 ```
 
-GitHub Actions runs the full crawl every Monday and commits `data/` and `state/`. A push that changes the crawler or `sources.yaml` runs a smoke test on the live sites instead (5 pages each, nothing committed). The first full run fills the index; later runs fetch only pages whose sitemap date changed. A run with a blocked site, a failed source or a big drop in recipe count fails, so it shows up as a GitHub notification.
+GitHub Actions runs the full crawl every Monday and commits `data/` and `state/`. A push that changes the crawler or the vendored source list runs a smoke test on the live sites instead (5 pages each, nothing committed). The first full run fills the index; later runs fetch only pages whose sitemap date changed. A run with a blocked site, a failed source or a big drop in recipe count fails, so it shows up as a GitHub notification.
 
 ## The search page
 
@@ -38,7 +38,7 @@ npm run preview   # builds, then runs it the way Cloudflare will
 | The page | `src/pages/recipe-search/index.astro` |
 | Searching, typeahead, filters, URL state | `src/scripts/search.ts` |
 | The index (generated, not committed) | `public/recipe-search/index.json`, from `scripts/build-index.mjs` |
-| Ingredient matching | `vendor/kitchen-catalog/` (refresh with `npm run sync-catalog`) |
+| Ingredient matching and the source list | `vendor/kitchen-catalog/` (refresh with `npm run sync-catalog`), read through `crawler/lib/sources.mjs` |
 | Page shell (back link, footer line, analytics) | `LabLayout` from [kp-design](https://github.com/kyle-pace/kp-design) |
 | Its own look (colors) | `src/styles/theme.css` |
 | Share card | `design/og.html`, rendered to `public/recipe-search/og.png` |

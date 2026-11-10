@@ -7,7 +7,7 @@ name: Crawl
 on:
   push:
     branches: [main]
-    paths: ['crawler/**', 'sources.yaml', '.github/workflows/crawl.yml', 'package*.json']
+    paths: ['crawler/**', 'vendor/kitchen-catalog/sources.json', '.github/workflows/crawl.yml', 'package*.json']
   schedule:
     - cron: '17 11 * * 1' # Mondays, 3:17 or 4:17 am Seattle time
   workflow_dispatch:

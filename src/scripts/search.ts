@@ -25,7 +25,7 @@ type Index = {
   sources: Source[];
   paused: { id: string; name: string; site: string; why: string }[];
   videos: { sources: Channel[]; rows: VideoRow[] };
-  /** Ways to support each creator, by source id (data/support.json). */
+  /** Ways to support each creator, by creator id (from KitchenCatalog's recipe sources). */
   support: Record<string, { label: string; url: string; book?: boolean }[]>;
   linkOnly: { name: string; search: string }[];
   cuisines: [string, number][];

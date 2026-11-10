@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-// The weekly crawl. For each recipe site in sources.yaml: check robots.txt,
+// The weekly crawl. For each recipe site in KitchenCatalog's recipe sources
+// (vendor/kitchen-catalog/sources.json, read through lib/sources.mjs): check robots.txt,
 // read the sitemap, fetch only pages that are new or changed (one at a time,
 // a few seconds apart), and keep only what's needed to find a recipe.
 // Video channels come from the YouTube Data API. Writes data/<id>.json,
@@ -12,11 +13,11 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { parse as parseYaml } from 'yaml';
 import { robotsFor } from './lib/robots.mjs';
 import { readSitemaps } from './lib/sitemap.mjs';
 import { extractRecipe } from './lib/extract.mjs';
 import { fetchChannelVideos } from './lib/youtube.mjs';
+import { readSources } from './lib/sources.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const BOT = 'RecipeSearchBot';
@@ -34,7 +35,7 @@ const only = args.sources ? new Set(String(args.sources).split(',')) : null;
 const dryRun = Boolean(args['dry-run']);
 const today = new Date().toISOString().slice(0, 10);
 
-const sources = parseYaml(await readFile(join(ROOT, 'sources.yaml'), 'utf8'));
+const sources = readSources();
 const previousStatus = await readJson(join(ROOT, 'data/status.json'), { sources: {} });
 const status = { run: new Date().toISOString(), options: { limit: args.limit ? limit : null, delayMs }, sources: {}, alerts: [] };
 
@@ -82,7 +83,7 @@ async function crawlSite(src) {
   const sitemapUrl = new URL(src.sitemap, src.site).href;
   if (!robots.allowed('/') && !robots.allowed(sitemapUrl)) return { ...out, result: 'blocked', error: 'robots.txt disallows us' };
   // A site can ask for more time between requests (robots.txt Crawl-delay), and so can
-  // sources.yaml (delay_seconds) for a site that has told us we're too quick (HTTP 429).
+  // the source list (crawl.delay_seconds) for a site that has told us we're too quick (HTTP 429).
   const pause = Math.max(delayMs, (robots.crawlDelay || 0) * 1000, (src.delay_seconds || 0) * 1000);
 
   const include = src.include ? new RegExp(src.include) : null;

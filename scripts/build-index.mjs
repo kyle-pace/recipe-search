@@ -9,14 +9,15 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync, copyFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { parse } from 'yaml';
 import { load, match } from '../vendor/kitchen-catalog/catalog.mjs';
+import { readSources } from '../crawler/lib/sources.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const out = join(root, 'public/recipe-search/index.json');
 const report = process.argv.includes('--report');
 
-const sources = parse(readFileSync(join(root, 'sources.yaml'), 'utf8'));
+// The recipe sources come from KitchenCatalog (vendor/kitchen-catalog/sources.json).
+const sources = readSources();
 const catalog = load(join(root, 'vendor/kitchen-catalog/catalog.json'));
 const status = JSON.parse(readFileSync(join(root, 'data/status.json'), 'utf8'));
 
@@ -209,13 +210,10 @@ const paused = sources.recipes
   .filter((s) => s.paused || !srcList.some((x) => x.id === s.id))
   .map((s) => ({ id: s.id, name: s.name, site: s.site, why: s.paused ? 'paused' : 'not indexed yet' }));
 
-// Ways to support each creator (data/support.json, hand-maintained). Books become
-// Bookshop.org links by ISBN, which sends the sale to the author and an indie shop.
-const supportFile = join(root, 'data/support.json');
-const supportRaw = existsSync(supportFile) ? JSON.parse(readFileSync(supportFile, 'utf8')) : {};
+// Ways to support each creator (each source's support in KitchenCatalog, hand-maintained).
+// Books become Bookshop.org links by ISBN, which sends the sale to the author and an indie shop.
 const support = Object.fromEntries(
-  Object.entries(supportRaw)
-    .filter(([id]) => !id.startsWith('_'))
+  Object.entries(sources.support)
     .map(([id, v]) => [
       id,
       [...(v.links || []), ...(v.books || []).map((b) => ({ label: b.title, url: `https://bookshop.org/book/${b.isbn}`, book: true }))],

@@ -141,7 +141,7 @@ Working name. One search box across the recipe sites Kyle trusts, from our own s
 - Read sitemaps and fetch only pages that are new or changed.
 - YouTube only through the official YouTube Data API. Refresh stored video data at least every 30 days (the weekly run does), drop removed or private videos, and label video results clearly as YouTube.
 - The YouTube key lives in the GitHub Actions secret `YOUTUBE_API_KEY`. Never in code, the site, or a chat.
-- Adding a source means checking robots.txt, terms and whether it publishes recipe data first, and recording the result in `sources.yaml` and Confluence.
+- Adding a source means checking robots.txt, terms and whether it publishes recipe data first, and recording the result in KitchenCatalog's `recipe-sources/sources.json` and Confluence. To add or change a source, edit that file in kyle-pace/kitchen-catalog (`node js/test.mjs` checks it), push it, then run `npm run sync-catalog` here and commit the copy. Only `vetted: true` sources are used.
 - Serious Eats is not crawled (its owner requires written permission). It's a link-out only, unless permission is given.
 
 ### Shared App Projects rules
@@ -154,7 +154,7 @@ Working name. One search box across the recipe sites Kyle trusts, from our own s
 
 ### Layout
 
-- `sources.yaml`: every source, how it's collected, and the result of its last check.
+- Sources: every source, how it's collected, the result of its last check and ways to support its creator live in KitchenCatalog (`recipe-sources/sources.json`, field reference in `recipe-sources/schema.md`), vendored to `vendor/kitchen-catalog/sources.json`. `crawler/lib/sources.mjs` turns it into the crawl jobs, YouTube channels, link-outs and support links the crawler and `scripts/build-index.mjs` use.
 - `crawler/`: the weekly crawl (`node crawler/crawl.mjs`, options at the top of the file). `npm test` runs its tests. GitHub Actions runs it every Monday (`.github/workflows/crawl.yml`) and commits the results; run it by hand from the Actions tab with a small `limit` to test.
 - `data/<id>.json`: what we keep per recipe (n name, u link, t minutes, c cuisine, k course, y yield, i ingredient names, img photo link, kw keywords) or per video. `data/status.json`: the last run's counts and alerts.
 - `state/<id>.json`: every page seen, its sitemap lastmod, whether it had a recipe and when it was fetched, so only new or changed pages are fetched.
@@ -169,6 +169,6 @@ Working name. One search box across the recipe sites Kyle trusts, from our own s
 - The search page is only the app. The explanation is its own page, `src/pages/recipe-search/about.astro` (`/recipe-search/about/`), built at build time from the index and linked from the top bar (`src/components/LabLinks.astro`). Old `#about` links forward there. The crawler's user agent links to it, so keep its "For site owners" section accurate.
 - Creators: a creator is a site, a site and its YouTube channel, or a channel alone (Kenji). The `site=` URL parameter holds creator ids.
 - It stands on its own, not as a page of kylepace.dev: the shell is kp-design's `LabLayout` (a back link to kylepace.dev, a footer line, display settings, analytics), pinned to a commit in package.json. Its look is its own: `src/styles/theme.css` overrides the tokens.
-- Photos load straight from each recipe's own site (Kyle's call, 2026-11-08), with no referrer and lazily. Their hosts are in `.agents/allowed-hosts.txt`. A site that blocks it or asks us to stop gets text-only cards: set `photos: false` on it in `sources.yaml`.
+- Photos load straight from each recipe's own site (Kyle's call, 2026-11-08), with no referrer and lazily. Their hosts are in `.agents/allowed-hosts.txt`. A site that blocks it or asks us to stop gets text-only cards: set `crawl.photos: false` on it in KitchenCatalog's `recipe-sources/sources.json`, then `npm run sync-catalog`.
 - The share cards are `design/og.html` and `design/og-about.html`, rendered to `public/recipe-search/og.png` and `og-about.png`.
 - Run `npm run build` before pushing; it must pass.

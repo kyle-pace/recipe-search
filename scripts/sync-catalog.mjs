@@ -1,6 +1,7 @@
 // Refreshes the vendored copy of KitchenCatalog (vendor/kitchen-catalog/) from a clone of
-// kyle-pace/kitchen-catalog next to this repo (or the path given). The catalog repo is
-// private, so builds in the cloud use this copy instead of fetching it.
+// kyle-pace/kitchen-catalog next to this repo (or the path given): the ingredient catalog and
+// its matcher, and the recipe sources list (recipe-sources/sources.json) and its loader. The
+// catalog repo is private, so builds in the cloud use this copy instead of fetching it.
 //
 //   node scripts/sync-catalog.mjs [path-to-kitchen-catalog]
 import { copyFileSync, writeFileSync, existsSync } from 'node:fs';
@@ -17,6 +18,8 @@ if (!existsSync(join(src, 'js/catalog.mjs'))) {
 const dest = join(root, 'vendor/kitchen-catalog');
 copyFileSync(join(src, 'js/catalog.mjs'), join(dest, 'catalog.mjs'));
 copyFileSync(join(src, 'Sources/KitchenCatalog/Resources/catalog.json'), join(dest, 'catalog.json'));
+copyFileSync(join(src, 'js/sources.mjs'), join(dest, 'sources.mjs'));
+copyFileSync(join(src, 'recipe-sources/sources.json'), join(dest, 'sources.json'));
 const sha = execFileSync('git', ['-C', src, 'rev-parse', 'HEAD']).toString().trim();
 writeFileSync(join(dest, 'VERSION'), sha + '\n');
-console.log(`KitchenCatalog ${sha.slice(0, 7)} copied to vendor/kitchen-catalog/. Run npm run index to see the effect.`);
+console.log(`KitchenCatalog ${sha.slice(0, 7)} copied to vendor/kitchen-catalog/. Run npm run index to see the effect (and commit the copy).`);

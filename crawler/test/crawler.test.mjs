@@ -7,6 +7,7 @@ import { ingredientName } from '../lib/ingredients.mjs';
 import { toMinutes } from '../lib/text.mjs';
 import { toVideo, seconds, fetchChannelVideos } from '../lib/youtube.mjs';
 import { totals } from '../lib/popularity.mjs';
+import { adapt, readSources } from '../lib/sources.mjs';
 
 test('robots: AI-bot blocks leave us alone; wp-json stays off limits', () => {
   const txt = `User-agent: GPTBot\nDisallow: /\n\nUser-agent: CCBot\nDisallow: /\n\nUser-agent: *\nDisallow: /wp-json/\nDisallow: /wp-admin/\nAllow: /wp-admin/admin-ajax.php\n`;
@@ -187,4 +188,40 @@ test('popularity: sums each recipe\'s opens and skips events without a recipe', 
   const data = { series: [[1, 2, 0], [0, 0, 5], [3]], seriesLabels: [[0, 'woks:/mapo-tofu/'], [0, 'htk:/green-curry/'], [0, '(none)']] };
   assert.deepEqual(totals(data), { 'woks:/mapo-tofu/': 3, 'htk:/green-curry/': 5 });
   assert.deepEqual(totals({ series: [[2]], seriesLabels: ['sk:/scones/'] }), { 'sk:/scones/': 2 });
+});
+
+test('sources: KitchenCatalog entries become crawl jobs, channels, link-outs and support', () => {
+  const collect = (status) => ({ status, reason: `${status} because`, checked: '2026-11-09' });
+  const crawl = { sitemap: '/sitemap.xml', format: 'json-ld', size: 'about 10 posts', notes: ['sitemap: a note'] };
+  const support = { links: [{ label: 'YouTube', url: 'https://www.youtube.com/@x' }], books: [] };
+  const out = adapt([
+    { id: 'a', name: 'A', url: 'https://a.example', kind: 'site', collect: collect('crawl'), crawl: { ...crawl, delay_seconds: 12 }, youtube: { id: 'a-yt', url: 'https://www.youtube.com/@a' }, support },
+    { id: 'b', name: 'B', url: 'https://b.example', kind: 'site', collect: collect('paused'), crawl, youtube: { id: 'b-yt', url: 'https://www.youtube.com/@b' } },
+    { id: 'c', name: 'C', url: 'https://www.youtube.com/@c', kind: 'channel', collect: collect('youtube-only'), search: 'https://www.youtube.com/@c/search?query={q}', search_label: 'All of C', search_note: 'backstop', support },
+    { id: 'd', name: 'D', url: 'https://d.example', kind: 'site', collect: collect('link-only'), search: 'https://d.example/?s={q}', youtube: { id: 'd-yt', url: 'https://www.youtube.com/@d' }, support },
+  ]);
+  assert.deepEqual(out.recipes, [
+    { id: 'a', name: 'A', site: 'https://a.example', sitemap: '/sitemap.xml', format: 'json-ld', delay_seconds: 12 },
+    { id: 'b', name: 'B', site: 'https://b.example', sitemap: '/sitemap.xml', format: 'json-ld', paused: 'paused because' },
+  ]);
+  // A channel belongs to its site only when the site is crawled or paused; otherwise it stands alone.
+  assert.deepEqual(out.videos, [
+    { id: 'a-yt', name: 'A', site: 'a', channel: 'https://www.youtube.com/@a' },
+    { id: 'b-yt', name: 'B', site: 'b', channel: 'https://www.youtube.com/@b' },
+    { id: 'c', name: 'C', channel: 'https://www.youtube.com/@c' },
+    { id: 'd-yt', name: 'D', channel: 'https://www.youtube.com/@d' },
+  ]);
+  // Sites' own searches first, YouTube searches last.
+  assert.deepEqual(out.link_only.map((l) => l.name), ['D', 'All of C']);
+  assert.equal(out.link_only[1].reason, 'backstop');
+  // Support is keyed by creator: the site, or the channel when it stands alone.
+  assert.deepEqual(Object.keys(out.support), ['a', 'c', 'd-yt']);
+});
+
+test('sources: the vendored list is valid and only vetted sources are used', () => {
+  const s = readSources();
+  assert.ok(s.recipes.length > 0 && s.videos.length > 0);
+  assert.ok(s.recipes.some((r) => r.id === 'woks'));
+  const ids = [...s.recipes.map((r) => r.id), ...s.videos.map((v) => v.id)];
+  assert.equal(new Set(ids).size, ids.length);
 });

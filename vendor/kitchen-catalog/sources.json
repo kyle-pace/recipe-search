@@ -1,0 +1,4081 @@
+{
+  "_about": "Trusted recipe sources for Kyle's apps (Recipe search, World cuisine, Henwood). vetted: true means Kyle picked it; false means a suggestion awaiting his review. collect says whether and how a crawler may read it, with the reason and date checked. Field reference: recipe-sources/schema.md.",
+  "version": 1,
+  "sources": [
+    {
+      "id": "woks",
+      "name": "The Woks of Life",
+      "url": "https://thewoksoflife.com",
+      "kind": "site",
+      "vetted": true,
+      "cuisines": [
+        "Chinese cuisine"
+      ],
+      "note": "Chinese and Chinese American recipes from the Leung family, running since 2013.",
+      "youtube": {
+        "id": "woks-yt",
+        "url": "https://www.youtube.com/@Thewoksoflife1"
+      },
+      "collect": {
+        "status": "crawl",
+        "reason": "Blocks AI training bots only; stay out of /wp-json/.",
+        "checked": "2026-11-01"
+      },
+      "crawl": {
+        "sitemap": "/sitemap_index.xml",
+        "format": "json-ld",
+        "size": "about 1,600 posts",
+        "notes": [
+          "sitemap: not listed in robots.txt",
+          "format: full schema.org Recipe"
+        ]
+      },
+      "support": {
+        "links": [
+          {
+            "label": "YouTube",
+            "url": "https://www.youtube.com/@Thewoksoflife1"
+          }
+        ],
+        "books": [
+          {
+            "title": "The Woks of Life",
+            "isbn": "9780593233894"
+          }
+        ]
+      }
+    },
+    {
+      "id": "joc",
+      "name": "Just One Cookbook",
+      "url": "https://www.justonecookbook.com",
+      "kind": "site",
+      "vetted": true,
+      "cuisines": [
+        "Japanese cuisine",
+        "Nagoya cuisine",
+        "Japanese Chinese cuisine",
+        "Itameshi"
+      ],
+      "note": "Namiko Chen's long-running blog and videos on Japanese home cooking.",
+      "youtube": {
+        "id": "joc-yt",
+        "url": "https://www.youtube.com/@JustOneCookbook"
+      },
+      "collect": {
+        "status": "paused",
+        "reason": "Cloudflare bot protection blocks automated requests (HTTP 403 on its sitemap from GitHub Actions and from a home connection, with or without our crawler's name; robots.txt allows us; checked 2026-11-08). Needs the site to allow us",
+        "checked": "2026-11-08"
+      },
+      "crawl": {
+        "sitemap": "/sitemap_index.xml",
+        "format": "json-ld",
+        "default_cuisine": "Japanese",
+        "size": "1,000 to 2,000 posts",
+        "notes": [
+          "allowed: only site search is off limits"
+        ]
+      },
+      "support": {
+        "links": [
+          {
+            "label": "JOC Plus membership",
+            "url": "https://www.justonecookbook.com/joc-plus/joc-plus-membership/"
+          },
+          {
+            "label": "Cookbooks",
+            "url": "https://www.justonecookbook.com/cookbook/"
+          },
+          {
+            "label": "YouTube",
+            "url": "https://www.youtube.com/@JustOneCookbook"
+          }
+        ],
+        "books": []
+      }
+    },
+    {
+      "id": "htk",
+      "name": "Hot Thai Kitchen",
+      "url": "https://hot-thai-kitchen.com",
+      "kind": "site",
+      "vetted": true,
+      "cuisines": [
+        "Thai cuisine"
+      ],
+      "note": "Pailin Chongchitnant's recipes and videos, with background on technique and ingredients.",
+      "youtube": {
+        "id": "htk-yt",
+        "url": "https://www.youtube.com/@PailinsKitchen"
+      },
+      "collect": {
+        "status": "crawl",
+        "reason": "robots.txt allows us.",
+        "checked": "2026-11-01"
+      },
+      "crawl": {
+        "sitemap": "/sitemap_index.xml",
+        "format": "json-ld",
+        "default_cuisine": "Thai",
+        "size": "about 470 posts",
+        "notes": [
+          "format: total time and cuisine often missing"
+        ]
+      },
+      "support": {
+        "links": [
+          {
+            "label": "Patreon",
+            "url": "https://www.patreon.com/pailinskitchen"
+          },
+          {
+            "label": "YouTube",
+            "url": "https://www.youtube.com/@PailinsKitchen"
+          }
+        ],
+        "books": [
+          {
+            "title": "Hot Thai Kitchen",
+            "isbn": "9780525613442"
+          },
+          {
+            "title": "Sabai",
+            "isbn": "9780525611714"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sk",
+      "name": "Smitten Kitchen",
+      "url": "https://smittenkitchen.com",
+      "kind": "site",
+      "vetted": true,
+      "cuisines": [
+        "American cuisine"
+      ],
+      "note": "Deb Perelman's home cooking blog.",
+      "youtube": {
+        "id": "sk-yt",
+        "url": "https://www.youtube.com/@smittenkitchening"
+      },
+      "collect": {
+        "status": "crawl",
+        "reason": "robots.txt allows us.",
+        "checked": "2026-11-01"
+      },
+      "crawl": {
+        "sitemap": "/sitemap.xml",
+        "include": "^https://smittenkitchen\\.com/\\d{4}/\\d{2}/",
+        "format": "microdata",
+        "size": "1,000+ posts",
+        "notes": [
+          "include: posts only, not pages",
+          "format: name, yield, total time as text, ingredients; photo from og:image"
+        ]
+      },
+      "support": {
+        "links": [
+          {
+            "label": "YouTube",
+            "url": "https://www.youtube.com/smittenkitchening"
+          }
+        ],
+        "books": [
+          {
+            "title": "Smitten Kitchen Keepers",
+            "isbn": "9780593318782"
+          },
+          {
+            "title": "Smitten Kitchen Every Day",
+            "isbn": "9781101874813"
+          },
+          {
+            "title": "The Smitten Kitchen Cookbook",
+            "isbn": "9780307595652"
+          }
+        ]
+      }
+    },
+    {
+      "id": "maangchi",
+      "name": "Maangchi",
+      "url": "https://www.maangchi.com",
+      "kind": "site",
+      "vetted": true,
+      "cuisines": [
+        "Korean cuisine"
+      ],
+      "note": "Maangchi's Korean recipe site and YouTube channel, one of the best known English sources for Korean cooking.",
+      "youtube": {
+        "id": "maangchi-yt",
+        "url": "https://www.youtube.com/@Maangchi"
+      },
+      "collect": {
+        "status": "paused",
+        "reason": "Cloudflare bot protection blocks automated requests (HTTP 403 on its sitemap from GitHub Actions and from a home connection, with or without our crawler's name; robots.txt allows us; checked 2026-11-08). Needs the site to allow us",
+        "checked": "2026-11-08"
+      },
+      "crawl": {
+        "sitemap": "/sitemap.xml",
+        "include": "/recipe/",
+        "format": "json-ld",
+        "default_cuisine": "Korean",
+        "size": "451 recipes (of 2,278 posts)",
+        "notes": [
+          "allowed: blocks AI training bots only (checked 2026-11-01)",
+          "sitemap: index of yearly post sitemaps; recipes are under /recipe/",
+          "format: older recipes have an empty ingredient list; match them by title and keywords",
+          "note: her site blocks automated requests for now, so her YouTube channel (under videos) carries her recipes meanwhile"
+        ]
+      },
+      "support": {
+        "links": [
+          {
+            "label": "YouTube",
+            "url": "https://www.youtube.com/@Maangchi"
+          },
+          {
+            "label": "Newsletter",
+            "url": "https://maangchi.substack.com/"
+          }
+        ],
+        "books": [
+          {
+            "title": "Maangchi’s Big Book of Korean Cooking",
+            "isbn": "9781328988126"
+          },
+          {
+            "title": "Maangchi’s Real Korean Cooking",
+            "isbn": "9780544129894"
+          }
+        ]
+      }
+    },
+    {
+      "id": "mala",
+      "name": "The Mala Market",
+      "url": "https://blog.themalamarket.com",
+      "kind": "site",
+      "vetted": true,
+      "cuisines": [
+        "Chinese cuisine",
+        "Sichuan cuisine",
+        "Northeastern Chinese cuisine"
+      ],
+      "note": "Sichuan and regional Chinese recipes and ingredient guides from a US importer of Sichuan pantry staples. No YouTube channel.",
+      "collect": {
+        "status": "crawl",
+        "reason": "robots.txt allows everything; the blog has no terms page, and the shop's (Shopify) terms say nothing on automated access.",
+        "checked": "2026-11-08"
+      },
+      "crawl": {
+        "sitemap": "/sitemap_index.xml",
+        "include": "^https://blog\\.themalamarket\\.com/(?!shop/)[^/]+/$",
+        "format": "json-ld",
+        "default_cuisine": "Chinese",
+        "size": "about 225 posts",
+        "notes": [
+          "url: the recipes are on the blog; themalamarket.com is the shop",
+          "include: posts only; its affiliate sitemap lists 105 /shop/ pages",
+          "format: Recipe card on 12 of 14 sampled posts, old and new; no total time"
+        ]
+      },
+      "support": {
+        "links": [
+          {
+            "label": "The Mala Market shop",
+            "url": "https://themalamarket.com/"
+          }
+        ],
+        "books": []
+      }
+    },
+    {
+      "id": "rte",
+      "name": "RecipeTin Eats",
+      "url": "https://www.recipetineats.com",
+      "kind": "site",
+      "vetted": true,
+      "cuisines": [
+        "Australian cuisine"
+      ],
+      "note": "Sydney-based Nagi Maehashi's widely used recipe site; broad in scope, but a staple of Australian home cooking.",
+      "youtube": {
+        "id": "rte-yt",
+        "url": "https://www.youtube.com/@Recipetineats"
+      },
+      "collect": {
+        "status": "crawl",
+        "reason": "Generic bots allowed; blocks a few AI bots only. Its use policy bars commercial use and republishing a recipe's ingredients and method; we keep ingredient names only, never the method, and link every result.",
+        "checked": "2026-11-08"
+      },
+      "crawl": {
+        "sitemap": "/sitemap_index.xml",
+        "format": "json-ld",
+        "size": "about 1,750 posts",
+        "notes": [
+          "sitemap: listed in robots.txt; four post sitemaps",
+          "format: cuisine is often \"Western\""
+        ]
+      },
+      "support": {
+        "links": [
+          {
+            "label": "YouTube",
+            "url": "https://www.youtube.com/@Recipetineats"
+          }
+        ],
+        "books": [
+          {
+            "title": "RecipeTin Eats: Dinner",
+            "isbn": "9781682688427"
+          },
+          {
+            "title": "Delicious Tonight",
+            "isbn": "9781682689479"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rtj",
+      "name": "RecipeTin Japan",
+      "url": "https://japan.recipetineats.com",
+      "kind": "site",
+      "vetted": true,
+      "cuisines": [
+        "Japanese cuisine"
+      ],
+      "note": "Japanese home recipes from Yumiko, a Japan-born cook, sister site to RecipeTin Eats.",
+      "youtube": {
+        "id": "rtj-yt",
+        "url": "https://www.youtube.com/@RecipeTinJapan"
+      },
+      "collect": {
+        "status": "crawl",
+        "reason": "No robots.txt (404), so no rules. No terms page, only privacy and disclosure.",
+        "checked": "2026-11-08"
+      },
+      "crawl": {
+        "sitemap": "/sitemap_index.xml",
+        "format": "json-ld",
+        "default_cuisine": "Japanese",
+        "size": "about 440 posts",
+        "notes": [
+          "sitemap: no robots.txt (404), so no rules; attachment sitemaps are skipped",
+          "format: cuisine often missing; a few guide posts have no recipe card"
+        ]
+      },
+      "support": {
+        "links": [
+          {
+            "label": "YouTube",
+            "url": "https://www.youtube.com/@RecipeTinJapan"
+          }
+        ],
+        "books": []
+      }
+    },
+    {
+      "id": "sudachi",
+      "name": "Sudachi",
+      "url": "https://sudachirecipes.com",
+      "kind": "site",
+      "vetted": true,
+      "cuisines": [
+        "Japanese cuisine",
+        "Japanese Chinese cuisine",
+        "Itameshi"
+      ],
+      "note": "Japanese home recipes from Japanese cook Yuto Omura.",
+      "youtube": {
+        "id": "sudachi-yt",
+        "url": "https://www.youtube.com/@SudachiRecipes"
+      },
+      "collect": {
+        "status": "crawl",
+        "reason": "robots.txt only blocks /wp-admin/ and /cdn-cgi/; no terms page, only privacy.",
+        "checked": "2026-11-08"
+      },
+      "crawl": {
+        "sitemap": "/sitemap_index.xml",
+        "format": "json-ld",
+        "default_cuisine": "Japanese",
+        "delay_seconds": 12,
+        "size": "about 600 posts",
+        "notes": [
+          "delay_seconds: answered HTTP 429 (too many requests) after about 500 pages at 4 seconds apart, 2026-11-09",
+          "sitemap: listed in robots.txt"
+        ]
+      },
+      "support": {
+        "links": [
+          {
+            "label": "YouTube",
+            "url": "https://www.youtube.com/@SudachiRecipes"
+          }
+        ],
+        "books": [
+          {
+            "title": "Japan: The Ultimate Cookbook",
+            "isbn": "9781400345083"
+          }
+        ]
+      }
+    },
+    {
+      "id": "mwl",
+      "name": "Made With Lau",
+      "url": "https://www.madewithlau.com",
+      "kind": "site",
+      "vetted": true,
+      "cuisines": [
+        "Chinese cuisine",
+        "Cantonese cuisine"
+      ],
+      "note": "Family-run channel and site teaching Cantonese recipes from retired chef Daddy Lau.",
+      "youtube": {
+        "id": "mwl-yt",
+        "url": "https://www.youtube.com/@MadeWithLau"
+      },
+      "collect": {
+        "status": "crawl",
+        "reason": "robots.txt allows everything but /private/; no terms page, only privacy.",
+        "checked": "2026-11-08"
+      },
+      "crawl": {
+        "sitemap": "/sitemap.xml",
+        "include": "^https://www\\.madewithlau\\.com/recipes/[^/]+$",
+        "format": "json-ld",
+        "default_cuisine": "Chinese",
+        "size": "197 recipes (of about 388 URLs)",
+        "notes": [
+          "url: the bare domain redirects here",
+          "sitemap: listed in robots.txt; one urlset, not an index",
+          "include: recipes only, not lessons, courses or the blog",
+          "format: photos come from its image CDN, cdn.sanity.io"
+        ]
+      },
+      "support": {
+        "links": [
+          {
+            "label": "Canto Cooking Club",
+            "url": "https://www.madewithlau.com/club"
+          },
+          {
+            "label": "Newsletter",
+            "url": "https://newsletter.madewithlau.com/"
+          },
+          {
+            "label": "YouTube",
+            "url": "https://www.youtube.com/@MadeWithLau"
+          }
+        ],
+        "books": []
+      }
+    },
+    {
+      "id": "ab",
+      "name": "Alton Brown",
+      "url": "https://altonbrown.com",
+      "kind": "site",
+      "vetted": true,
+      "cuisines": [
+        "American cuisine"
+      ],
+      "note": "Alton Brown's recipes, from Good Eats and his cookbooks.",
+      "youtube": {
+        "id": "ab-yt",
+        "url": "https://www.youtube.com/@AltonBrown",
+        "note": "UCfDNi1aEljAQ17mUrfUjkvg, the channel altonbrown.com links to (checked 2026-11-08)"
+      },
+      "collect": {
+        "status": "crawl",
+        "reason": "robots.txt only blocks /wp-admin/. Its only terms page (/terms-conditions/; /terms/, /terms-of-use/ and /terms-and-conditions/ 301 to the home page) is a privacy and cookie policy that says nothing on copying, storing or automated access.",
+        "checked": "2026-11-08"
+      },
+      "crawl": {
+        "sitemap": "/sitemap_index.xml",
+        "include": "^https://altonbrown\\.com/recipes/[^/]+/$",
+        "format": "json-ld",
+        "size": "947 recipes",
+        "notes": [
+          "url: www. redirects here",
+          "sitemap: robots.txt lists /sitemap.xml, which 301s here (Yoast); recipes are in recipes-sitemap.xml",
+          "include: recipes only; the index also lists blog posts, books, videos and shop pages. Read through the index so a second recipes sitemap past 1,000 is still found",
+          "format: WP Recipe Maker card on 5 of 5 sampled recipes, 2020 to now; no cuisine (it's in keywords), category is the course"
+        ]
+      },
+      "support": {
+        "links": [
+          {
+            "label": "YouTube",
+            "url": "https://www.youtube.com/@AltonBrown"
+          }
+        ],
+        "books": [
+          {
+            "title": "Good Eats: The Final Years",
+            "isbn": "9781419753527"
+          },
+          {
+            "title": "EveryDayCook",
+            "isbn": "9781101885710"
+          },
+          {
+            "title": "I’m Just Here for the Food: Version 2.0",
+            "isbn": "9781584795599"
+          },
+          {
+            "title": "Good Eats: The Early Years",
+            "isbn": "9781584797951"
+          }
+        ]
+      }
+    },
+    {
+      "id": "kenji",
+      "name": "J. Kenji López-Alt",
+      "url": "https://www.youtube.com/@JKenjiLopezAlt",
+      "kind": "channel",
+      "vetted": true,
+      "cuisines": [
+        "American cuisine"
+      ],
+      "note": "J. Kenji López-Alt's cooking videos.",
+      "collect": {
+        "status": "youtube-only",
+        "reason": "kenjilopezalt.com and his Patreon have no recipe data to index.",
+        "checked": "2026-11-01"
+      },
+      "search": "https://www.youtube.com/@JKenjiLopezAlt/search?query={q}",
+      "search_label": "All of Kenji's videos",
+      "search_note": "Backstop for anything the index misses.",
+      "support": {
+        "links": [
+          {
+            "label": "Patreon",
+            "url": "https://www.patreon.com/kenjilopezalt"
+          },
+          {
+            "label": "YouTube",
+            "url": "https://www.youtube.com/@JKenjiLopezAlt"
+          }
+        ],
+        "books": [
+          {
+            "title": "The Food Lab",
+            "isbn": "9780393081084"
+          },
+          {
+            "title": "The Wok",
+            "isbn": "9780393541212"
+          },
+          {
+            "title": "Every Night Is Pizza Night",
+            "isbn": "9781324005254"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ccd",
+      "name": "Chinese Cooking Demystified",
+      "url": "https://www.youtube.com/@ChineseCookingDemystified",
+      "kind": "channel",
+      "vetted": true,
+      "cuisines": [
+        "Chinese cuisine"
+      ],
+      "note": "Technique-heavy YouTube channel on regional Chinese home and restaurant cooking.",
+      "collect": {
+        "status": "youtube-only",
+        "reason": "Regional Chinese technique videos; no recipe site to index (added at Kyle's yes, 2026-11-08).",
+        "checked": "2026-11-08"
+      },
+      "support": {
+        "links": [
+          {
+            "label": "Patreon",
+            "url": "https://www.patreon.com/ChineseCookingDemystified"
+          },
+          {
+            "label": "YouTube",
+            "url": "https://www.youtube.com/@ChineseCookingDemystified"
+          }
+        ],
+        "books": []
+      }
+    },
+    {
+      "id": "seriouseats",
+      "name": "Serious Eats",
+      "url": "https://www.seriouseats.com",
+      "kind": "magazine",
+      "vetted": true,
+      "cuisines": [],
+      "note": "Food site known for tested recipes and long technique articles.",
+      "collect": {
+        "status": "link-only",
+        "reason": "Owner (People Inc.) requires written permission for automated collection, so it is a link-out only unless permission is given.",
+        "checked": "2026-11-01"
+      },
+      "search": "https://www.seriouseats.com/search?q={q}"
+    },
+    {
+      "id": "rhs",
+      "name": "Red House Spice",
+      "url": "https://redhousespice.com",
+      "kind": "site",
+      "vetted": true,
+      "cuisines": [
+        "Chinese cuisine",
+        "Gansu cuisine"
+      ],
+      "note": "Classic Chinese recipes from Wei Guo, who grew up in Gansu, blogging since 2017.",
+      "youtube": {
+        "id": "rhs-yt",
+        "url": "https://www.youtube.com/@redhousespice",
+        "note": "\"Wei's Red House Kitchen\""
+      },
+      "collect": {
+        "status": "link-only",
+        "reason": "Its terms (redhousespice.com/terms/, checked 2026-11-08) say \"Copying or storing our content for other than personal use is expressly prohibited without our prior written consent.\" robots.txt would allow us (it blocks AI bots only), and pages carry full Recipe data, so it's ready to crawl if Wei Guo agrees: then add a crawl section and set status to crawl, and her channel ties to the site.",
+        "checked": "2026-11-08"
+      },
+      "search": "https://redhousespice.com/?s={q}",
+      "support": {
+        "links": [
+          {
+            "label": "YouTube",
+            "url": "https://www.youtube.com/@redhousespice"
+          }
+        ],
+        "books": [
+          {
+            "title": "Three Meals, Four Seasons",
+            "isbn": "9781837839292"
+          }
+        ]
+      }
+    },
+    {
+      "id": "fca",
+      "name": "French Cooking Academy",
+      "url": "https://www.youtube.com/@FrenchCookingAcademy",
+      "kind": "channel",
+      "vetted": true,
+      "cuisines": [
+        "French cuisine"
+      ],
+      "note": "Classic French home cooking, taught on YouTube.",
+      "collect": {
+        "status": "youtube-only",
+        "reason": "Its site (thefrenchcookingacademy.com; frenchcookingacademy.com is a parked domain) has about 960 recipe pages but no Recipe data, and its terms bar copying its materials, so it isn't crawled.",
+        "checked": "2026-11-08"
+      },
+      "support": {
+        "links": [
+          {
+            "label": "Patreon",
+            "url": "https://www.patreon.com/frenchcookingacademy"
+          },
+          {
+            "label": "The FCA Club",
+            "url": "https://www.thefrenchcookingacademy.com/fcaclub"
+          },
+          {
+            "label": "YouTube",
+            "url": "https://www.youtube.com/@FrenchCookingAcademy"
+          }
+        ],
+        "books": [
+          {
+            "title": "French Cooking Academy",
+            "isbn": "9781645679790"
+          }
+        ]
+      }
+    },
+    {
+      "id": "kitchenbutterfly",
+      "name": "Kitchen Butterfly",
+      "url": "https://www.kitchenbutterfly.com/about-2",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Nigerian cuisine"
+      ],
+      "note": "Long-running blog by Nigerian food writer and historian Ozoz Sokoh, with Nigerian and New Nigerian recipes.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "sisiyemmie",
+      "name": "Sisi Yemmie",
+      "url": "https://sisiyemmie.com/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Nigerian cuisine"
+      ],
+      "note": "Nigerian home cooking recipes and meal plans, paired with the SisiYemmieTV YouTube channel.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "eleniskitchen",
+      "name": "Eleni's Kitchen Blog",
+      "url": "https://www.eleniskitchen.com/blog",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Ethiopian cuisine"
+      ],
+      "note": "Recipes from Ethiopian-born caterer and cooking instructor Eleni Woldeyes near Portland; also promotes her spice and sauce shop.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "mymoroccanfood",
+      "name": "My Moroccan Food",
+      "url": "https://www.mymoroccanfood.com/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Moroccan cuisine"
+      ],
+      "note": "Moroccan recipe blog linked to cookbook author Nargisse Benkabbou, covering breads, soups and tagines.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "tasteofmaroc",
+      "name": "Taste of Maroc",
+      "url": "https://tasteofmaroc.com/about/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Moroccan cuisine"
+      ],
+      "note": "Moroccan recipes and tutorials from Christine Benlafquih, formerly the Moroccan food writer at The Spruce Eats.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "salimaskitchen",
+      "name": "Salima's Kitchen",
+      "url": "https://salimaskitchen.com/category/moroccan/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Moroccan cuisine"
+      ],
+      "note": "Moroccan section of Salima Benkhalti's blog, drawing on her family cooking.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "drizzleanddip",
+      "name": "Drizzle and Dip",
+      "url": "https://drizzleanddip.com/category/recipes/cuisine/south-african/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "South African cuisine"
+      ],
+      "note": "South African recipes section of Cape Town food writer Sam Linsell's blog.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "taste",
+      "name": "TASTE",
+      "url": "https://taste.co.za/south-african-recipes",
+      "kind": "magazine",
+      "vetted": false,
+      "cuisines": [
+        "South African cuisine"
+      ],
+      "note": "South African recipe collection from the Woolworths food magazine.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "thecinnamonjar",
+      "name": "The Cinnamon Jar",
+      "url": "https://thecinnamonjar.com/category/south-african-recipes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "South African cuisine"
+      ],
+      "note": "South African favourites like bobotie and milk tart from Maretha, a South African home cook in the UK.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "eatwithafia",
+      "name": "Eat with Afia",
+      "url": "https://eatwithafia.com",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Ghanaian cuisine"
+      ],
+      "note": "Plant based Ghanaian cooking from Afia Amoako.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "fafagilbert",
+      "name": "Fafa Gilbert (Ndudu by Fafa)",
+      "url": "https://fafagilbert.com/tag/ghana-recipes",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Ghanaian cuisine"
+      ],
+      "note": "Ghanaian recipe posts from cook and writer Fafa Gilbert.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "cheznermine",
+      "name": "Chez Nermine",
+      "url": "https://cheznermine.com/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Egyptian cuisine"
+      ],
+      "note": "Egyptian recipes and the stories behind them from Egyptian American cook Nermine.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "amiraspantry",
+      "name": "Amira's Pantry",
+      "url": "https://amiraspantry.com/tag/egyptian-cuisine/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Egyptian cuisine"
+      ],
+      "note": "Egyptian section of Amira's recipe blog, with koshari, hawawshi, feteer and sweets.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "kaluhiskitchen",
+      "name": "Kaluhi's Kitchen",
+      "url": "https://www.kaluhiskitchen.com/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Kenyan cuisine"
+      ],
+      "note": "Award winning Kenyan food blog by Kaluhi Adagala, focused on Kenyan home cooking.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "nairobikitchen",
+      "name": "Nairobi Kitchen",
+      "url": "https://nairobikitchen.blogspot.com",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Kenyan cuisine"
+      ],
+      "note": "Kenyan recipes blog by Nairobi cook Mulunga.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "pikachakula",
+      "name": "Pika Chakula",
+      "url": "https://www.pikachakula.com/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Kenyan cuisine"
+      ],
+      "note": "Kenyan and East African recipes such as kuku paka and mandazi.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "ourtunisiantable",
+      "name": "Our Tunisian Table",
+      "url": "https://ourtunisiantable.com",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Tunisian cuisine"
+      ],
+      "note": "Tunisian and Maghreb recipes such as lablebi and brik, written by Munya and Rim.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "amourdecuisine",
+      "name": "Amour de Cuisine",
+      "url": "https://www.amourdecuisine.fr/en",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Algerian cuisine"
+      ],
+      "note": "Algerian home cooking and pastries from Algerian born cook Soulef Zaoui, in English and French.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "xawaash",
+      "name": "Xawaash",
+      "url": "https://xawaash.com/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Somali cuisine"
+      ],
+      "note": "Somali recipe blog started in 2011 by Leila Adde and Abdullahi Kassim in Ontario.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "preciouscore",
+      "name": "Precious Core",
+      "url": "https://www.preciouscore.com/?p=22",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Cameroonian cuisine"
+      ],
+      "note": "Recipe blog by Precious Nkeih centered on Cameroonian dishes, with a companion YouTube channel.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "africanbites",
+      "name": "Immaculate Bites",
+      "url": "https://www.africanbites.com/about",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Cameroonian cuisine"
+      ],
+      "note": "African and Caribbean recipes from Cameroon born cook Imma, with many Cameroonian dishes.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "akitcheninuganda",
+      "name": "A Kitchen in Uganda",
+      "url": "https://akitcheninuganda.com/recipe-index",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Ugandan cuisine"
+      ],
+      "note": "Ugandan recipes such as katogo and firinda from Sophie; most posts date to 2018 or earlier.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "princesstafadzwa",
+      "name": "Princess Tafadzwa",
+      "url": "https://www.princesstafadzwa.com/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Zimbabwean cuisine"
+      ],
+      "note": "Zimbabwean recipes using Shona ingredients and dish names, alongside craft posts.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "sudanese",
+      "name": "The Sudanese Kitchen",
+      "url": "https://www.sudanese.kitchen/about",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Sudanese cuisine"
+      ],
+      "note": "Sudanese home cooking recipes and food history collected by Omer Al Tijani (Eltigani).",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "foodwini",
+      "name": "Foodwini",
+      "url": "https://foodwini.com/about-foodwini-mauritius-food-blog/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Mauritian cuisine"
+      ],
+      "note": "Mauritius based food blog by Hanshini, leaning vegetarian, with many Mauritian recipes.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "crumbsnatched",
+      "name": "Crumb-Snatched",
+      "url": "https://www.crumbsnatched.com/category/food/recipes/cape-verdean-recipes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Cape Verdean cuisine"
+      ],
+      "note": "Cape Verdean recipes from Crystal, a Providence cook whose family is from Sao Nicolau.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "kitweonline",
+      "name": "Let's Cook with Gloria (Kitwe Online)",
+      "url": "https://kitweonline.com/about/contributors/blogs/lets-cook-with-gloria",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Zambian cuisine"
+      ],
+      "note": "Zambian recipe column by Gloria Miyoba on the Kitwe Online community site.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "esterkocht",
+      "name": "Ester kocht",
+      "url": "https://www.esterkocht.com/about/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Namibian cuisine"
+      ],
+      "note": "Namibian and German home recipes from Namibian born Ester, now living in Bavaria.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "ndudu-by-fafa",
+      "name": "Ndudu by Fafa (Togolese posts)",
+      "url": "https://ndudu-by-fafa.blogspot.com/search/label/Togolese%20Food",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Togolese cuisine"
+      ],
+      "note": "A handful of Togolese dishes from a London based cook with Ghanaian and Togolese family.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "saintcooks",
+      "name": "The Saint Cooks",
+      "url": "https://www.saintcooks.com/recipe/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Cuisine of Saint Helena"
+      ],
+      "note": "St Helena island recipes such as plo and fishcakes from Robin and Emma-Jane, who are writing a St Helena cookbook.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "zanzibarrecipes",
+      "name": "Zanzibar Recipes",
+      "url": "https://zanzibarrecipes.blogspot.com/p/about-us.html",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Zanzibari cuisine"
+      ],
+      "note": "Blog collecting Zanzibar and Swahili coast recipes such as urojo and pilau; authors unnamed.",
+      "region": "africa",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "kitchenfrau",
+      "name": "Kitchen Frau: Canadian Food",
+      "url": "https://www.kitchenfrau.com/canadian-food/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Canadian cuisine"
+      ],
+      "note": "Canadian food section of an Alberta-based home cooking blog.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "mexicoinmykitchen",
+      "name": "Mexico in My Kitchen",
+      "url": "https://www.mexicoinmykitchen.com/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Mexican cuisine"
+      ],
+      "note": "Mely Martínez's long-running blog of Mexican home-style recipes.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "patijinich",
+      "name": "Pati Jinich",
+      "url": "https://patijinich.com/recipes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Mexican cuisine"
+      ],
+      "note": "Recipe archive from the Mexican-born chef and host of the PBS series Pati's Mexican Table.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "muybuenoblog",
+      "name": "Muy Bueno",
+      "url": "https://muybuenoblog.com/?p=24",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Mexican-American cuisine"
+      ],
+      "note": "Blog of Mexican-American family recipes.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "mjskitchen",
+      "name": "MJ's Kitchen: Chile and New Mexico",
+      "url": "https://mjskitchen.com/recipe-index/chile-and-new-mexico/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "New Mexican cuisine"
+      ],
+      "note": "New Mexico chile recipes on a Southwest home cooking blog.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "homesicktexan",
+      "name": "Homesick Texan",
+      "url": "https://www.homesicktexan.com/homesick-texan-cookbook-introduction/comment-page-20/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Tex-Mex cuisine",
+        "Texan cuisine"
+      ],
+      "note": "Lisa Fain's long-running blog of Texan and Tex-Mex home cooking.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "newengland",
+      "name": "Yankee Magazine: Chowder Recipes",
+      "url": "https://newengland.com/food/soups-stews-chowders/favorite-chowder-recipes",
+      "kind": "magazine",
+      "vetted": false,
+      "cuisines": [
+        "Cuisine of New England"
+      ],
+      "note": "Recipes from Yankee, the long-running New England regional magazine.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "lanascooking",
+      "name": "Lana's Cooking",
+      "url": "https://www.lanascooking.com/about/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Cuisine of the Southern United States"
+      ],
+      "note": "Lana Stuart's blog of Southern home cooking from Georgia.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "asouthernsoul",
+      "name": "A Southern Soul: Southern Classics",
+      "url": "https://asouthernsoul.com/recipes/southern-classics",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Cuisine of the Southern United States"
+      ],
+      "note": "Collection of classic Southern recipes on a Southern home cooking blog.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "kennethtemple",
+      "name": "Kenneth Temple: Cajun and Creole",
+      "url": "https://kennethtemple.com/recipes/cajun-creole/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Louisiana Creole cuisine",
+        "Cajun cuisine",
+        "Cuisine of New Orleans"
+      ],
+      "note": "Cajun and Creole recipes from a New Orleans-based cook and video creator.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "thesoulfoodpot",
+      "name": "The Soul Food Pot",
+      "url": "https://thesoulfoodpot.com/recipe-index",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Soul food"
+      ],
+      "note": "Shaunda Necole's blog of soul food and Southern recipes.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "cookswithsoul",
+      "name": "Cooks with Soul",
+      "url": "https://cookswithsoul.com/2024-holiday-gift-guide-soul-food-cookbooks-by-black-authors/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Soul food"
+      ],
+      "note": "Soul food recipe site that also covers cookbooks by Black authors.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "onolicioushawaii",
+      "name": "Onolicious Hawaii",
+      "url": "https://onolicioushawaii.com",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Cuisine of Hawaii"
+      ],
+      "note": "Hawaii-based blog of local-style recipes.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "iheartumami",
+      "name": "I Heart Umami: Chinese American",
+      "url": "https://iheartumami.com/category/cuisines/chinese-american",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Chinese American cuisine",
+        "American Chinese cuisine"
+      ],
+      "note": "Chinese American takeout-style recipes on an Asian home cooking blog.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "vietworldkitchen",
+      "name": "Viet World Kitchen",
+      "url": "https://vietworldkitchen.com/?p=6967",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Vietnamese Americans#Cuisine",
+        "Vietnamese cuisine"
+      ],
+      "note": "Andrea Nguyen's long-running site on Vietnamese cooking in American kitchens.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "takingbelize",
+      "name": "Taking Belize: Belizean Recipes",
+      "url": "https://takingbelize.blogspot.com/p/belizean-recipes.html",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Belizean cuisine"
+      ],
+      "note": "Collection of Belizean home recipes on a personal blog.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "puravidamoms",
+      "name": "Pura Vida Moms",
+      "url": "https://puravidamoms.com/costa-rican-cookbook/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Costa Rican cuisine"
+      ],
+      "note": "Costa Rica-focused family site with traditional Costa Rican recipes and its own cookbook.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "thefoodieskitchen",
+      "name": "The Foodies' Kitchen: Guatemalan Recipe Collection",
+      "url": "https://www.thefoodieskitchen.com/2011/09/12/guatemalan-recipe-collection/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Guatemalan cuisine"
+      ],
+      "note": "Index of Guatemalan recipes on a home cooking blog.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "familiakitchen",
+      "name": "Familia Kitchen: Guatemala",
+      "url": "https://familiakitchen.com/destination/guatemala/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Guatemalan cuisine",
+        "Argentine cuisine"
+      ],
+      "note": "Guatemalan recipes and stories on a Latino family cooking site.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "chipabythedozen",
+      "name": "Chipa by the Dozen",
+      "url": "https://chipabythedozen.com/en/category/bolivian-food-recipes-savory-sweet/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Bolivian cuisine"
+      ],
+      "note": "Bolivian-American Lizet Bowen's bilingual blog of Bolivian recipes.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "oliviascuisine",
+      "name": "Olivia's Cuisine",
+      "url": "https://oliviascuisine.com/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Brazilian cuisine"
+      ],
+      "note": "Brazilian-born Olivia Mesquita's blog, with a large section of Brazilian classics.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "easyanddelish",
+      "name": "Easy and Delish",
+      "url": "https://www.easyanddelish.com/easy-brazilian-recipes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Brazilian cuisine"
+      ],
+      "note": "Brazilian recipe collection from a Brazilian-born home cook based in the US.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "midiariodecocina",
+      "name": "Mi Diario de Cocina: Chilean Recipes",
+      "url": "https://www.midiariodecocina.com/en/chilean-recipes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Chilean cuisine"
+      ],
+      "note": "Bilingual blog with a large collection of traditional Chilean recipes.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "chileanfoodandgarden",
+      "name": "Pilar's Chilean Food & Garden",
+      "url": "https://www.chileanfoodandgarden.com/?p=37406",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Chilean cuisine"
+      ],
+      "note": "Chilean home cooking blog by Pilar Hernández.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "mycolombianrecipes",
+      "name": "My Colombian Recipes",
+      "url": "https://www.mycolombianrecipes.com/about/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Colombian cuisine"
+      ],
+      "note": "Medellín-born Erica Dinho's blog of traditional Colombian recipes.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "laylita",
+      "name": "Laylita's Recipes",
+      "url": "https://www.laylita.com/recipes/about/comment-page-1/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Ecuadorian cuisine"
+      ],
+      "note": "Ecuadorian-born Layla Pujol's blog, strong on Ecuadorian and Latin American dishes.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "metemgee",
+      "name": "Metemgee",
+      "url": "https://metemgee.com/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Culture of Guyana#Cuisine"
+      ],
+      "note": "Guyanese-born Althea Brown's blog of Guyanese and Caribbean recipes.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "alicaspepperpot",
+      "name": "Alica's Pepperpot",
+      "url": "https://alicaspepperpot.com/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Culture of Guyana#Cuisine",
+        "Indo Caribbean food"
+      ],
+      "note": "Blog of Guyanese home recipes.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "camilamade",
+      "name": "Camila Made: Top 15 Paraguayan Recipes",
+      "url": "https://camilamade.com/top-15-paraguayan-recipes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Paraguayan cuisine"
+      ],
+      "note": "Paraguayan recipe roundup on a Latin American home cooking blog.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "perudelights",
+      "name": "Peru Delights",
+      "url": "https://perudelights.com/tag/peruvian-home-cooking/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Peruvian cuisine",
+        "Chinese Latin American cuisine"
+      ],
+      "note": "Morena Cuadra's blog of Peruvian home recipes and food culture.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "eatperu",
+      "name": "Eat Peru",
+      "url": "https://www.eatperu.com/category/recipes/?sf_paged=2",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Peruvian cuisine",
+        "Chifa"
+      ],
+      "note": "Guide to Peruvian dishes and ingredients with a recipe section.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "ceciliatupac",
+      "name": "Cecilia Tupac: Chifa",
+      "url": "https://en.ceciliatupac.com/chifa-peruano",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Chifa",
+        "Chinese Latin American cuisine"
+      ],
+      "note": "Chifa recipes from a Peruvian cook and cooking teacher.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "peru",
+      "name": "Peru.travel: Amazonian Cuisine",
+      "url": "https://www.peru.travel/gastronomy/en/peruvian-cuisine/amazonian-cuisine.html",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Amazonian cuisine"
+      ],
+      "note": "Section on Peruvian Amazon dishes and ingredients from Peru's official tourism board.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "byandreajanssen",
+      "name": "Andrea Janssen: Surinamese Recipes",
+      "url": "https://www.byandreajanssen.com/dutch-recipes/surinamese-recipes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Surinamese cuisine",
+        "Dutch cuisine"
+      ],
+      "note": "Surinamese recipes section on a Dutch food blogger's site.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "multiculticooking",
+      "name": "Multiculticooking: Suriname",
+      "url": "https://multiculticooking.com/category/cuisines/americas/suriname/page/4/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Surinamese cuisine"
+      ],
+      "note": "Netherlands-based blog with many Surinamese, including Surinamese-Javanese, recipes.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "enrilemoine",
+      "name": "Enriqueta Lemoine: Venezuelan recipes",
+      "url": "https://enrilemoine.com/en/2025/10/02/foolproof-and-fuss-free-authentic-venezuelan-recipes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Venezuelan cuisine"
+      ],
+      "note": "Roundup of Venezuelan recipes on a Venezuelan-born food writer's blog.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "mybigfatcubanfamily",
+      "name": "My Big Fat Cuban Family",
+      "url": "https://www.mybigfatcubanfamily.com/about-marta/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Cuban cuisine"
+      ],
+      "note": "Marta Darby's blog of Cuban family recipes.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "caribbeanpot",
+      "name": "Caribbean Pot: Grenada",
+      "url": "https://caribbeanpot.com/tag/grenada-cooking/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Culture of Grenada#Cuisine"
+      ],
+      "note": "Grenadian dishes on Chris De La Rosa's large Caribbean recipe site.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "spiceislandcooking",
+      "name": "Spice Island Cooking",
+      "url": "https://spiceislandcooking.com/?p=618",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Culture of Grenada#Cuisine"
+      ],
+      "note": "Blog of Grenadian home recipes.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "jamaicancookery",
+      "name": "Jamaican Cookery",
+      "url": "https://www.jamaicancookery.com/p/about-me.html",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Jamaican cuisine"
+      ],
+      "note": "Long-running blog of everyday Jamaican home recipes.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "jamaicanfoodsandrecipes",
+      "name": "Jamaican Foods and Recipes",
+      "url": "https://jamaicanfoodsandrecipes.com/category-index/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Jamaican cuisine"
+      ],
+      "note": "Recipe site focused on traditional Jamaican dishes.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "delishdlites",
+      "name": "Delish D'Lites",
+      "url": "https://delishdlites.com",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Puerto Rican cuisine"
+      ],
+      "note": "Jannese Torres's blog of Puerto Rican and Latin recipes.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "senseandedibility",
+      "name": "Sense and Edibility",
+      "url": "https://senseandedibility.com/category/cuisines/puerto-rican/page/5/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Puerto Rican cuisine"
+      ],
+      "note": "Food blog with a large Puerto Rican recipe category.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "cookingwithria",
+      "name": "Cooking with Ria",
+      "url": "https://cookingwithria.com/about",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Trinidad and Tobago cuisine",
+        "Indo Caribbean food"
+      ],
+      "note": "Trinidadian home recipes from Ria Mathura.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "trinigourmet",
+      "name": "Trini Gourmet",
+      "url": "https://trinigourmet.com/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Trinidad and Tobago cuisine"
+      ],
+      "note": "Long-running Trinidad and Tobago food blog with local recipes.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "annieschamorrokitchen",
+      "name": "Annie's Chamorro Kitchen",
+      "url": "https://www.annieschamorrokitchen.com/?p=5054",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Cuisine of the Mariana Islands",
+        "Culture of Guam#Cuisine"
+      ],
+      "note": "Blog of Chamorro home recipes, the shared cuisine of Guam and the Northern Mariana Islands.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "guampedia",
+      "name": "Guampedia: Chamorro Dishes",
+      "url": "https://www.guampedia.com/category/food/chamorro-dishes/page/2",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Culture of Guam#Cuisine"
+      ],
+      "note": "Chamorro recipes and food history in Guam's online encyclopedia.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "dominicancooking",
+      "name": "Dominican Cooking",
+      "url": "https://www.dominicancooking.com/start",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Dominican Republic cuisine"
+      ],
+      "note": "Long-running Dominican recipe site run by Clara González.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "mydominicankitchen",
+      "name": "My Dominican Kitchen",
+      "url": "https://mydominicankitchen.com/category/recipes/main-dishes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Dominican Republic cuisine"
+      ],
+      "note": "Blog of Dominican home recipes.",
+      "region": "americas",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "koreanbapsang",
+      "name": "Korean Bapsang",
+      "url": "https://www.koreanbapsang.com/category/recipes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Korean cuisine",
+        "Korean Chinese cuisine",
+        "South Korean cuisine"
+      ],
+      "note": "Home-style Korean recipes from Hyosun, a Korean-American mom.",
+      "region": "asia-east",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "chinasichuanfood",
+      "name": "China Sichuan Food",
+      "url": "https://www.chinasichuanfood.com/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Sichuan cuisine"
+      ],
+      "note": "Elaine's blog of Chinese home recipes with a strong Sichuan focus.",
+      "region": "asia-east",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "cookinginchinglish",
+      "name": "Cooking in Chinglish",
+      "url": "https://cookinginchinglish.com",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Taiwan cuisine"
+      ],
+      "note": "Taiwanese home recipes from Edwina, who grew up in Taiwan.",
+      "region": "asia-east",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "tinyurbankitchen",
+      "name": "Tiny Urban Kitchen: Taiwanese Recipes",
+      "url": "https://tinyurbankitchen.com/taiwanese-recipes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Taiwan cuisine"
+      ],
+      "note": "Small set of Taiwanese recipes from Jen Che, a Taiwanese American blogger in Hong Kong.",
+      "region": "asia-east",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "farwestchina",
+      "name": "Far West China: Uyghur Food Recipes",
+      "url": "https://www.farwestchina.com/cuisine/ugyhur-food-recipes-xinjiang/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Xinjiang cuisine"
+      ],
+      "note": "Xinjiang travel and culture site with a section of Uyghur dish recipes.",
+      "region": "asia-east",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "chinasouthoftheclouds",
+      "name": "China South of the Clouds",
+      "url": "https://chinasouthoftheclouds.com/category/recipes",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Yunnan cuisine"
+      ],
+      "note": "Yunnan recipes, ingredient guides and travel notes tied to Georgia Freedman's Yunnan cookbook.",
+      "region": "asia-east",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "thehakkacookbook",
+      "name": "The Hakka Cookbook (blog)",
+      "url": "https://thehakkacookbook.com/tag/hakka-recipes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Hakka cuisine"
+      ],
+      "note": "Linda Lau Anusasananan's companion blog with Hakka recipes and news.",
+      "region": "asia-east",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "simplytibetan",
+      "name": "Simply Tibetan",
+      "url": "https://simplytibetan.com/about-me/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Tibetan cuisine"
+      ],
+      "note": "Tibetan home recipes such as thukpa, momo and laphing from a Tibetan home cook.",
+      "region": "asia-east",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "yowangdu",
+      "name": "YoWangdu Tibetan Cookbook",
+      "url": "https://www.yowangdu.com/tibetan-food/tibetan-cookbook.html",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Tibetan cuisine"
+      ],
+      "note": "Free online collection of Tibetan home recipes by Tibetan cook Lobsang Wangdu, on a Tibet travel site.",
+      "region": "asia-east",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "chawjcreations",
+      "name": "ChawJ Creations",
+      "url": "https://chawjcreations.com/tag/hmong/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Hmong cuisine"
+      ],
+      "note": "Hmong food and storytelling site by Cindy Her, a pastry chef in the Pacific Northwest.",
+      "region": "asia-east",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "carolynjphillips",
+      "name": "Madame Huang's Kitchen: Guizhou cuisine",
+      "url": "https://carolynjphillips.blogspot.com/search/label/Guizhou%20cuisine",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Guizhou cuisine",
+        "Hainan cuisine",
+        "Hubei cuisine",
+        "Jiangxi cuisine",
+        "Henan cuisine"
+      ],
+      "note": "Recipe posts on Guizhou dishes from Carolyn Phillips' blog, Madame Huang's Kitchen.",
+      "region": "asia-east",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "emb-japan",
+      "name": "Kyodo Ryori: Japanese Regional Cuisine",
+      "url": "https://www.ny.us.emb-japan.go.jp/Foods/kyodoryori/index.html",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Japanese regional cuisine"
+      ],
+      "note": "Embassy of Japan in New York pages on local dishes by prefecture, with videos and PDF recipes.",
+      "region": "asia-east",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "norecipes",
+      "name": "No Recipes: Japanese Chinese",
+      "url": "https://norecipes.com/recipe/cuisine/japanese-chinese/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Japanese Chinese cuisine"
+      ],
+      "note": "Japanese Chinese recipe category on Marc Matsumoto's food site.",
+      "region": "asia-east",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "indianhealthyrecipes",
+      "name": "Swasthi's Recipes",
+      "url": "https://www.indianhealthyrecipes.com/about/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Indian cuisine"
+      ],
+      "note": "Swasthi Shreekanth's long-running blog of everyday Indian home cooking from across the regions.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "harighotra",
+      "name": "Hari Ghotra",
+      "url": "https://www.harighotra.co.uk/indian-recipes",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Indian cuisine"
+      ],
+      "note": "UK-based cook Hari Ghotra's recipe library and videos of home-style Indian dishes.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "shesimmers",
+      "name": "SheSimmers",
+      "url": "https://shesimmers.com/who-is-shesimmers",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Thai cuisine"
+      ],
+      "note": "Bangkok-born writer Leela Punyaratabandhu's blog on Thai home cooking.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "hungryhuy",
+      "name": "Hungry Huy",
+      "url": "https://www.hungryhuy.com/vietnamese/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Vietnamese cuisine"
+      ],
+      "note": "Vietnamese-American Huy Vu's recipes for home-style Vietnamese dishes.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "ozlemsturkishtable",
+      "name": "Ozlem's Turkish Table",
+      "url": "https://ozlemsturkishtable.com/tag/turkish-recipes/page/9",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Turkish cuisine"
+      ],
+      "note": "Turkish-born cook and teacher Ozlem Warren's blog of home-style Turkish recipes.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "maureenabood",
+      "name": "Maureen Abood",
+      "url": "https://maureenabood.com/blog/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Lebanese cuisine"
+      ],
+      "note": "Lebanese-American writer Maureen Abood's blog of classic and modern Lebanese recipes.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "panlasangpinoy",
+      "name": "Panlasang Pinoy",
+      "url": "https://panlasangpinoy.com/filipino-food/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Filipino cuisine"
+      ],
+      "note": "Vanjo Merano's large library of Filipino recipes and cooking videos.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "kawalingpinoy",
+      "name": "Kawaling Pinoy",
+      "url": "https://www.kawalingpinoy.com/about/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Filipino cuisine"
+      ],
+      "note": "Lalaine Manalo's blog of Filipino home cooking.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "dailycookingquest",
+      "name": "Daily Cooking Quest",
+      "url": "https://dailycookingquest.com/cuisines/indonesian.html",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Indonesian cuisine"
+      ],
+      "note": "Indonesian home cook Anita's blog with a large archive of Indonesian recipes.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "rasamalaysia",
+      "name": "Rasa Malaysia",
+      "url": "https://rasamalaysia.com/nyonya-recipes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Malaysian cuisine"
+      ],
+      "note": "Penang-born Bee Yinn Low's recipe site, including Malaysian and Nyonya dishes.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "unicornsinthekitchen",
+      "name": "Unicorns in the Kitchen",
+      "url": "https://www.unicornsinthekitchen.com/persian-recipes",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Iranian cuisine"
+      ],
+      "note": "Iranian-born Shadi HasanzadeNemati's blog with a large Persian recipe section.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "olgasflavorfactory",
+      "name": "Olga's Flavor Factory",
+      "url": "https://www.olgasflavorfactory.com/category/russianrecipes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Russian cuisine"
+      ],
+      "note": "Russian-born home cook Olga's blog, with a dedicated Russian recipes category.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "pakistaneats",
+      "name": "Pakistan Eats",
+      "url": "https://pakistaneats.substack.com/p/pakistani-dishes-for-beginners",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Pakistani cuisine"
+      ],
+      "note": "Maryam Jillani's newsletter on Pakistani food, recipes and food culture.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "georgianrecipes",
+      "name": "Georgian Recipes",
+      "url": "https://georgianrecipes.net/about-georgian-recipes",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Georgian cuisine"
+      ],
+      "note": "Recipe site dedicated to traditional Georgian dishes.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "thearmeniankitchen",
+      "name": "The Armenian Kitchen",
+      "url": "https://www.thearmeniankitchen.com/classic-armenian-recipes-another/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Armenian cuisine"
+      ],
+      "note": "Armenian-American blog of family recipes and reviews of Armenian cookbooks.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "mysingaporefood",
+      "name": "My Singapore Food",
+      "url": "https://mysingaporefood.com/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Singaporean cuisine"
+      ],
+      "note": "Recipe archive focused on documenting Singaporean heritage dishes.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "afghancultureunveiled",
+      "name": "Afghan Culture Unveiled",
+      "url": "https://www.afghancultureunveiled.com/humaira-ghilzai/afghancooking/2013/01/our-aushak-recipe-in-print-food52.html",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Afghan cuisine"
+      ],
+      "note": "Afghan-American Humaira Ghilzai's blog on Afghan food and culture.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "afghancooks",
+      "name": "Afghan Cooks",
+      "url": "https://afghancooks.com/recipes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Afghan cuisine"
+      ],
+      "note": "Recipe blog dedicated to traditional Afghan dishes.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "thegundruk",
+      "name": "The Gundruk",
+      "url": "https://thegundruk.com",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Nepalese cuisine"
+      ],
+      "note": "Blog dedicated to Nepali recipes and food culture.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "iraqifamilycookbook",
+      "name": "The Iraqi Family Cookbook",
+      "url": "https://iraqifamilycookbook.blogspot.com/2014",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Iraqi cuisine"
+      ],
+      "note": "Long-running blog of Iraqi family recipes tied to the cookbook of the same name.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "chefnak",
+      "name": "Chef Nak",
+      "url": "https://www.chefnak.com/nhum",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Cambodian cuisine"
+      ],
+      "note": "Site of Cambodian chef and cookbook author Chef Nak, with notes on Khmer cookbooks.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "saengskitchen",
+      "name": "Saeng's Kitchen",
+      "url": "https://www.saengskitchen.com/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Lao cuisine"
+      ],
+      "note": "Lao-American cook Saeng Douangdara's recipes and videos of Lao home cooking.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "dubaiculture",
+      "name": "Emirati Recipes (Dubai Culture)",
+      "url": "https://dubaiculture.gov.ae/en/about-us/special-projects/our-projects-events/Emirati-Recipes",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Emirati cuisine"
+      ],
+      "note": "Dubai Culture and Arts Authority project documenting traditional Emirati recipes.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "cloudykitchen",
+      "name": "Cloudy Kitchen",
+      "url": "https://cloudykitchen.com/blog/category/new-zealand-recipes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "New Zealand cuisine"
+      ],
+      "note": "New Zealand-born baker Erin Clarkson's blog, with a section of Kiwi classics.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "yummytummyaarthi",
+      "name": "Yummy Tummy Aarthi (Kerala recipes)",
+      "url": "https://yummytummyaarthi.com/recipes/kerala",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Kerala cuisine",
+        "South Indian cuisine"
+      ],
+      "note": "Kerala section of Aarthi's large South Indian home cooking blog.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "goanfoodrecipes",
+      "name": "Goan Food Recipes",
+      "url": "https://www.goanfoodrecipes.com/cuisine/goan",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Goan cuisine"
+      ],
+      "note": "Recipe blog dedicated to traditional Goan home dishes.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "vegrecipesofindia",
+      "name": "Dassana's Veg Recipes (Punjabi)",
+      "url": "https://www.vegrecipesofindia.com/recipes/punjabi/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Punjabi cuisine",
+        "Hyderabadi cuisine",
+        "Karnataka cuisine",
+        "Cuisine of Uttar Pradesh"
+      ],
+      "note": "Punjabi section of Dassana Amit's large Indian vegetarian recipe blog.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "chefkunalkapur",
+      "name": "Chef Kunal Kapur",
+      "url": "https://www.chefkunalkapur.com/tag/punjabi",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Punjabi cuisine",
+        "Bihari cuisine"
+      ],
+      "note": "Indian chef and TV host Kunal Kapur's recipe site, tagged Punjabi dishes.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "spiceupthecurry",
+      "name": "Spice Up The Curry (Gujarat)",
+      "url": "https://www.spiceupthecurry.com/category/recipes-by-region/gujarat/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Gujarati cuisine",
+        "Andhra cuisine",
+        "Telugu cuisine",
+        "Jain vegetarianism"
+      ],
+      "note": "Gujarati section of Kanan Patel's Indian vegetarian recipe blog.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "parsicuisine",
+      "name": "ParsiCuisine.com",
+      "url": "https://www.parsicuisine.com/parsicuisine-com/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Parsi cuisine"
+      ],
+      "note": "Long-running community recipe site devoted to Parsi Zoroastrian cooking.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "archanaskitchen",
+      "name": "Archana's Kitchen (Chettinad)",
+      "url": "https://www.archanaskitchen.com/tag/chettinad-recipes/page-2",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Chettinad cuisine",
+        "Odia cuisine",
+        "Oriya cuisine",
+        "Awadhi cuisine",
+        "Naga cuisine",
+        "Bihari cuisine",
+        "Cuisine of Uttar Pradesh"
+      ],
+      "note": "Chettinad-tagged recipes on Archana Doshi's large Indian recipe site.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "theodehlicious",
+      "name": "The Odehlicious (Khaleeji)",
+      "url": "https://theodehlicious.com/cuisines/khaleeji/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Kuwaiti cuisine",
+        "Bahraini cuisine",
+        "Qatari cuisine",
+        "Eastern Arabian cuisine"
+      ],
+      "note": "Khaleeji section of a Middle Eastern home cooking blog.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "lonumedhu",
+      "name": "Lonumedhu",
+      "url": "https://lonumedhu.com/node/346",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Maldivian cuisine"
+      ],
+      "note": "Maldivian recipe and food culture site, including reviews of Maldivian cookbooks.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "cookingfromheart",
+      "name": "Cooking From Heart (Tamil Nadu)",
+      "url": "https://cookingfromheart.com/category/tamilnadu-special/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Tamil cuisine"
+      ],
+      "note": "Tamil Nadu section of a South Indian vegetarian home cooking blog.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "chitrasfoodbook",
+      "name": "Chitra's Food Book",
+      "url": "https://chitrasfoodbook.com/?p=5163",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Tamil cuisine",
+        "Karnataka cuisine"
+      ],
+      "note": "Chennai-based home cook's blog of everyday Tamil vegetarian recipes.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "mygingergarlickitchen",
+      "name": "My Ginger Garlic Kitchen (Rajasthani)",
+      "url": "https://www.mygingergarlickitchen.com/categories/rajasthani-recipes",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Rajasthani cuisine"
+      ],
+      "note": "Rajasthani section of Anupama Paliwal's Indian home cooking blog.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "cdn-tarladalal",
+      "name": "Tarla Dalal (Rajasthani)",
+      "url": "https://cdn.tarladalal.com/recipes/category/Rajasthani-Food",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Rajasthani cuisine",
+        "Sindhi cuisine",
+        "Jain vegetarianism"
+      ],
+      "note": "Rajasthani category on the recipe site of the late Indian cookbook author Tarla Dalal.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "shwetainthekitchen",
+      "name": "Shweta in the Kitchen (Maharashtrian)",
+      "url": "https://shwetainthekitchen.com/category/maharashtrian/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Maharashtrian cuisine"
+      ],
+      "note": "Maharashtrian section of an Indian home cooking blog.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "tarladalal",
+      "name": "Tarla Dalal (Maharashtrian)",
+      "url": "https://www.tarladalal.com/recipes/category/Maharashtrian/?page=3",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Maharashtrian cuisine"
+      ],
+      "note": "Maharashtrian category on Tarla Dalal's long-running recipe site.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "ikashmir",
+      "name": "iKashmir Cookbook",
+      "url": "https://ikashmir.net/cookbook/recipes/index.html",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Kashmiri cuisine"
+      ],
+      "note": "Kashmiri Pandit community site with a collection of traditional recipes.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "nandyala",
+      "name": "Mahanandi",
+      "url": "https://nandyala.org/mahanandi/archives/2006/12/12/cooking-at-home-with-pedatha-cookbook-review-interview-and-recipe/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Andhra cuisine",
+        "Telugu cuisine"
+      ],
+      "note": "Indira's long-running blog of Andhra vegetarian home cooking.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "awayinthekitchen",
+      "name": "Away in the Kitchen (Odia home cooking)",
+      "url": "https://www.awayinthekitchen.com/odia-home-cooking",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Odia cuisine",
+        "Oriya cuisine"
+      ],
+      "note": "Blog section devoted to Odia home recipes.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "brahmosfoodie",
+      "name": "Brahmos Foodie",
+      "url": "https://brahmosfoodie.blogspot.com",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "North East Indian cuisine"
+      ],
+      "note": "Blog of recipes from and inspired by North-East India.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "aakholghor",
+      "name": "Aakhol Ghor",
+      "url": "https://aakholghor.blogspot.com/2008",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Assamese cuisine"
+      ],
+      "note": "Blog dedicated to Assamese home cooking.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "kapampangankitchen",
+      "name": "Kapampangan Kitchen",
+      "url": "https://kapampangankitchen.blogspot.com",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Kapampangan cuisine"
+      ],
+      "note": "Blog dedicated to Kapampangan home recipes from Pampanga.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "ruchikrandhap",
+      "name": "Ruchik Randhap",
+      "url": "https://www.ruchikrandhap.com/recipes",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Mangalorean Catholic Cuisine",
+        "Mangalorean Catholic cuisine"
+      ],
+      "note": "Mangalorean Catholic home cook's blog of Mangalorean and Konkani recipes.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "cooklikececilia",
+      "name": "Cook Like Cecilia",
+      "url": "https://cooklikececilia.com/category/mangalorean-recipes/page/3/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Mangalorean Catholic Cuisine"
+      ],
+      "note": "Blog with a dedicated Mangalorean recipes category.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "udupi-recipes",
+      "name": "Udupi Recipes",
+      "url": "https://udupi-recipes.com/about-me",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Udupi cuisine"
+      ],
+      "note": "Blog dedicated to traditional Udupi and coastal Karnataka vegetarian dishes.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "jewishfoodsociety",
+      "name": "Jewish Food Society: Bukharian and Central Asian Jewish recipes",
+      "url": "https://www.jewishfoodsociety.org/collections/bukharian-central-asian-jewish-recipes",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Bukharan Jewish cuisine"
+      ],
+      "note": "Nonprofit archive of family recipes, with a Bukharian collection.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "hildaskitchenblog",
+      "name": "Hilda's Kitchen Blog (Assyrian)",
+      "url": "https://hildaskitchenblog.com/recipe/category/assyrian",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Assyrian cuisine"
+      ],
+      "note": "Assyrian home cook Hilda Sterner's blog, with a dedicated Assyrian recipes category.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "thequirinokitchen",
+      "name": "The Quirino Kitchen (Ilocano)",
+      "url": "https://thequirinokitchen.com/tag/ilocano-recipes",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Ilocano cuisine"
+      ],
+      "note": "Filipino home cooking blog with an Ilocano recipes tag.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "flavoursofiloilo",
+      "name": "Flavours of Iloilo",
+      "url": "https://flavoursofiloilo.blogspot.com/2013/05/how-about-some-chicken-binakol.html",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Filipino cuisine#Visayas"
+      ],
+      "note": "Blog of Ilonggo home dishes from Iloilo in the Western Visayas.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "sailusfood",
+      "name": "Sailu's Kitchen (Kodava cuisine)",
+      "url": "https://www.sailusfood.com/indian-food-kodava-cuisine-coorgi-recipes",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Kodava people"
+      ],
+      "note": "Overview of Kodava (Coorgi) cooking with recipes on Sailaja's Indian food blog.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "playfulcooking",
+      "name": "Playful Cooking (Bengali cuisine)",
+      "url": "https://www.playfulcooking.com/category/bengali-cuisine",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Bengali cuisine"
+      ],
+      "note": "Bengali section of Kankana Saxena's home cooking blog.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "subbuskitchen",
+      "name": "Subbu's Kitchen",
+      "url": "https://www.subbuskitchen.com/about-us",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "South Indian cuisine"
+      ],
+      "note": "Family-run blog of traditional Tamil and South Indian vegetarian recipes.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "hebbarskitchen",
+      "name": "Hebbar's Kitchen (North Indian)",
+      "url": "https://hebbarskitchen.com/cuisines/north-indian/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "North Indian cuisine"
+      ],
+      "note": "North Indian section of Archana Hebbar's large vegetarian recipe site.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "malaysianchinesekitchen",
+      "name": "Malaysian Chinese Kitchen",
+      "url": "https://www.malaysianchinesekitchen.com/about",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Malaysian Chinese cuisine"
+      ],
+      "note": "Blog dedicated to Malaysian Chinese home cooking, with recipes and videos.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "rootsandleisure",
+      "name": "Roots and Leisure (Naga cuisine)",
+      "url": "https://rootsandleisure.com/tag/naga-cuisine/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Naga cuisine",
+        "Mizo cuisine"
+      ],
+      "note": "Northeast India food and culture site, with Naga recipes and profiles of Naga cooks.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "lukthel",
+      "name": "Lukthel",
+      "url": "https://lukthel.com/blog/15/exploring-the-culinary-delights-of-manipuri-cuisine",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Manipuri cuisine",
+        "Meitei cuisine"
+      ],
+      "note": "Recipe site dedicated to Manipuri dishes, organized by community of origin.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "guaishushu1",
+      "name": "Guai Shu Shu (Sarawakian cuisines)",
+      "url": "https://www.guaishushu1.com/special-compilation-of-sarawakian-cuisines/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Sarawakian cuisine"
+      ],
+      "note": "Sarawak-born home cook Kenneth Goh's blog, with a compilation of Sarawakian dishes.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "houseofannie",
+      "name": "House of Annie",
+      "url": "https://houseofannie.com/category/recipes/page/4",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Sarawakian cuisine"
+      ],
+      "note": "Food blog by a couple with Sarawak roots, known for Sarawakian recipes.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "indofijianrecipes",
+      "name": "Indo Fijian Recipes",
+      "url": "https://indofijianrecipes.blogspot.com",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Indo-Fijian food"
+      ],
+      "note": "Blog of home-style Indo-Fijian curries, chutneys and sweets.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "tasteofsikkim",
+      "name": "Taste of Sikkim",
+      "url": "https://tasteofsikkim.blogspot.com",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Sikkimese cuisine"
+      ],
+      "note": "Blog dedicated to Sikkimese home recipes.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "flavoursandreceipesofindia-jharkhand",
+      "name": "Flavours of Jharkhand",
+      "url": "https://flavoursandreceipesofindia-jharkhand.blogspot.com",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Jharkhandi cuisine"
+      ],
+      "note": "Blog dedicated to traditional Jharkhand dishes such as dhuska and chilka roti.",
+      "region": "asia-rest",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "pastagrannies",
+      "name": "Pasta Grannies",
+      "url": "https://pastagrannies.substack.com/p/pasta-grannies-is-now-on-substack",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Italian cuisine"
+      ],
+      "note": "Vicky Bennison's long-running video series filming Italian grandmothers making regional pasta by hand.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "recipesfromitaly",
+      "name": "Recipes from Italy",
+      "url": "https://recipesfromitaly.com",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Italian cuisine"
+      ],
+      "note": "Traditional Italian recipes written by Italian home cooks, organized by region and course.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "manusmenu",
+      "name": "Manu's Menu",
+      "url": "https://www.manusmenu.com/about/about-this-site",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Italian cuisine"
+      ],
+      "note": "Italian-born home cook Manuela sharing classic family and regional Italian dishes.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "pardonyourfrench",
+      "name": "Pardon Your French",
+      "url": "https://pardonyourfrench.com",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "French cuisine"
+      ],
+      "note": "Audrey Le Goff, a French cook, shares classic and regional French home recipes.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "lacuisinedegeraldine",
+      "name": "La Cuisine de Géraldine",
+      "url": "https://lacuisinedegeraldine.fr/en/about-us",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "French cuisine"
+      ],
+      "note": "French home cooking blog by Géraldine Leverd, also author of The New French Kitchen.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "spainonafork",
+      "name": "Spain on a Fork",
+      "url": "https://spainonafork.com/welcome2/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Spanish cuisine"
+      ],
+      "note": "Albert Bevia's video channel and site of traditional and everyday Spanish recipes.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "dimitrasdishes",
+      "name": "Dimitra's Dishes",
+      "url": "https://dimitrasdishes.com",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Greek cuisine"
+      ],
+      "note": "Dimitra Alfieris's video channel and blog focused on classic Greek home cooking.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "quick-german-recipes",
+      "name": "Quick German Recipes",
+      "url": "https://www.quick-german-recipes.com/about-me.html",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "German cuisine",
+        "German cuisine#Thuringia"
+      ],
+      "note": "Long-running site by German-born cook Gerhild Fulson (Oma) with traditional German home recipes.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "dirndlkitchen",
+      "name": "Dirndl Kitchen",
+      "url": "https://dirndlkitchen.com",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "German cuisine"
+      ],
+      "note": "Blog of German and Bavarian recipes, from main dishes to holiday baking.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "foodfromportugal",
+      "name": "Food From Portugal",
+      "url": "https://www.foodfromportugal.com/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Portuguese cuisine"
+      ],
+      "note": "Portuguese-run recipe site and video channel of traditional Portuguese dishes.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "greatbritishchefs",
+      "name": "Great British Chefs: traditional British recipes",
+      "url": "https://www.greatbritishchefs.com/features/our-most-popular-traditional-british-recipes",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "British cuisine"
+      ],
+      "note": "UK chef-driven recipe site with a large section of classic British dishes.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "polonist",
+      "name": "Polonist",
+      "url": "https://www.polonist.com/about/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Polish cuisine"
+      ],
+      "note": "Polish recipes and food culture from a Polish-born writer living abroad.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "polishyourkitchen",
+      "name": "Polish Your Kitchen",
+      "url": "https://polishyourkitchen.com",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Polish cuisine"
+      ],
+      "note": "Long-running blog of traditional Polish home recipes.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "savaskitchen",
+      "name": "Savas Kitchen: Ukrainian recipes",
+      "url": "https://savaskitchen.com/category/ukrainian-recipes",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Ukrainian cuisine"
+      ],
+      "note": "Ukrainian-born home cook Nataliia Savas's section of family Ukrainian recipes.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "zsuzsaisinthekitchen",
+      "name": "Zsuzsa Is in the Kitchen",
+      "url": "https://zsuzsaisinthekitchen.blogspot.com/2010/01",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Hungarian cuisine"
+      ],
+      "note": "Hungarian-born home cook's blog of traditional Hungarian recipes.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "scandicuisine",
+      "name": "Scandicuisine: Swedish recipes",
+      "url": "https://scandicuisine.com/category/swedish-recipes",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Swedish cuisine"
+      ],
+      "note": "Traditional Swedish recipes from Cecilia, a cook from a Finnish-Swedish family on Åland.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "irishamericanmom",
+      "name": "Irish American Mom",
+      "url": "https://www.irishamericanmom.com/recipes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Irish cuisine"
+      ],
+      "note": "Irish-born cook living in the US sharing traditional Irish recipes.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "vienna-sunday",
+      "name": "Vienna Sunday Kitchen",
+      "url": "https://www.vienna-sunday.kitchen/newest-recipes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Austrian cuisine"
+      ],
+      "note": "Viennese food blog of Austrian home cooking and pastries, with English-language recipes.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "lilvienna",
+      "name": "Lil Vienna",
+      "url": "https://www.lilvienna.com/?p=1366",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Austrian cuisine"
+      ],
+      "note": "Austrian recipes from Ursula and David, two Austrians living in Boston.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "cooklikeczechs",
+      "name": "Cook Like Czechs",
+      "url": "https://cooklikeczechs.com/about/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Czech cuisine"
+      ],
+      "note": "English-language blog of traditional Czech home recipes by a Czech cook.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "helvetickitchen",
+      "name": "Helvetic Kitchen",
+      "url": "https://www.helvetickitchen.com/recipes/retrospective",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Swiss cuisine"
+      ],
+      "note": "Andie Pilot's blog of Swiss home cooking and baking, with notes on Swiss cookbooks.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "cuisinehelvetica",
+      "name": "Cuisine Helvetica",
+      "url": "https://cuisinehelvetica.com/swiss-recipes",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Swiss cuisine"
+      ],
+      "note": "Heddi Nieuwsma's Swiss recipes and food culture from her life in Switzerland.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "damijenestoslatko",
+      "name": "Da mi je nešto slatko",
+      "url": "https://www.damijenestoslatko.com/en/author/anamarija",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Croatian cuisine"
+      ],
+      "note": "Croatian baking and dessert blog with English versions of its recipes.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "balkanlunchbox",
+      "name": "Balkan Lunchbox: Serbian recipes",
+      "url": "https://balkanlunchbox.com/category/country/serbian-recipes/page/3",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Serbian cuisine",
+        "Bosnian cuisine",
+        "Montenegrin cuisine",
+        "Kosovan cuisine"
+      ],
+      "note": "Balkan home cooking blog with a section of Serbian dishes.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "kopiaste",
+      "name": "Kopiaste",
+      "url": "https://www.kopiaste.org/about/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Cypriot cuisine"
+      ],
+      "note": "Long-running blog of Greek and Cypriot home recipes.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "myalbanianfood",
+      "name": "My Albanian Food",
+      "url": "https://www.myalbanianfood.com/?p=936",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Cuisine of Albania"
+      ],
+      "note": "Albanian home recipes shared by an Albanian cook.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "latvianeats",
+      "name": "Latvian Eats",
+      "url": "https://latvianeats.com",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Latvian cuisine"
+      ],
+      "note": "English-language blog of traditional Latvian recipes, including a project cooking through old Latvian cookbooks.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "estoniancuisine",
+      "name": "Estonian Cuisine",
+      "url": "https://estoniancuisine.com/about-estonian-food-blog/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Estonian cuisine"
+      ],
+      "note": "English-language blog dedicated to Estonian home recipes.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "slovakcooking",
+      "name": "Slovak Cooking",
+      "url": "https://www.slovakcooking.com/about/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Slovak cuisine"
+      ],
+      "note": "English-language site of Slovak home recipes started by a young Slovak cook.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "cookslovak",
+      "name": "Cook Slovak",
+      "url": "https://cookslovak.com/category/recipes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Slovak cuisine"
+      ],
+      "note": "Blog of traditional Slovak recipes and food customs.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "scottishscran",
+      "name": "Scottish Scran",
+      "url": "https://scottishscran.com",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Scottish cuisine"
+      ],
+      "note": "Blog working through traditional Scottish dishes one recipe at a time.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "somethingsweetsomethingsavoury",
+      "name": "Something Sweet Something Savoury: Scottish recipes",
+      "url": "https://somethingsweetsomethingsavoury.com/category/scottish-recipes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Scottish cuisine"
+      ],
+      "note": "Scottish home baking and cooking section of a UK food blog.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "bakingwithgranny",
+      "name": "Baking with Granny: Welsh recipes",
+      "url": "https://bakingwithgranny.co.uk/category/recipe/welsh/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Welsh cuisine"
+      ],
+      "note": "Traditional Welsh baking recipes such as Welsh cakes and bara brith.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "julskitchen",
+      "name": "Juls' Kitchen",
+      "url": "https://en.julskitchen.com",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Tuscan cuisine"
+      ],
+      "note": "Tuscan cook and author Giulia Scarpaleggia's blog of Tuscan home recipes.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "divinacucina",
+      "name": "Divina Cucina",
+      "url": "https://divinacucina.com/?p=3266",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Tuscan cuisine"
+      ],
+      "note": "Florence-based cooking teacher Judy Witts Francini's site on Tuscan food.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "anneskitchen",
+      "name": "Anne's Kitchen: classic Luxembourgish dishes",
+      "url": "https://anneskitchen.lu/category/recipes/classic-luxembourgish-dishes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Cuisine of Luxembourg"
+      ],
+      "note": "Luxembourg cook and TV host Anne Faber's collection of traditional Luxembourgish recipes.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "asmallkitcheningenoa",
+      "name": "A Small Kitchen in Genoa",
+      "url": "https://asmallkitcheningenoa.com/about",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Cuisine of Liguria"
+      ],
+      "note": "Genoese cook Enrica Monzani's English-language blog of Ligurian recipes.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "sabrinastable",
+      "name": "Sabrina's Table: Swabian recipes",
+      "url": "https://sabrinastable.com/en/swabian-recipes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Swabian cuisine"
+      ],
+      "note": "German food blogger's collection of Swabian dishes such as Maultaschen and Spätzle.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "explorecrete",
+      "name": "Explore Crete: Cretan cooking recipes",
+      "url": "https://www.explorecrete.com/cuisine/psilakis-recipes.html",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Cretan cuisine"
+      ],
+      "note": "Traditional Cretan recipes drawn from the work of Cretan food writer Nikos Psilakis.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "cookingwithrosetta-bureaujules",
+      "name": "Cooking with Rosetta",
+      "url": "https://cookingwithrosetta-bureaujules.squarespace.com/blog-1",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Calabrian cuisine"
+      ],
+      "note": "Calabrian-born cooking teacher Rosetta Costantino's blog on Calabrian food.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "greatitalianchefs",
+      "name": "Great Italian Chefs: Lombardian recipes",
+      "url": "https://greatitalianchefs.com/collections/lombardian-recipes",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Lombard cuisine",
+        "Cuisine of Abruzzo"
+      ],
+      "note": "Collection of Lombard dishes from Italian chefs on an established recipe site.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "the-pasta-project",
+      "name": "The Pasta Project: Abruzzo",
+      "url": "https://www.the-pasta-project.com/abruzzo/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Cuisine of Abruzzo"
+      ],
+      "note": "Italy-based pasta blog's section on regional pasta dishes from Abruzzo.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "anglo-indianrecipes",
+      "name": "Anglo-Indian Recipes (Bridget White)",
+      "url": "https://anglo-indianrecipes.blogspot.com/2013/05/anglo-indian-recipe-books-bridget-white.html",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Anglo-Indian cuisine"
+      ],
+      "note": "Blog of Bangalore-based Anglo-Indian cookbook author and culinary historian Bridget White.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "irinageorgescu",
+      "name": "Notes from Irina's Kitchen",
+      "url": "https://irinageorgescu.substack.com/about",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Romanian cuisine"
+      ],
+      "note": "Newsletter of Romanian recipes and food stories from cookbook author Irina Georgescu.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "plachutta",
+      "name": "Plachutta: original recipes",
+      "url": "https://www.plachutta.at/en/recipes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Viennese cuisine"
+      ],
+      "note": "Recipes from the Plachutta family's Viennese restaurants, known for Tafelspitz.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "nuernberg",
+      "name": "Nuremberg Tourism: Franconian specialties",
+      "url": "https://tourismus.nuernberg.de/en/food-drink/nurembergs-specialties/franconian-specialties/recipe-franconian-schaeuferle-pork-shoulder-in-beer-sauce-1/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Franconian cuisine"
+      ],
+      "note": "Nuremberg's official tourism site, with a section of Franconian specialty recipes such as Schäufele.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "visitguernsey",
+      "name": "Visit Guernsey: traditional Guernsey recipes",
+      "url": "https://www.visitguernsey.com/articles/2020/5-traditional-guernsey-recipes-to-try-at-home/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Channel Islands cuisine"
+      ],
+      "note": "Guernsey's official tourism site with traditional island recipes such as bean jar.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "channelislands",
+      "name": "Channel Islands Co-op: Liberation Day recipes",
+      "url": "https://www.channelislands.coop/food/recipes/liberation-day-recipes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Channel Islands cuisine"
+      ],
+      "note": "Local co-operative's collection of traditional Channel Islands dishes.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "insidetherustickitchen",
+      "name": "Inside the Rustic Kitchen: Basilicata recipes",
+      "url": "https://www.insidetherustickitchen.com/category/basilicata-recipes",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Cuisine of Basilicata"
+      ],
+      "note": "Italian home-cooking blog's dedicated section of dishes from Basilicata.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "greek-recipe",
+      "name": "Greek Recipe: Corfu",
+      "url": "https://greek-recipe.com/category/regional/corfu",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Cuisine of the Ionian Islands"
+      ],
+      "note": "Regional category of Corfiot dishes such as pastitsada on a Greek recipe site.",
+      "region": "europe",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "bellyrumbles",
+      "name": "Belly Rumbles: Australian Recipes",
+      "url": "https://bellyrumbles.com/category/australian-recipes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Australian cuisine"
+      ],
+      "note": "Sara McCleary's collection of Australian classics such as Anzac biscuits, pavlova, sausage rolls and native-ingredient bakes.",
+      "region": "oceania-other",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "blog-polynesia",
+      "name": "Polynesian Cultural Center Blog: Samoan recipes",
+      "url": "https://blog.polynesia.com/tag/samoan-recipe",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Samoan cuisine"
+      ],
+      "note": "Samoan dishes such as palusami from the Hawaii cultural center's blog, written with its Pacific Islander staff.",
+      "region": "oceania-other",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "polynesia",
+      "name": "Polynesian Cultural Center Blog: Lupulu",
+      "url": "https://www.polynesia.com/blog/tongan-lupulu-recipe",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Culture of Tonga#Cuisine"
+      ],
+      "note": "Recipe and background for lu pulu, the Tongan taro-leaf and corned beef dish.",
+      "region": "oceania-other",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "newcaledonia",
+      "name": "New Caledonia Tourism: Kanak cooking",
+      "url": "https://www.newcaledonia.travel/nz/gastronomy-wine/gastronomy/kanak-cooking",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "New Caledonian cuisine"
+      ],
+      "note": "Official tourism board overview of Kanak food, including bougna cooked in an earth oven.",
+      "region": "oceania-other",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "toriavey",
+      "name": "Tori Avey: Jewish Recipes",
+      "url": "https://toriavey.com/jewish-recipes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Jewish cuisine"
+      ],
+      "note": "Tori Avey's Jewish recipe index, often paired with notes on each dish's history.",
+      "region": "oceania-other",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "myjewishlearning",
+      "name": "The Nosher (My Jewish Learning)",
+      "url": "https://www.myjewishlearning.com/recipes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Jewish cuisine"
+      ],
+      "note": "Recipe section of the nonprofit My Jewish Learning, covering Ashkenazi, Sephardi and Mizrahi home cooking and holiday food.",
+      "region": "oceania-other",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "pass-the-garum",
+      "name": "Pass the Garum",
+      "url": "https://pass-the-garum.blogspot.com/p/about-me.html",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Ancient Roman cuisine"
+      ],
+      "note": "Blog by an ancient history graduate recreating Roman recipes as closely as possible to the sources; may no longer be updated.",
+      "region": "oceania-other",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "colonialwilliamsburg",
+      "name": "Colonial Williamsburg: Recipes",
+      "url": "https://www.colonialwilliamsburg.org/learn/recipes/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Cuisine of the Thirteen Colonies"
+      ],
+      "note": "Historic foodways recipes from the Colonial Williamsburg living history museum, adapted from 18th-century sources.",
+      "region": "oceania-other",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "catholicculture",
+      "name": "Catholic Culture: Recipes for the Liturgical Year",
+      "url": "https://catholicculture.org/culture/liturgicalyear/recipes",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Fasting and abstinence in the Catholic Church"
+      ],
+      "note": "Catholic recipe archive tied to feast days and fasting seasons such as Lent.",
+      "region": "oceania-other",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "folger",
+      "name": "Folger Shakespeare Library: Recipes series",
+      "url": "https://www.folger.edu/blogs/shakespeare-and-beyond/series/recipes",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Early modern European cuisine"
+      ],
+      "note": "Folger blog series where staff and researchers cook and adapt recipes from 16th and 17th century manuscript cookbooks.",
+      "region": "oceania-other",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "julskitchen-substack",
+      "name": "Juls' Kitchen: Cucina povera",
+      "url": "https://julskitchen.substack.com/p/cucina-povera-cookbook",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Peasant foods"
+      ],
+      "note": "Tuscan cook Giulia Scarpaleggia's newsletter post on the frugal Italian peasant cooking her cookbook covers.",
+      "region": "oceania-other",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "terracircle",
+      "name": "School and Community Garden Cookbook (TerraCircle)",
+      "url": "https://terracircle.org.au/?p=4913",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Marshallese cuisine"
+      ],
+      "note": "2025 Marshall Islands recipe book from the Canvasback Wellness Centre in Majuro, with a downloadable PDF.",
+      "region": "oceania-other",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "livelearn",
+      "name": "Boki ni Kuuka: Recipes from Kiribati (Live & Learn)",
+      "url": "https://livelearn.org/resources/boki-ni-kuuka-recipes-from-kiribati/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Kiribati#Cuisine"
+      ],
+      "note": "Free PDF cookbook of community recipes from Tarawa, Abaiang and Kiritimati, produced by the NGO Live & Learn.",
+      "region": "oceania-other",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "vrg",
+      "name": "Vegetarian Resource Group: Vegan Recipes from Egypt",
+      "url": "https://www.vrg.org/blog/2011/02/02/vegan-recipes-from-egypt/",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Fasting and abstinence of the Coptic Orthodox Church"
+      ],
+      "note": "Coptic Orthodox writer Marie Henein's fasting-day dishes such as koshari and ful medames, with notes on the Coptic fasts.",
+      "region": "oceania-other",
+      "collect": {
+        "status": "not-checked"
+      }
+    },
+    {
+      "id": "wallis-futuna",
+      "name": "Wallis and Futuna Tourism: Island savours",
+      "url": "https://www.wallis-futuna.travel/en/discover-our-islands/island-savours",
+      "kind": "site",
+      "vetted": false,
+      "cuisines": [
+        "Wallis and Futuna cuisine"
+      ],
+      "note": "Official tourism overview of local food such as umu earth-oven cooking, raw fish in coconut milk and faikai; no full recipes.",
+      "region": "oceania-other",
+      "collect": {
+        "status": "not-checked"
+      }
+    }
+  ]
+}
