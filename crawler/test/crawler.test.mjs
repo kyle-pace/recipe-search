@@ -225,3 +225,89 @@ test('sources: the vendored list is valid and only vetted sources are used', () 
   const ids = [...s.recipes.map((r) => r.id), ...s.videos.map((v) => v.id)];
   assert.equal(new Set(ids).size, ids.length);
 });
+
+// ---- Newsletters read through their RSS feed (made-up posts in Substack's markup)
+
+import { parseFeed } from '../lib/feed.mjs';
+import { recipeFromPost, amountLine, toLines } from '../lib/post.mjs';
+
+const item = (title, slug, body, extra = '') => `<item><title><![CDATA[${title}]]></title>
+<link>https://lina.substack.com/p/${slug}?utm_source=rss</link><guid isPermaLink="false">https://lina.substack.com/p/${slug}</guid>
+<pubDate>Sun, 08 Nov 2026 09:00:00 GMT</pubDate>${extra}<content:encoded><![CDATA[${body}]]></content:encoded></item>`;
+const li = (lines) => `<ul>${lines.map((l) => `<li><p>${l}</p></li>`).join('')}</ul>`;
+const p = (lines) => lines.map((l) => `<p>${l}</p>`).join('');
+
+const ESSAY_WITH_RECIPE = p(['My grandmother never wrote anything down, and for 3 years I tried to cook from memory.', 'Things she did with plums:']) +
+  li(['eat them warm from the tree', 'dry them on the roof', 'trade them with the neighbours']) +
+  '<h3><strong>Plum and walnut cake</strong></h3>' + p(['Prăjitură cu prune', '<strong>Ingredients</strong>', 'Makes 12 slices', 'Prep time: 20 minutes. Baking time: 45 minutes',
+    '150g salted butter, soft', '125 g caster sugar', '3 medium size eggs', '200g plain flour', '1 tsp baking powder', '<strong>For the top:</strong>', '500 g plums, halved', 'Icing sugar',
+    '<strong>Method:</strong>', 'Cream the butter with the sugar until SECRET pale.', 'Fold in the flour and bake for 45 minutes.']) +
+  '<div class="subscription-widget-wrap-editor"><p>Thanks for reading! Subscribe for free to receive new posts.</p></div>';
+const LIST_RECIPE = p(['It turns sweet in a hot oven.', 'Serves 4 to 6']) + li(['1 pointed cabbage', '3 tablespoons olive oil, plus more to finish', '3 teaspoons Dijon mustard', '1 generous pinch fine sea salt', '¼ cup/60 ml grated Parmigiano']) +
+  p(['Preheat the oven to 220°C.', 'Cut the cabbage into 8 wedges.', 'Roast for 30 minutes.']);
+const TWO_RECIPES = '<p><strong>First recipe: Easter bread</strong></p>' + p(['500g bread flour', '80g caster sugar', '7g yeast', '2 egg yolks', '<strong>Method:</strong>', 'Mix everything and wait.']) +
+  '<h4>RECIPE. Torta di ricotta. Sweet cheese pie</h4>' + p(['Ingredients:', '400g ricotta', '100g sugar', '2 eggs', '1 lemon, zested', '<strong>Method:</strong>', 'Whisk and bake.']);
+const TRAVEL = '<h2>Our 2027 cooking classes</h2>' + p(['3 days in Lucca, with 12 guests at the table.', 'The new dates are 1st-8th September 2027.', '2 rooms are left for the autumn week.', '40 glasses of wine later, we went home.']) +
+  li(['12 September: market tour', '14 September: pasta day', '16 September: farewell lunch']) + '<p><strong>What I am reading</strong></p>' + p(['5 books, 2 podcasts and 1 very long article.']);
+const PAYWALLED = p(['This soup is all I want in July.', 'You’ll find the recipe below for paid subscribers.']) + '<p><a href="https://lina.substack.com/p/zucchini-soup">Read more</a></p>';
+const PANTRY_TALK = '<h3>Introductions and the pantry</h3>' + p(['Lina: What is always in your pantry?', 'Flour, sugar, 2 kinds of paprika and far too many jars.', 'Ingredients matter more than recipes, she says.']);
+
+const FEED = `<?xml version="1.0" encoding="UTF-8"?><rss xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title><![CDATA[Lina's table]]></title><link>https://lina.substack.com</link>
+${item('The plum tree behind the house', 'plum-tree', ESSAY_WITH_RECIPE, '<enclosure url="https://substackcdn.com/image/fetch/f_auto/https%3A%2F%2Fexample.com%2Fplums.jpeg" length="0" type="image/jpeg"/>')}
+${item('Roasted pointed cabbage', 'cabbage', LIST_RECIPE)}
+${item('Two things for Easter', 'easter', TWO_RECIPES)}
+${item('Come and cook with us', 'classes', TRAVEL)}
+${item('Zucchini soup', 'zucchini-soup', PAYWALLED)}
+${item('A pantry between two countries', 'pantry', PANTRY_TALK, '<enclosure url="https://api.substack.com/feed/podcast/1.mp3" length="0" type="audio/mpeg"/>')}
+</channel></rss>`;
+
+test('feed: posts with clean links, dates and cover photos', () => {
+  const posts = parseFeed(FEED);
+  assert.equal(posts.length, 6);
+  assert.equal(posts[0].link, 'https://lina.substack.com/p/plum-tree');
+  assert.equal(posts[0].date, '2026-11-08');
+  assert.equal(posts[0].image, 'https://substackcdn.com/image/fetch/f_auto/https%3A%2F%2Fexample.com%2Fplums.jpeg');
+  assert.equal(posts[5].image, null); // a podcast's audio file is not a photo
+  assert.throws(() => parseFeed('<html>Sign in</html>'));
+});
+
+test('feed: only posts that hold a recipe are kept', () => {
+  const kept = Object.fromEntries(parseFeed(FEED).map((post) => [post.title, recipeFromPost(post, { defaultCuisine: 'Romanian' })]));
+  assert.deepEqual(Object.keys(kept).filter((k) => kept[k]), ['The plum tree behind the house', 'Roasted pointed cabbage', 'Two things for Easter']);
+});
+
+test('feed: a recipe inside an essay gets the dish name, names only, no method', () => {
+  const r = recipeFromPost(parseFeed(FEED)[0], { defaultCuisine: 'Romanian' });
+  assert.equal(r.n, 'Plum and walnut cake');
+  assert.deepEqual(r.kw, ['The plum tree behind the house']);
+  assert.equal(r.y, 'Makes 12 slices');
+  assert.equal(r.t, 65);
+  assert.equal(r.c, 'Romanian');
+  assert.deepEqual(r.i, ['salted butter', 'caster sugar', 'eggs', 'plain flour', 'baking powder', 'plums', 'icing sugar']);
+  assert.ok(!JSON.stringify(r).includes('SECRET') && !JSON.stringify(r).includes('150'));
+  assert.deepEqual(Object.keys(r).sort(), ['c', 'i', 'img', 'kw', 'n', 't', 'u', 'y']);
+});
+
+test('feed: a bare list after "Serves 4"; two recipes in one post', () => {
+  const [, cabbage, easter] = parseFeed(FEED);
+  const a = recipeFromPost(cabbage);
+  assert.equal(a.n, 'Roasted pointed cabbage');
+  assert.equal(a.y, 'Serves 4 to 6');
+  assert.deepEqual(a.i, ['pointed cabbage', 'olive oil', 'dijon mustard', 'fine sea salt', 'grated parmigiano']);
+  const b = recipeFromPost(easter);
+  assert.equal(b.n, 'Two things for Easter');
+  assert.deepEqual(b.kw, ['Easter bread', 'Torta di ricotta. Sweet cheese pie']);
+  assert.deepEqual(b.i, ['bread flour', 'caster sugar', 'yeast', 'egg yolks', 'ricotta', 'sugar', 'eggs', 'lemon']);
+});
+
+test('feed: amounts versus ordinary numbers', () => {
+  const cases = { '150g butter': 2, '2tsp cornflour, optional': 2, '2x tin of tomatoes': 2, '4 egg whites': 1, 'Half of the lemon juice': 1, '1. Heat the oil': 0, '3 days in Lucca': 0, '2027 dates are open': 0, '1st-8th September': 0, '12 guests at the table': 0, 'Two sausages, one region. Two stories.': 0, 'Salt': 0 };
+  for (const [line, want] of Object.entries(cases)) assert.equal(amountLine(line), want, line);
+  assert.deepEqual(toLines('<p><strong>For the glaze</strong> 40 g butter<br>2 tbsp honey</p>').map((l) => l.text), ['For the glaze', '40 g butter', '2 tbsp honey']);
+});
+
+test('sources: a source with a feed is read from its feed', () => {
+  const collect = { status: 'crawl', reason: 'r', checked: '2026-11-11' };
+  const out = adapt([{ id: 'lina', name: "Lina's table", url: 'https://lina.substack.com/about', kind: 'site', collect, feed: { url: '/feed', default_cuisine: 'Romanian' } }]);
+  assert.deepEqual(out.recipes, [{ id: 'lina', name: "Lina's table", site: 'https://lina.substack.com', feed: '/feed', default_cuisine: 'Romanian' }]);
+});

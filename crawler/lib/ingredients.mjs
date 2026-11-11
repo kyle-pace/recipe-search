@@ -9,7 +9,7 @@ const UNITS = [
   'cups?', 'c\\.', 'tablespoons?', 'tbsps?\\.?', 'tbs\\.?', 'tb\\.?', 'teaspoons?', 'tsps?\\.?',
   'grams?', 'g', 'gr', 'kilograms?', 'kg', 'milligrams?', 'mg', 'millilit(?:er|re)s?', 'ml', 'lit(?:er|re)s?', 'l',
   'ounces?', 'oz\\.?', 'fl\\.? oz\\.?', 'fluid ounces?', 'pounds?', 'lbs?\\.?', 'pints?', 'quarts?', 'qts?\\.?', 'gallons?',
-  'cans?', 'jars?', 'packages?', 'pkgs?\\.?', 'packets?', 'bags?', 'boxes', 'box', 'bottles?', 'containers?', 'cartons?', 'blocks?',
+  'cans?', 'tins?', 'jars?', 'packages?', 'pkgs?\\.?', 'packets?', 'bags?', 'boxes', 'box', 'bottles?', 'containers?', 'cartons?', 'blocks?',
   'pinch(?:es)?', 'dash(?:es)?', 'drops?', 'handfuls?', 'bunch(?:es)?', 'sprigs?', 'stalks?', 'sticks?', 'slices?',
   'pieces?', 'pcs?\\.?', 'heads?', 'inch(?:es)?', 'in\\.', 'cm', 'sheets?', 'leaves', 'knobs?', 'thumbs?', 'strips?',
   'cubes?', 'fillets?', 'scoops?', 'rounds?', 'ears?', 'bulbs?', 'cloves?', 'squeezes?', 'splash(?:es)?', 'glugs?',
@@ -19,8 +19,8 @@ const SIZES = ['thin', 'thick', 'large', 'medium', 'small', 'extra-large', 'extr
 // Word quantities must end at a word boundary, so "a" never eats the start of
 // "all-purpose"; digits may touch their unit ("100g").
 const NUM = "(?:\\d+(?:[.,/]\\d+)?|[½⅓⅔¼¾⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞]|(?:a few|a half|a|an|one|two|three|four|five|six|seven|eight|nine|ten|twelve|few|several|half)(?![a-z-]))";
-const QTY = new RegExp(`^(?:${NUM}(?:\\s*(?:-|–|to|or)\\s*${NUM})?\\s*)+`, 'i');
-const UNIT_RE = new RegExp(`^(?:${UNITS.join('|')})(?=\\s|$)\\.?\\s*(?:of\\s+)?`, 'i');
+export const QTY = new RegExp(`^(?:${NUM}(?:\\s*(?:-|–|to|or)\\s*${NUM})?\\s*)+`, 'i');
+export const UNIT_RE = new RegExp(`^(?:${UNITS.join('|')})(?=\\s|$)\\.?\\s*(?:of\\s+)?`, 'i');
 const SIZE_RE = new RegExp(`^(?:${SIZES.join('|')})(?=\\s|$)\\s*`, 'i');
 
 // Lines that are headings or notes, not ingredients.
@@ -30,6 +30,7 @@ export function ingredientName(line) {
   let s = clean(line).toLowerCase();
   if (!s || s.length > 200 || NOT_INGREDIENT.test(s)) return null;
   s = s.replace(/\([^)]*\)?/g, ' ').replace(/\[[^\]]*\]/g, ' ').replace(/[()]/g, ' ');
+  s = s.replace(/([a-z.])\s*\/\s*(?=\d)/g, '$1 / '); // "¼ cup/60 ml oil": two measures of one thing
   s = firstPart(s);
   s = s.replace(/\b(to taste|as needed|if needed|optional|for garnish|for serving|divided|plus more.*|or more.*)$/g, '');
   for (let i = 0; i < 4; i++) {
@@ -37,6 +38,7 @@ export function ingredientName(line) {
     s = s.trim().replace(QTY, '').trim();
     s = s.replace(/^[-–x×]\s*/, '');
     s = s.replace(UNIT_RE, '').replace(SIZE_RE, '');
+    s = s.replace(/^\/\s*/, '').replace(/^-?sized?\s+/, '');
     s = s.replace(/^(?:of|or|and)\s+/, '');
     if (s === before) break;
   }

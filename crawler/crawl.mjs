@@ -3,7 +3,8 @@
 // (vendor/kitchen-catalog/sources.json, read through lib/sources.mjs): check robots.txt,
 // read the sitemap, fetch only pages that are new or changed (one at a time,
 // a few seconds apart), and keep only what's needed to find a recipe.
-// Video channels come from the YouTube Data API. Writes data/<id>.json,
+// Newsletters (a source with a feed) are read from their RSS feed, one request each,
+// and only posts that hold a recipe are kept. Video channels come from the YouTube Data API. Writes data/<id>.json,
 // state/<id>.json and data/status.json.
 //
 //   node crawler/crawl.mjs [--sources woks,sk] [--limit 20] [--budget-minutes 300]
@@ -16,6 +17,8 @@ import { fileURLToPath } from 'node:url';
 import { robotsFor } from './lib/robots.mjs';
 import { readSitemaps } from './lib/sitemap.mjs';
 import { extractRecipe } from './lib/extract.mjs';
+import { parseFeed } from './lib/feed.mjs';
+import { recipeFromPost } from './lib/post.mjs';
 import { fetchChannelVideos } from './lib/youtube.mjs';
 import { readSources } from './lib/sources.mjs';
 
@@ -41,7 +44,7 @@ const status = { run: new Date().toISOString(), options: { limit: args.limit ? l
 
 const recipeJobs = (sources.recipes || [])
   .filter((s) => !only || only.has(s.id))
-  .map((s) => (s.paused ? Promise.resolve({ id: s.id, name: s.name, result: 'paused', error: s.paused }) : crawlSite(s)).catch((err) => ({ id: s.id, name: s.name, result: 'error', error: err.message })));
+  .map((s) => (s.paused ? Promise.resolve({ id: s.id, name: s.name, result: 'paused', error: s.paused }) : s.feed ? crawlFeed(s) : crawlSite(s)).catch((err) => ({ id: s.id, name: s.name, result: 'error', error: err.message })));
 const results = await Promise.all(recipeJobs);
 for (const r of results) status.sources[r.id] = r;
 
@@ -183,6 +186,58 @@ async function crawlSite(src) {
     await writeJson(statePath, Object.fromEntries(Object.entries(state).sort(([a], [b]) => a.localeCompare(b))));
   }
   log(`done: ${out.added} added, ${out.updated} updated, ${out.removed} removed, ${out.noRecipe} without a recipe, ${out.count} total`);
+  return out;
+}
+
+// A newsletter or blog read through its RSS feed: one request per run for the newest
+// posts. Post pages are never fetched. Each post is kept only if it holds a recipe
+// (lib/post.mjs), and what we keep is the same as for a recipe site. A feed only
+// lists recent posts, so recipes stay after their post leaves the feed.
+async function crawlFeed(src) {
+  const log = (msg) => console.log(`[${src.id}] ${msg}`);
+  const out = { id: src.id, name: src.name, result: 'ok', fetched: 0, added: 0, updated: 0, removed: 0, noRecipe: 0, httpErrors: {} };
+  const feedUrl = new URL(src.feed, src.site).href;
+
+  const robotsRes = await get(`${src.site}/robots.txt`).catch((err) => ({ status: 0, error: err.message }));
+  if ([401, 403, 429].includes(robotsRes.status)) return { ...out, result: 'blocked', error: `HTTP ${robotsRes.status} on robots.txt` };
+  if (robotsRes.status === 0 || robotsRes.status >= 500) return { ...out, result: 'error', error: `robots.txt unreachable (${robotsRes.error || 'HTTP ' + robotsRes.status})` };
+  const robots = robotsFor(robotsRes.status === 200 ? robotsRes.text : '', BOT);
+  if (!robots.allowed(feedUrl)) return { ...out, result: 'blocked', error: 'robots.txt disallows the feed' };
+
+  await sleep(Math.max(delayMs, (robots.crawlDelay || 0) * 1000));
+  const res = await get(feedUrl);
+  out.fetched = 1;
+  if ([401, 403, 429].includes(res.status)) return { ...out, result: 'blocked', error: `HTTP ${res.status} on the feed` };
+  if (res.status !== 200) return { ...out, result: 'error', error: `HTTP ${res.status} on the feed` };
+  const posts = parseFeed(res.text).filter((p) => sameSite(p.link, new URL(src.site).host.replace(/^www\./, '')));
+  out.feedPosts = posts.length;
+
+  const dataPath = join(ROOT, `data/${src.id}.json`);
+  const statePath = join(ROOT, `state/${src.id}.json`);
+  const recipes = new Map((await readJson(dataPath, [])).map((r) => [r.u, r]));
+  const state = await readJson(statePath, {});
+  const fresh = [];
+  for (const post of posts) {
+    const recipe = recipeFromPost(post, { defaultCuisine: src.default_cuisine });
+    state[post.link] = { m: post.date, r: recipe ? 1 : 0, f: today };
+    if (!recipe) {
+      out.noRecipe++;
+      if (recipes.delete(post.link)) out.removed++; // the post was edited and the recipe is gone
+      continue;
+    }
+    if (recipes.has(post.link)) out.updated++;
+    else out.added++;
+    recipes.set(post.link, recipe);
+    fresh.push(recipe);
+  }
+  if (args.sample) for (const r of fresh.slice(0, Number(args.sample) || 2)) log(`sample: ${JSON.stringify(r)}`);
+  out.count = recipes.size;
+  out.waiting = 0;
+  if (!dryRun) {
+    await writeJson(dataPath, [...recipes.values()].sort((a, b) => a.u.localeCompare(b.u)));
+    await writeJson(statePath, Object.fromEntries(Object.entries(state).sort(([a], [b]) => a.localeCompare(b))));
+  }
+  log(`done: ${posts.length} posts in the feed, ${out.added} new recipes, ${out.updated} updated, ${out.noRecipe} posts without a recipe, ${out.count} total`);
   return out;
 }
 

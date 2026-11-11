@@ -3,7 +3,8 @@
 // npm run sync-catalog); this turns it into what the crawler and the index builder use.
 // Only vetted sources count; suggestions waiting for Kyle's review are left out.
 //
-//   recipes:   sites to crawl (collect.status crawl) or skip for now (paused, with the reason)
+//   recipes:   sites to crawl (collect.status crawl) or skip for now (paused, with the reason);
+//              one with `feed` is read from its RSS feed, the rest from their sitemap
 //   videos:    every YouTube channel; `site` ties it to its creator's crawled or paused site
 //   link_only: sources offered as a link to their own search
 //   support:   ways to support each creator, by creator id (a site's id, or a channel's own id)
@@ -38,6 +39,21 @@ export function adapt(list) {
         paused: s.collect.status === 'paused' ? s.collect.reason : undefined,
       });
     });
+  // Newsletters and blogs read through their RSS feed instead of a sitemap (collect.status
+  // crawl or paused, with a feed section). They sit in the same list, told apart by `feed`.
+  for (const s of list) {
+    if (!s.feed || s.crawl || !['crawl', 'paused'].includes(s.collect.status)) continue;
+    const { url, default_cuisine, photos } = s.feed;
+    recipes.push(clean({
+      id: s.id,
+      name: s.name,
+      site: new URL(s.url).origin,
+      feed: url || '/feed',
+      default_cuisine,
+      photos,
+      paused: s.collect.status === 'paused' ? s.collect.reason : undefined,
+    }));
+  }
   const crawled = new Set(recipes.map((r) => r.id));
 
   const videos = [];
