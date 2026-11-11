@@ -172,3 +172,12 @@ Working name. One search box across the recipe sites Kyle trusts, from our own s
 - Photos load straight from each recipe's own site (Kyle's call, 2026-11-08), with no referrer and lazily. Their hosts are in `.agents/allowed-hosts.txt`. A site that blocks it or asks us to stop gets text-only cards: set `crawl.photos: false` on it in KitchenCatalog's `recipe-sources/sources.json`, then `npm run sync-catalog`.
 - The share cards are `design/og.html` and `design/og-about.html`, rendered to `public/recipe-search/og.png` and `og-about.png`.
 - Run `npm run build` before pushing; it must pass.
+
+### The MCP endpoint
+
+- `kylepace.dev/recipe-search/mcp` lets AI assistants search the index over MCP (Streamable HTTP), added 2026-11-11. Two read-only tools, `search_recipes` and `list_sources`. No sign-in, no analytics, and it never logs what was asked.
+- It's an Astro endpoint (`src/pages/recipe-search/mcp.ts`, `prerender = false`), the only part of the site that runs on the server; the pages stay static files. It reads the same `index.json` the page loads, through the Worker's `ASSETS` binding, once per isolate. Built on `createMcpHandler` from Cloudflare's Agents SDK (`agents`) with MCP SDK v2 (`@modelcontextprotocol/server`) and `zod`; stateless, no Durable Object. `nodejs_compat` in `wrangler.jsonc` is for it.
+- The search rules live in `src/mcp/search.mjs` and follow the page's (`src/scripts/search.ts`), minus typo fixing. Change a ranking rule in one and check the other. If the index's shape changes in `scripts/build-index.mjs`, update `prepare()` there too.
+- The collecting rules apply here as well: results are names, links, ingredient names, time and cuisine, never the method, and the server's instructions tell assistants to send people to the original. Pantry data still never comes to this site: ingredients arrive as typed words, like on the page.
+- `npm test` covers the rules; `npm run try-mcp` calls every tool with the official client (against `npm run preview`, or pass the live address).
+- Seattle Grocery Deals has a sister server (`mcp/` in its repo); Henwood's is local, in the Mac app.

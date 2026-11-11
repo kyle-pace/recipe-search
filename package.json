@@ -10,17 +10,22 @@
     "preview": "npm run build && wrangler dev",
     "sync-catalog": "node scripts/sync-catalog.mjs",
     "crawl": "node crawler/crawl.mjs",
-    "test": "node --test crawler/test/*.test.mjs"
+    "test": "node --test crawler/test/*.test.mjs src/mcp/*.test.mjs",
+    "try-mcp": "node scripts/try-mcp.mjs"
   },
   "engines": {
     "node": ">=22"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.4.6",
+    "@modelcontextprotocol/server": "^2.4.0",
+    "agents": "^0.33.0",
     "astro": "^7.4.7",
-    "kp-design": "github:kyle-pace/kp-design#022e189b6db000462cee0506eb931845b50de428"
+    "kp-design": "github:kyle-pace/kp-design#022e189b6db000462cee0506eb931845b50de428",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@modelcontextprotocol/client": "^2.4.0",
     "axe-core": "^4.14.0",
     "wrangler": "^4.158.0"
   }

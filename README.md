@@ -46,6 +46,23 @@ npm run preview   # builds, then runs it the way Cloudflare will
 
 It's its own Cloudflare Worker, `recipe-search`, mounted on the hub's domain by two routes in `wrangler.jsonc`. Cloudflare Workers Builds deploys `main` (build `npm run build`, deploy `npx wrangler deploy`), so each Monday's crawl ships a fresh index on its own.
 
+## For AI assistants (MCP)
+
+The same index is searchable by AI assistants over MCP (Model Context Protocol, the standard way to give an assistant tools) at `https://kylepace.dev/recipe-search/mcp`. Read-only, no sign-in, nothing about the person asking is kept.
+
+| Tool | What it answers |
+| --- | --- |
+| `search_recipes` | Recipes by dish name, by ingredients to cook with, or both; plus without, vegetarian or vegan, cuisine, time and creator. Results are names and links to the original, never the method. |
+| `list_sources` | Who is indexed, ways to support them, and the cuisines to filter on. |
+
+| What | Where |
+| --- | --- |
+| The endpoint (the only server-run part of the site) | `src/pages/recipe-search/mcp.ts` |
+| The search rules, as plain functions | `src/mcp/search.mjs`, tests in `src/mcp/search.test.mjs` (`npm test`) |
+| Try every tool with the official MCP client | `npm run preview`, then `npm run try-mcp` (add the live address to check a deploy) |
+
+To connect: in Claude, Settings > Connectors > Add custom connector and paste the address. In Claude Code, `claude mcp add --transport http recipe-search https://kylepace.dev/recipe-search/mcp`.
+
 ## The prototype
 
 ```sh
