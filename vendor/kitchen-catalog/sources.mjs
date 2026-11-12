@@ -16,7 +16,8 @@ export const STATUSES = ["crawl", "paused", "link-only", "youtube-only", "permis
 export const REGIONS = ["africa", "americas", "asia-east", "asia-rest", "europe", "oceania-other"];
 export const FORMATS = ["json-ld", "microdata"];
 
-const FIELDS = ["id", "name", "url", "kind", "vetted", "cuisines", "note", "region", "youtube", "collect", "crawl", "search", "search_label", "search_note", "support"];
+const FIELDS = ["id", "name", "url", "kind", "vetted", "cuisines", "note", "region", "youtube", "collect", "crawl", "feed", "search", "search_label", "search_note", "support"];
+const FEED_FIELDS = ["url", "default_cuisine", "photos", "notes"];
 const CRAWL_FIELDS = ["sitemap", "include", "format", "default_cuisine", "delay_seconds", "photos", "size", "notes"];
 
 export function loadSources(path = SOURCES_PATH) {
@@ -60,7 +61,7 @@ export function validateSources(data) {
     }
     if (c && Object.keys(c).some((k) => !["status", "reason", "checked"].includes(k))) bad("collect has an unknown field");
 
-    if (["crawl", "paused"].includes(c?.status) && !s.crawl) bad(`a ${c.status} source needs crawl`);
+    if (["crawl", "paused"].includes(c?.status) && !s.crawl && !s.feed) bad(`a ${c.status} source needs crawl or feed`);
     if (s.crawl) {
       const k = s.crawl;
       for (const f of Object.keys(k)) if (!CRAWL_FIELDS.includes(f)) bad(`unknown crawl field ${f}`);
@@ -73,6 +74,17 @@ export function validateSources(data) {
       if ("delay_seconds" in k && !(typeof k.delay_seconds === "number" && k.delay_seconds > 0)) bad("crawl.delay_seconds must be a positive number");
       if ("photos" in k && typeof k.photos !== "boolean") bad("crawl.photos must be true or false");
       if ("notes" in k && !(Array.isArray(k.notes) && k.notes.every(text))) bad("crawl.notes must be a list of lines");
+    }
+
+    // A newsletter or blog read through its public RSS feed instead of a sitemap.
+    if (s.feed) {
+      const f = s.feed;
+      for (const k of Object.keys(f)) if (!FEED_FIELDS.includes(k)) bad(`unknown feed field ${k}`);
+      if (s.crawl) bad("a source has crawl or feed, not both");
+      if (s.kind === "channel") bad("a channel can't have feed");
+      if (!/^\/\S*$/.test(f.url ?? "")) bad("feed.url must be a path starting with /");
+      if ("photos" in f && typeof f.photos !== "boolean") bad("feed.photos must be true or false");
+      if ("notes" in f && !(Array.isArray(f.notes) && f.notes.every(text))) bad("feed.notes must be a list of lines");
     }
 
     if (c?.status === "link-only" && !s.search) bad("a link-only source needs search");
