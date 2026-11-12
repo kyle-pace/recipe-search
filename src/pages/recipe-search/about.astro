@@ -33,6 +33,12 @@ const crawled = index.crawled
   ? new Date(index.crawled + 'T12:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
   : '';
 const total = { recipes: index.recipes.length, videos: index.videos.rows.length };
+
+// For AI assistants: the MCP server's address (src/pages/recipe-search/mcp.ts) and a link
+// that opens Claude's "add connector" dialog with the name and address filled in. Claude
+// doesn't document that link (2026-11-11), so the address and written steps stay on the page.
+const mcpAddress = 'https://kylepace.dev/recipe-search/mcp';
+const addToClaude = `https://claude.ai/customize/connectors?modal=add-custom-connector&connectorName=Recipe+search&connectorUrl=${encodeURIComponent(mcpAddress)}`;
 ---
 
 <LabLayout
@@ -162,6 +168,30 @@ const total = { recipes: index.recipes.length, videos: index.videos.rows.length 
       </p>
     </section>
 
+    <section aria-labelledby="assistants">
+      <h2 id="assistants">Ask your AI assistant</h2>
+      <p>
+        Claude and other AI assistants can search this same index for you: by dish, by what you have, or by creator.
+        Like the page, it only finds recipes. It answers with names and links, never the recipe itself, so you still
+        read it on the creator’s site.
+      </p>
+      <p class="add"><a class="add-button" href={addToClaude}>Add to Claude</a></p>
+      <p class="fine">Opens Claude with the name and address filled in. Nothing is added until you say so there.</p>
+      <p>
+        Any other assistant that can connect to a remote MCP server (the common way to give an assistant new tools)
+        works too. Wherever it asks for a connector or server address, paste this one:
+      </p>
+      <p class="address">
+        <code>{mcpAddress}</code>
+        <button type="button" data-copy={mcpAddress}>Copy address</button>
+        <span role="status" data-copy-status></span>
+      </p>
+      <p>
+        It’s free, with no account. A search through an assistant goes to this site’s server to be answered, and the
+        server keeps nothing about it. Your assistant has its own privacy rules for your conversations.
+      </p>
+    </section>
+
     <section aria-labelledby="owners">
       <h2 id="owners">For site owners</h2>
       <p>
@@ -186,6 +216,20 @@ const total = { recipes: index.recipes.length, videos: index.videos.rows.length 
     document.querySelector('.about')!.addEventListener('click', (e) => {
       const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[data-support]');
       if (a) track('Opened Support Link', { experiment: 'recipe-search', source: a.dataset.support!, link_kind: a.dataset.kind || 'link' });
+    });
+
+    // Copy address: copies data-copy and says so in the status beside the button, which
+    // screen readers announce.
+    document.querySelector<HTMLButtonElement>('[data-copy]')?.addEventListener('click', async (e) => {
+      const button = e.currentTarget as HTMLButtonElement;
+      const status = button.parentElement!.querySelector<HTMLElement>('[data-copy-status]')!;
+      try {
+        await navigator.clipboard.writeText(button.dataset.copy!);
+        status.textContent = 'Copied';
+      } catch {
+        status.textContent = 'Couldn’t copy here. Select the address and copy it yourself.';
+      }
+      window.setTimeout(() => (status.textContent = ''), 4000);
     });
   </script>
 </LabLayout>
@@ -274,5 +318,69 @@ const total = { recipes: index.recipes.length, videos: index.videos.rows.length 
     font-family: inherit;
     font-weight: 700;
     color: var(--ink);
+  }
+
+  /* Ask your AI assistant. The button is ink and square-shouldered like the search button
+     (design/PLAN.md: actions are ink, nothing is a pill). */
+  .add {
+    margin: var(--space-6) 0 var(--space-2);
+  }
+
+  /* "section > p a" (the green text links) would otherwise win and color the label. */
+  section > p a.add-button {
+    color: var(--bg);
+  }
+
+  .add-button {
+    display: inline-flex;
+    align-items: center;
+    min-height: 3rem;
+    padding: 0 1.25rem;
+    border-radius: 0.5rem;
+    background: var(--ink);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .add-button:hover {
+    text-decoration: underline;
+  }
+
+  section > p.fine {
+    margin-top: 0;
+    font-size: var(--step--1);
+  }
+
+  .address {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-4);
+  }
+
+  .address code {
+    padding: 0.6rem 0.8rem;
+    border: 1px solid var(--field-rule);
+    border-radius: 0.5rem;
+    background: var(--bg-raised);
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  .address button {
+    min-height: 2.75rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--ink);
+    font: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--field-rule);
+    text-underline-offset: 0.2em;
+    cursor: pointer;
+  }
+
+  .address button:hover {
+    text-decoration-color: currentColor;
   }
 </style>

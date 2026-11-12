@@ -108,23 +108,14 @@ function createServer(origin: string) {
   return server;
 }
 
-const ABOUT = `Recipe search MCP server
-
-This lets an AI assistant search https://kylepace.dev/recipe-search/ (recipes from a
-hand-picked set of recipe sites; every result links to the original).
-
-Connect an MCP client that supports Streamable HTTP to:
-
-  https://kylepace.dev/recipe-search/mcp
-
-Tools: search_recipes, list_sources. Read-only, no sign-in, and nothing about the person
-asking is kept. More: https://kylepace.dev/recipe-search/about/
-`;
+// Where a person who opens the address in a browser is sent: the About page's section on
+// AI assistants, which has the Add to Claude button.
+const PAGE = 'https://kylepace.dev/recipe-search/about/#assistants';
 
 export const ALL: APIRoute = async ({ request, locals }) => {
-  // A person opening the address in a browser gets a plain explanation, not an error.
+  // A person opening the address in a browser is sent to the page about it, not shown an error.
   if (request.method === 'GET' && !(request.headers.get('accept') || '').includes('text/event-stream')) {
-    return new Response(ABOUT, { headers: { 'content-type': 'text/plain; charset=utf-8', 'x-robots-tag': 'noindex' } });
+    return Response.redirect(PAGE, 302);
   }
   const url = new URL(request.url);
   const origin = url.origin;
