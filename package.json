@@ -11,7 +11,8 @@
     "sync-catalog": "node scripts/sync-catalog.mjs",
     "crawl": "node crawler/crawl.mjs",
     "test": "node --test crawler/test/*.test.mjs src/mcp/*.test.mjs",
-    "try-mcp": "node scripts/try-mcp.mjs"
+    "try-mcp": "node scripts/try-mcp.mjs",
+    "check": "node .agents/skills/page-check/check.mjs"
   },
   "engines": {
     "node": ">=22"
@@ -21,12 +22,13 @@
     "@modelcontextprotocol/server": "^2.4.0",
     "agents": "^0.33.0",
     "astro": "^7.4.7",
-    "kp-design": "github:kyle-pace/kp-design#022e189b6db000462cee0506eb931845b50de428",
+    "kp-design": "github:kyle-pace/kp-design#4dbd054a3c541a679643fcfebba3e6ba2ff88bba",
     "zod": "^4.6.7"
   },
   "devDependencies": {
     "@modelcontextprotocol/client": "^2.4.0",
     "axe-core": "^4.14.0",
+    "playwright": "^1.65.1",
     "wrangler": "^4.158.0"
   }
 }
